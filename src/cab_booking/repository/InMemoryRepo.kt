@@ -30,5 +30,4 @@ abstract class InMemoryRepo<T> : Repository<T>{
             throw IllegalArgumentException("Record not found for key: $key")
         }
     }
-
 }

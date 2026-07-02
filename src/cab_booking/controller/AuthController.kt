@@ -60,6 +60,4 @@ class AuthController(val authService: AuthService) {
             return null
         }
     }
-
-
 }
