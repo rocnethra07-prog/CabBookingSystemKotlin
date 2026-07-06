@@ -2,6 +2,7 @@ package cab_booking.controller
 
 import cab_booking.exception.CabBookingException
 import cab_booking.model.*
+import cab_booking.model.types.Location
 import cab_booking.service.AuthService
 import cab_booking.service.RiderService
 import cab_booking.util.InputUtil
@@ -192,14 +193,11 @@ class RiderController(
         )
 
         if (name == rider.name && phone == rider.phone) {
-
             println("\nNo changes made.")
-
             return
         }
 
         try {
-
             riderService.updateProfile(
                 rider,
                 name,
@@ -207,7 +205,6 @@ class RiderController(
             )
 
             println("\nProfile Updated Successfully\n")
-
             println("Name  : ${rider.name}")
             println("Phone : ${rider.phone}")
             println("Email : ${rider.email}")

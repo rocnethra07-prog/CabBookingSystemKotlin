@@ -2,10 +2,12 @@ package cab_booking.service
 
 import cab_booking.exception.CabBookingException
 import cab_booking.model.Driver
-import cab_booking.model.Location
+import cab_booking.model.types.Location
 import cab_booking.model.Ride
+import cab_booking.model.types.RideStatus
 import cab_booking.repository.DriverRepo
 import cab_booking.repository.RideRepo
+import java.time.LocalDateTime
 
 class DriverService {
 
@@ -27,28 +29,44 @@ class DriverService {
         ride: Ride,
         driver: Driver
     ) {
-
-        validateRideOwnership(ride, driver)
-
-        ride.completeRide()
-
+        endRide(ride, driver){ ride -> markRideAsCompleted(ride)}
         driver.updateLocation(ride.dropLocation)
-
         driver.addEarnings(ride.fare)
-
-        driver.markAvailable()
     }
 
     fun cancelRide(
         ride: Ride,
         driver: Driver
     ) {
+       endRide(ride, driver){ ride -> markRideAsCancelled(ride)}
+    }
 
+    private fun markAvailable(driver: Driver){
+        driver.isAvailable = true
+    }
+
+    private fun markRideAsCompleted(ride: Ride){
+        if(ride.rideStatus != RideStatus.BOOKED) {
+            throw CabBookingException("Only booked rides can be completed.")
+        }
+
+        ride.rideStatus = RideStatus.COMPLETED
+        ride.completedAt = LocalDateTime.now()
+    }
+
+    private fun endRide(ride: Ride, driver : Driver, action: (Ride) -> Unit ){
         validateRideOwnership(ride, driver)
+        action(ride)
+        markAvailable(driver)
+    }
 
-        ride.cancelRide()
+    private fun markRideAsCancelled(ride: Ride){
+        if(ride.rideStatus != RideStatus.BOOKED) {
+            throw CabBookingException("Only booked rides can be cancelled.")
+        }
 
-        driver.markAvailable()
+        ride.rideStatus = RideStatus.CANCELLED
+        ride.cancelledAt = LocalDateTime.now()
     }
 
     private fun validateRideOwnership(
@@ -57,9 +75,7 @@ class DriverService {
     ) {
 
         if (ride.driverId != driver.userId) {
-            throw CabBookingException(
-                "Only the assigned driver can perform this action."
-            )
+            throw CabBookingException("Only the assigned driver can perform this action.")
         }
     }
     fun getRidesByDriver(

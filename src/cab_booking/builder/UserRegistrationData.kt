@@ -1,9 +1,12 @@
 package cab_booking.builder
 
 import cab_booking.exception.CabBookingException
-import cab_booking.model.UserRole
+import cab_booking.model.types.UserRole
+import cab_booking.util.Validator
 
-class UserRegistrationData private constructor(
+// Useful when user object fields grow later
+// Data class holding user registration fields.
+data class UserRegistrationData(
     val name: String,
     val phone: String,
     val email: String,
@@ -11,50 +14,15 @@ class UserRegistrationData private constructor(
     val role: UserRole
 ) {
 
-    class Builder {
-
-        private var name: String? = null
-        private var phone: String? = null
-        private var email: String? = null
-        private var password: String? = null
-        private var role: UserRole? = null
-
-        fun name(value: String) = apply {
-            name = value.requireValue("Name")
+    // init block runs after construction
+    // This is where we enforce "not blank" and "not null" rules.
+    init {
+        Validator.validateString(name, "Name")
+        Validator.validateString(phone, "Phone")
+        Validator.validateString(email, "Email")
+        Validator.validateString(password, "Password")
+        if (role == null) {
+            throw CabBookingException("Role is required.")
         }
-
-        fun phone(value: String) = apply {
-            phone = value.requireValue("Phone")
-        }
-
-        fun email(value: String) = apply {
-            email = value.requireValue("Email")
-        }
-
-        fun password(value: String) = apply {
-            password = value.requireValue("Password")
-        }
-
-        fun role(value: UserRole) = apply {
-            role = value
-        }
-
-        fun build() = UserRegistrationData(
-            name = name.required("Name"),
-            phone = phone.required("Phone"),
-            email = email.required("Email"),
-            password = password.required("Password"),
-            role = role.required("Role")
-        )
-
-        private fun String.requireValue(field: String): String {
-            if (isBlank()) {
-                throw CabBookingException("$field is required.")
-            }
-            return trim()
-        }
-
-        private fun <T> T?.required(field: String): T =
-            this ?: throw CabBookingException("$field is required.")
     }
 }

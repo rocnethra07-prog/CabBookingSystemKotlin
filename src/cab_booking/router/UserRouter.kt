@@ -1,9 +1,10 @@
 package cab_booking.router
 
 import cab_booking.controller.*
+import cab_booking.exception.CabBookingException
 import cab_booking.model.Driver
 import cab_booking.model.User
-import cab_booking.model.UserRole
+import cab_booking.model.types.UserRole
 import cab_booking.service.DriverService
 
 class UserRouter(val adminController: AdminController,val driverController: DriverController, val riderController: RiderController, val driverService: DriverService) {
@@ -13,7 +14,7 @@ class UserRouter(val adminController: AdminController,val driverController: Driv
             UserRole.DRIVER -> {
                 val driver: Driver? = driverService.findDriverById(user.userId)
                 if(driver == null){
-                    throw IllegalArgumentException("Driver not found ${user.userId}")
+                    throw CabBookingException("Driver not found ${user.email}")
                 }
                 driverController.driverDashboard(driver)
             }

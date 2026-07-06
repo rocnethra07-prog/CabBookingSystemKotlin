@@ -1,10 +1,12 @@
 package cab_booking.builder
 
 import cab_booking.exception.CabBookingException
-import cab_booking.model.CabType
-import cab_booking.model.Location
+import cab_booking.model.types.CabType
+import cab_booking.model.types.Location
+import cab_booking.util.Validator
 
-class DriverRegistrationData private constructor(
+//builder class replacement with data class: takes in all the parameters required to create a driver and checks for non-null and not blank values in init block
+data class DriverRegistrationData(
     val name: String,
     val phone: String,
     val email: String,
@@ -16,74 +18,23 @@ class DriverRegistrationData private constructor(
     val cabType: CabType
 ) {
 
-    class Builder {
+    // init block: replaces builder's "required fields" checks.
+    init {
+        Validator.validateString(name, "Name")
+        Validator.validateString(phone, "Phone")
+        Validator.validateString(email, "Email")
+        Validator.validateString(password, "Password")
+        Validator.validateString(licenseNumber, "License Number")
+        Validator.validateString(model, "Cab Model")
+        Validator.validateString(registrationNumber, "Registration Number")
 
-        private var name: String? = null
-        private var phone: String? = null
-        private var email: String? = null
-        private var password: String? = null
-        private var currentLocation: Location? = null
-        private var licenseNumber: String? = null
-        private var model: String? = null
-        private var registrationNumber: String? = null
-        private var cabType: CabType? = null
-
-        fun name(value: String) = apply {
-            name = value.requireValue("Name")
+        // Non-null checks for object fields (Location, CabType).
+        if (currentLocation == null) {
+            throw CabBookingException("Location is required.")
         }
-
-        fun phone(value: String) = apply {
-            phone = value.requireValue("Phone")
+        if (cabType == null) {
+            throw CabBookingException("Cab Type is required.")
         }
-
-        fun email(value: String) = apply {
-            email = value.requireValue("Email")
-        }
-
-        fun password(value: String) = apply {
-            password = value.requireValue("Password")
-        }
-
-        fun currentLocation(value: Location) = apply {
-            currentLocation = value
-        }
-
-        fun licenseNumber(value: String) = apply {
-            licenseNumber = value.requireValue("License Number")
-        }
-
-        fun model(value: String) = apply {
-            model = value.requireValue("Model")
-        }
-
-        fun registrationNumber(value: String) = apply {
-            registrationNumber = value.requireValue("Registration Number")
-        }
-
-        fun cabType(value: CabType) = apply {
-            cabType = value
-        }
-
-        fun build() = DriverRegistrationData(
-            name = name.required("Name"),
-            phone = phone.required("Phone"),
-            email = email.required("Email"),
-            password = password.required("Password"),
-            currentLocation = currentLocation.required("Current Location"),
-            licenseNumber = licenseNumber.required("License Number"),
-            model = model.required("Model"),
-            registrationNumber = registrationNumber.required("Registration Number"),
-            cabType = cabType.required("Cab Type")
-        )
-
-        private fun String.requireValue(field: String): String {
-            if (isBlank()) {
-                throw CabBookingException("$field is required.")
-            }
-            return trim()
-        }
-
-        private fun <T> T?.required(field: String): T =
-            this ?: throw CabBookingException("$field is required.")
     }
+
 }

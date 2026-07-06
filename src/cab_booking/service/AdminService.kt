@@ -3,14 +3,12 @@ package cab_booking.service
 import cab_booking.builder.DriverRegistrationData
 import cab_booking.exception.CabBookingException
 import cab_booking.model.*
+import cab_booking.model.types.CabType
+import cab_booking.model.types.RideStatus
+import cab_booking.model.types.UserRole
 import cab_booking.repository.*
 
 class AdminService {
-
-    // -------------------------------------------------
-    // Validation
-    // -------------------------------------------------
-
     fun isEmailRegistered(email: String): Boolean =
         UserRepo.existsByEmail(email)
 
@@ -20,10 +18,7 @@ class AdminService {
     fun isRegistrationNumberExists(registrationNumber: String): Boolean =
         CabRepo.existsByRegistrationNumber(registrationNumber)
 
-    // -------------------------------------------------
     // Driver Management
-    // -------------------------------------------------
-
     fun addDriver(driverData: DriverRegistrationData): Driver {
 
         if (isEmailRegistered(driverData.email)) {
@@ -38,33 +33,13 @@ class AdminService {
             throw CabBookingException("Registration number already exists.")
         }
 
-        /*
-            Driver must be created first because
-            Cab requires Driver ID.
-         */
-
-        val driver = Driver(
-            name = driverData.name,
-            phone = driverData.phone,
-            email = driverData.email,
-            cabId = "",
-            licenseNumber = driverData.licenseNumber,
-            currentLocation = driverData.currentLocation
-        )
-
         val cab = Cab(
             registrationNumber = driverData.registrationNumber,
             model = driverData.model,
             cabType = driverData.cabType,
-            driverId = driver.userId
         )
 
-        /*
-            Since Driver requires Cab ID in constructor,
-            recreate Driver with Cab ID.
-         */
-
-        val registeredDriver = Driver(
+        val driver = Driver(
             name = driverData.name,
             phone = driverData.phone,
             email = driverData.email,
@@ -75,21 +50,21 @@ class AdminService {
 
         try {
 
-            DriverRepo.save(registeredDriver)
+            DriverRepo.save(driver)
 
             CabRepo.save(cab)
 
             AuthService().registerUserCredentials(
-                registeredDriver,
+                driver,
                 driverData.password
             )
 
-            return registeredDriver
+            return driver
 
         } catch (e: Exception) {
 
             runCatching {
-                DriverRepo.deleteByKey(registeredDriver.userId)
+                DriverRepo.deleteByKey(driver.userId)
             }
 
             runCatching {
@@ -111,11 +86,7 @@ class AdminService {
             return false
         }
 
-        CabRepo.findAll()
-            .firstOrNull { it.driverId == driverId }
-            ?.let {
-                CabRepo.deleteByKey(it.cabId)
-            }
+        CabRepo.deleteByKey(driver.cabId)
 
         DriverRepo.deleteByKey(driverId)
 
@@ -141,15 +112,12 @@ class AdminService {
         DriverRepo.findUnavailableDrivers()
 
     fun getCabForDriver(driver: Driver): Cab =
-        CabRepo.findAll().first {
-            it.driverId == driver.userId
-        }
+        CabRepo.findByKey(driver.cabId)
 
     fun getDriverRideHistory(driverId: String): List<Ride> =
         RideRepo.findRidesByDriver(driverId)
-    // -------------------------------------------------
+
     // Rider Management
-    // -------------------------------------------------
 
     fun getAllRiders(): List<User> =
         UserRepo.findAll()
@@ -158,12 +126,9 @@ class AdminService {
     fun getRiderRideHistory(riderId: String): List<Ride> =
         RideRepo.findRidesByRider(riderId)
 
-    // -------------------------------------------------
     // Ride Management
-    // -------------------------------------------------
 
-    fun getAllRides(): List<Ride> =
-        RideRepo.findAll()
+    fun getAllRides(): List<Ride> = RideRepo.findAll()
 
     fun getRidesByStatus(status: RideStatus): List<Ride> =
         RideRepo.findRidesByStatus(status)
@@ -177,10 +142,7 @@ class AdminService {
     fun getCancelledRides(): List<Ride> =
         getRidesByStatus(RideStatus.CANCELLED)
 
-    // -------------------------------------------------
     // Cab Management
-    // -------------------------------------------------
-
     fun getAllCabs(): List<Cab> =
         CabRepo.findAll()
 

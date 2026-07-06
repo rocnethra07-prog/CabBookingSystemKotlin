@@ -2,10 +2,14 @@ package cab_booking.service
 
 import cab_booking.exception.CabBookingException
 import cab_booking.model.*
+import cab_booking.model.types.CabType
+import cab_booking.model.types.Location
+import cab_booking.model.types.RideStatus
 import cab_booking.repository.CabRepo
 import cab_booking.repository.DriverRepo
 import cab_booking.repository.RideRepo
 import java.math.BigDecimal
+import java.time.LocalDateTime
 
 class RiderService {
 
@@ -40,7 +44,7 @@ class RiderService {
 
         RideRepo.save(ride)
 
-        driver.markUnavailable()
+        markUnavailable(driver)
 
         return ride
     }
@@ -90,16 +94,31 @@ class RiderService {
             )
         }
 
-        ride.cancelRide()
+        cancelRide(ride)
 
         markDriverAvailable(ride)
     }
 
+    private fun cancelRide(ride: Ride) {
+        if(ride.rideStatus != RideStatus.BOOKED) {
+            throw CabBookingException("Only booked rides can be cancelled.")
+        }
+
+        ride.rideStatus = RideStatus.CANCELLED
+        ride.cancelledAt = LocalDateTime.now()
+    }
+
     private fun markDriverAvailable(ride: Ride) {
-
         val driver = getDriverForRide(ride)
+        markAvailable(driver)
+    }
 
-        driver.markAvailable()
+    private fun markAvailable(driver: Driver){
+        driver.isAvailable = true
+    }
+
+    private fun markUnavailable(driver: Driver){
+        driver.isAvailable = false
     }
 
     fun getRidesByRider(
@@ -124,7 +143,7 @@ class RiderService {
             )
         }
 
-        ride.addRating(rating)
+        ride.rating = rating
 
         val driver = DriverRepo.findByKey(ride.driverId)
 

@@ -1,4 +1,4 @@
-package cab_booking.model
+package cab_booking.model.types
 
 enum class RideStatus {
     BOOKED,

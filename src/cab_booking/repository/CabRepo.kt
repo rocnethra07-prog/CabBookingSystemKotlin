@@ -1,7 +1,7 @@
 package cab_booking.repository
 
 import cab_booking.model.Cab
-import cab_booking.model.CabType
+import cab_booking.model.types.CabType
 
 object CabRepo : InMemoryRepo<Cab>() {
 

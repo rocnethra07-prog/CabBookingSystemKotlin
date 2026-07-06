@@ -14,10 +14,10 @@ class AuthService() {
 
     fun registerUser(userData : UserRegistrationData): User {
         val user = User(
-            name = userData.name,
-            phone = userData.phone,
-            email = userData.email,
-            userRole = userData.role)
+            userData.name,
+            userData.phone,
+            userData.email,
+            userData.role)
         registerUserCredentials(user, userData.password)
         return user
     }
@@ -41,7 +41,12 @@ class AuthService() {
             throw CabBookingException("Account does not exist. Please register.")
         }
 
-        if (!AuthRepo.validateCredentials(user.userId, password)) {
+        val userAuth: UserAuthInfo? = AuthRepo.findByUserId(user.userId)
+        if(userAuth == null){
+            throw CabBookingException("Authentication details not found. Please register")
+        }
+
+        if(!userAuth.verifyPassword(password)){
             throw CabBookingException("Invalid credentials.")
         }
         return user
@@ -53,13 +58,15 @@ class AuthService() {
         newPassword: String
     ) {
 
-        if (!AuthRepo.validateCredentials(user.userId, currentPassword)) {
-            throw CabBookingException("Current password is incorrect.")
+        val userAuth: UserAuthInfo? = AuthRepo.findByUserId(user.userId)
+        if(userAuth == null){
+            throw CabBookingException("Authentication details not found. Please register")
         }
 
-        val authInfo = AuthRepo.findByUserId(user.userId)
-            ?: throw CabBookingException("Authentication details not found.")
+        if(!userAuth.verifyPassword(currentPassword)){
+            throw CabBookingException("Invalid credentials.")
+        }
 
-        authInfo.updatePassword(newPassword)
+        userAuth.updatePassword(newPassword)
     }
 }

@@ -1,10 +1,13 @@
 package cab_booking.model
 
+import cab_booking.exception.CabBookingException
+import cab_booking.model.types.Location
+import cab_booking.model.types.RideStatus
 import cab_booking.util.IdGenerator
 import java.math.BigDecimal
 import java.time.LocalDateTime
 
-class Ride(
+data class Ride(
     val riderId: String,
     val driverId: String,
     val pickupLocation: Location,
@@ -15,69 +18,60 @@ class Ride(
     val rideId: String = IdGenerator.generateRideId()
 
     var rideStatus: RideStatus = RideStatus.BOOKED
-        private set
+        set(value) {
+            if(field == value) return
+            if ((value == RideStatus.CANCELLED || value == RideStatus.COMPLETED) &&
+                field != RideStatus.BOOKED
+            ) {
+                throw CabBookingException("Only booked rides can be completed or cancelled.")
+            }
+            if (value == RideStatus.BOOKED &&
+                (field == RideStatus.CANCELLED || field == RideStatus.COMPLETED)
+            ) {
+                throw CabBookingException("Completed or cancelled rides cannot be booked again.")
+            }
+            field = value
+        }
 
     val bookedAt: LocalDateTime = LocalDateTime.now()
 
     var completedAt: LocalDateTime? = null //null by default
-        private set
 
     var cancelledAt: LocalDateTime? = null //null by default
-        private set
 
     var rating: Int? = null  // 1–5, null if not yet rated
-        private set
+        set(value) {
+            if(rideStatus != RideStatus.COMPLETED) {
+                throw CabBookingException("Only completed rides can be rated.")
+            }
+
+            if(field != null) {
+                throw CabBookingException("Ride has already been rated.")
+            }
+
+            if(value !in 1..5) {
+                throw CabBookingException("Rating must be between 1 and 5.")
+            }
+
+            field = value
+        }
 
     init {
-        require(riderId.isNotBlank()) {
-            "Rider ID cannot be blank."
+        if(riderId.isBlank()) {
+            throw CabBookingException("Rider ID cannot be blank.")
         }
 
-        require(driverId.isNotBlank()) {
-            "Driver ID cannot be blank."
+        if(driverId.isBlank()) {
+            throw CabBookingException("Driver ID cannot be blank.")
         }
 
-        require(pickupLocation != dropLocation) {
-            "Pickup and drop locations cannot be the same."
+        if(pickupLocation == dropLocation) {
+            throw CabBookingException("Pickup and drop locations cannot be the same.")
         }
 
-        require(fare > BigDecimal.ZERO) {
-            "Fare must be greater than zero."
+        if(fare <= BigDecimal.ZERO) {
+            throw CabBookingException("Fare must be greater than zero.")
         }
-    }
-
-    fun completeRide() {
-        require(rideStatus == RideStatus.BOOKED) {
-            "Only booked rides can be completed."
-        }
-
-        rideStatus = RideStatus.COMPLETED
-        completedAt = LocalDateTime.now()
-    }
-
-    fun cancelRide() {
-        require(rideStatus == RideStatus.BOOKED) {
-            "Only booked rides can be cancelled."
-        }
-
-        rideStatus = RideStatus.CANCELLED
-        cancelledAt = LocalDateTime.now()
-    }
-
-    fun addRating(rating: Int) {
-        require(rideStatus == RideStatus.COMPLETED) {
-            "Only completed rides can be rated."
-        }
-
-        require(this.rating == null) {
-            "Ride has already been rated."
-        }
-
-        require(rating in 1..5) {
-            "Rating must be between 1 and 5."
-        }
-
-        this.rating = rating
     }
 
     override fun toString(): String {

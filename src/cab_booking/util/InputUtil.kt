@@ -107,7 +107,7 @@ object InputUtil {
     fun getOptionalName(currentValue: String): String {
 
         while (true) {
-            print("Name [$currentValue] : ")
+            print("Name [$currentValue] (Press Enter to keep the current value) : ")
             val input = readln().trim()
             if (input.isBlank()) return currentValue
             if (Validator.isValidName(input)) {
@@ -120,7 +120,7 @@ object InputUtil {
     fun getOptionalPhone(currentValue: String): String {
 
         while (true) {
-            print("Phone [$currentValue] : ")
+            print("Phone [$currentValue] (Press Enter to keep the current value) : ")
             val input = readln().trim()
             if (input.isBlank()) return currentValue
             if (Validator.isValidPhone(input)) {

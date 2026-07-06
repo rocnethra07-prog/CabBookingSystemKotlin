@@ -1,7 +1,7 @@
 package cab_booking.repository
 
 import cab_booking.model.Ride
-import cab_booking.model.RideStatus
+import cab_booking.model.types.RideStatus
 
 object RideRepo : InMemoryRepo<Ride>() {
 

@@ -1,11 +1,11 @@
 package cab_booking.controller
 
-import cab_booking.builder.DriverRegistrationData
 import cab_booking.exception.CabBookingException
 import cab_booking.model.Driver
 import cab_booking.model.Ride
 import cab_booking.service.AdminService
 import cab_booking.util.InputUtil
+import cab_booking.builder.DriverRegistrationData
 
 class AdminController(
     private val adminService: AdminService = AdminService()
@@ -144,17 +144,17 @@ class AdminController(
 
         val cabType = InputUtil.selectCabType()
 
-        val driverData = DriverRegistrationData.Builder()
-            .name(name)
-            .phone(phone)
-            .email(email)
-            .password(password)
-            .currentLocation(currentLocation)
-            .licenseNumber(licenseNumber)
-            .model(model)
-            .registrationNumber(registrationNumber)
-            .cabType(cabType)
-            .build()
+        val driverData = DriverRegistrationData(
+            name = name,
+            phone = phone,
+            email = email,
+            password = password,
+            currentLocation = currentLocation,
+            licenseNumber = licenseNumber,
+            model = model,
+            registrationNumber = registrationNumber,
+            cabType = cabType
+        )
 
         try {
 
@@ -444,9 +444,7 @@ class AdminController(
         }
     }
 
-    // --------------------------------------------------------
     // CAB MANAGEMENT
-    // --------------------------------------------------------
 
     private fun cabManagementMenu() {
 

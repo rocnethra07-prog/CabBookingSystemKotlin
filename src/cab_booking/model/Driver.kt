@@ -1,5 +1,8 @@
 package cab_booking.model
 
+import cab_booking.exception.CabBookingException
+import cab_booking.model.types.Location
+import cab_booking.model.types.UserRole
 import cab_booking.util.Validator
 import java.math.BigDecimal
 
@@ -26,7 +29,11 @@ class Driver(
         private set
 
     var isAvailable: Boolean = true
-        private set
+        set(value){
+            if(value == isAvailable) return
+            field = value
+        }
+
 
     private var totalRating: Int = 0
     private var ratingCount: Int = 0
@@ -42,12 +49,12 @@ class Driver(
         }
 
     init {
-        require(cabId.isNotBlank()) {
-            "Cab ID cannot be blank."
+        if(cabId.isBlank()) {
+            throw CabBookingException("Cab ID cannot be blank.")
         }
 
-        require(licenseNumber.isNotBlank()) {
-            "Invalid license number."
+        if(licenseNumber.isBlank()) {
+            throw CabBookingException("Invalid license number.")
         }
     }
 
@@ -56,25 +63,16 @@ class Driver(
         currentLocation = location
     }
 
-    fun markAvailable() {
-        isAvailable = true
-    }
-
-    fun markUnavailable() {
-        isAvailable = false
-    }
-
     fun addEarnings(amount: BigDecimal) {
-        require(amount > BigDecimal.ZERO) {
-            "Amount must be greater than zero."
+        if(amount <= BigDecimal.ZERO) {
+            throw CabBookingException("Amount must be greater than zero.")
         }
-
         earnings += amount
     }
 
     fun addRating(rating: Int) {
-        require(rating in 1..5) {
-            "Rating must be between 1 and 5."
+        if(rating !in 1..5) {
+            throw CabBookingException("Rating must be between 1 and 5.")
         }
 
         totalRating += rating

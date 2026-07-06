@@ -1,5 +1,7 @@
 package cab_booking.model
 
+import cab_booking.exception.CabBookingException
+import cab_booking.model.types.UserRole
 import cab_booking.util.IdGenerator
 import cab_booking.util.Validator
 
@@ -14,16 +16,16 @@ open class User(
 
     var name: String = name.trim()
         set(value) {
-            require(Validator.isValidName(value)){
-                "Name must contain minimum 3 characters. Name cannot be blank"
+            if(!Validator.isValidName(value)){
+                throw CabBookingException("Name must contain minimum 3 characters. Name cannot be blank")
             }
             field = value.trim()
         }
 
     var phone: String = phone.trim()
         set(value) {
-            require(Validator.isValidPhone(value)){
-                "Invalid phone number format. Phone cannot be blank"
+            if(!Validator.isValidPhone(value)){
+                throw CabBookingException("Invalid phone number format. Phone cannot be blank")
             }
             field = value.trim()
         }
@@ -31,14 +33,14 @@ open class User(
     val email: String = email.trim().lowercase()
 
     init {
-        require(Validator.isValidName(name)){
-            "Name must contain minimum 3 characters. Name cannot be blank"
+        if(!Validator.isValidName(name)){
+            throw CabBookingException("Name must contain minimum 3 characters. Name cannot be blank")
         }
-        require(Validator.isValidPhone(phone)){
-            "Invalid phone number format. Phone cannot be blank"
+        if(!Validator.isValidPhone(phone)){
+           throw CabBookingException("Invalid phone number format. Phone cannot be blank")
         }
-        require(Validator.isValidEmail(email)){
-            "Invalid email format. Email cannot be blank"
+        if(!Validator.isValidEmail(email)){
+           throw CabBookingException("Invalid email format. Email cannot be blank")
         }
     }
 

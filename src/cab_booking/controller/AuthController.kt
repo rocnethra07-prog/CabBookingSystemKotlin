@@ -3,7 +3,7 @@ package cab_booking.controller
 import cab_booking.builder.UserRegistrationData
 import cab_booking.exception.CabBookingException
 import cab_booking.model.User
-import cab_booking.model.UserRole
+import cab_booking.model.types.UserRole
 import cab_booking.service.AuthService
 import cab_booking.util.InputUtil
 
@@ -44,13 +44,13 @@ class AuthController(val authService: AuthService) {
 
         try {
             val userRegistrationData =
-                UserRegistrationData.Builder()
-                    .name(name)
-                    .phone(phone)
-                    .email(email)
-                    .password(password)
-                    .role(UserRole.RIDER)
-                    .build()
+                UserRegistrationData(
+                    name =name,
+                    phone = phone,
+                    email = email,
+                    password = password,
+                    role = UserRole.RIDER)
+
             val user: User = authService.registerUser(userRegistrationData)
             System.out.println("\n  Account created successfully.\n  Welcome, " + user.name + "!")
             return user

@@ -1,26 +1,23 @@
 package cab_booking.model
 
+import cab_booking.exception.CabBookingException
+import cab_booking.model.types.CabType
 import cab_booking.util.IdGenerator
 
 data class Cab(
-    val cabId: String = IdGenerator.generateCabId(),
     val registrationNumber: String,
     val model: String,
-    val cabType: CabType,
-    val driverId : String
+    val cabType: CabType
 ) {
 
+    val cabId: String = IdGenerator.generateCabId()
+
     init {
-        require(registrationNumber.isNotBlank()) {
-            "Registration number cannot be blank."
+        if(registrationNumber.isBlank()) {
+            throw CabBookingException("Registration number cannot be blank.")
         }
-
-        require(model.isNotBlank()) {
-            "Car model cannot be blank."
-        }
-
-        require(driverId.isNotBlank()){
-            "Driver Id cannot be blank"
+        if(model.isBlank()) {
+            throw CabBookingException("Car model cannot be blank.")
         }
     }
 
@@ -30,7 +27,6 @@ data class Cab(
             Model            : $model
             Type             : $cabType
             Registration No. : $registrationNumber
-            Driver ID        : $driverId
         """.trimIndent()
     }
 }
