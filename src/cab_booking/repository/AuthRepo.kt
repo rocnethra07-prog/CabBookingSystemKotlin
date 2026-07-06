@@ -1,5 +1,6 @@
 package cab_booking.repository
 
+import cab_booking.exception.CabBookingException
 import cab_booking.model.UserAuthInfo
 
 object AuthRepo : InMemoryRepo<UserAuthInfo>() {
@@ -11,14 +12,13 @@ object AuthRepo : InMemoryRepo<UserAuthInfo>() {
     fun findByUserId(userId: String): UserAuthInfo? {
         val trimmedUserId = userId.trim()
 
-        require(trimmedUserId.isNotBlank()) {
-            "User ID cannot be blank."
+        if(trimmedUserId.isBlank()) {
+            throw CabBookingException("User ID cannot be blank.")
         }
-
-        return if (existsByKey(trimmedUserId)) {
+        return try{
             findByKey(trimmedUserId)
         }
-        else {
+        catch (ignored : CabBookingException){
             null
         }
     }

@@ -1,5 +1,6 @@
 package cab_booking.repository
 
+import cab_booking.exception.CabBookingException
 import cab_booking.model.User
 
 object UserRepo : InMemoryRepo<User>() {
@@ -9,8 +10,8 @@ object UserRepo : InMemoryRepo<User>() {
     }
 
     override fun save(entity: User) {
-        require(!existsByEmail(entity.email)) {
-            "User already exists with email: ${entity.email}"
+        if(existsByEmail(entity.email)) {
+            throw CabBookingException("User already exists with email: ${entity.email}")
         }
 
         super.save(entity)
@@ -19,14 +20,14 @@ object UserRepo : InMemoryRepo<User>() {
     fun findByEmail(email: String): User? {
         val trimmedEmail = email.trim().lowercase()
 
-        require(trimmedEmail.isNotBlank()) {
-            "Email cannot be blank."
+        if(trimmedEmail.isBlank()) {
+            throw CabBookingException("Email cannot be blank.")
         }
 
-        return if (existsByKey(trimmedEmail)) {
+        return try {
             findByKey(trimmedEmail)
         }
-        else {
+        catch (_ : CabBookingException){
             null
         }
     }
@@ -44,8 +45,8 @@ object UserRepo : InMemoryRepo<User>() {
     fun deleteByEmail(email: String) {
         val trimmedEmail = email.trim().lowercase()
 
-        require(trimmedEmail.isNotBlank()) {
-            "Email cannot be blank."
+        if(trimmedEmail.isBlank()) {
+            throw CabBookingException("Email cannot be blank.")
         }
 
         deleteByKey(trimmedEmail)
