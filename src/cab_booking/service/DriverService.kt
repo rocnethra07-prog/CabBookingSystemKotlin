@@ -81,7 +81,7 @@ class DriverService {
     fun getRidesByDriver(
         driver: Driver
     ): List<Ride> =
-        RideRepo.findRidesByRider(driver.userId)
+        RideRepo.findRidesByDriver(driver.userId)
 
     fun findDriverById(
         driverId: String
