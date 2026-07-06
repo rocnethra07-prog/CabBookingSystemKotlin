@@ -1,9 +1,17 @@
 package cab_booking.util
 
+import cab_booking.exception.CabBookingException
+
 //object instead of class
 //So I can call Validator.isValidName() instead of creating Validator()
 
 object Validator {
+
+    fun validateString(value: String?, fieldName: String) {
+        if (value.isNullOrBlank()) {
+            throw CabBookingException("$fieldName is required.")
+        }
+    }
     fun isValidName(name: String): Boolean{
         return name.isNotBlank() && name.trim().length >= 3
     }
