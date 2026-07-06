@@ -32,7 +32,7 @@ abstract class InMemoryRepo<T> : Repository<T>{
     }
 
     override fun deleteByKey(key: String) {
-        require(key.isBlank()){
+        if(key.isBlank()){
             throw CabBookingException("Key cannot be blank")
         }
         if (storage.remove(key.trim()) == null) {
