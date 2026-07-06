@@ -1,7 +1,7 @@
 package cab_booking.util
 
-import cab_booking.model.CabType
-import cab_booking.model.Location
+import cab_booking.model.types.CabType
+import cab_booking.model.types.Location
 
 object InputUtil {
     private fun getValidatedInput(prompt: String, errorMessage: String, validator: (String) -> Boolean) : String{
@@ -107,17 +107,12 @@ object InputUtil {
     fun getOptionalName(currentValue: String): String {
 
         while (true) {
-
             print("Name [$currentValue] : ")
-
             val input = readln().trim()
-
             if (input.isBlank()) return currentValue
-
             if (Validator.isValidName(input)) {
                 return input
             }
-
             println("Invalid name.")
         }
     }
@@ -125,17 +120,12 @@ object InputUtil {
     fun getOptionalPhone(currentValue: String): String {
 
         while (true) {
-
             print("Phone [$currentValue] : ")
-
             val input = readln().trim()
-
             if (input.isBlank()) return currentValue
-
             if (Validator.isValidPhone(input)) {
                 return input
             }
-
             println("Invalid phone number.")
         }
     }
