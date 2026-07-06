@@ -9,15 +9,15 @@ import cab_booking.service.DriverService
 class UserRouter(val adminController: AdminController,val driverController: DriverController, val riderController: RiderController, val driverService: DriverService) {
     fun route(user: User){
         when(user.userRole){
-            UserRole.ADMIN -> adminController.adminMenu()
+            UserRole.ADMIN -> adminController.adminDashboard()
             UserRole.DRIVER -> {
-                val driver: Driver? = driverService.findDriver(user.userId)
+                val driver: Driver? = driverService.findDriverById(user.userId)
                 if(driver == null){
                     throw IllegalArgumentException("Driver not found ${user.userId}")
                 }
-                driverController.driverMenu(driver)
+                driverController.driverDashboard(driver)
             }
-            UserRole.RIDER -> riderController.riderMenu(user)
+            UserRole.RIDER -> riderController.riderDashboard(user)
         }
     }
 }

@@ -2,7 +2,6 @@ package cab_booking.builder
 
 import cab_booking.exception.CabBookingException
 import cab_booking.model.UserRole
-import cab_booking.util.Validator
 
 class UserRegistrationData private constructor(
     val name: String,
@@ -11,53 +10,51 @@ class UserRegistrationData private constructor(
     val password: String,
     val role: UserRole
 ) {
-    class Builder{
+
+    class Builder {
 
         private var name: String? = null
-        private var password: String? = null
         private var phone: String? = null
         private var email: String? = null
+        private var password: String? = null
         private var role: UserRole? = null
 
-        fun name(name: String) = apply {
-            validateString(name, "Name")
-            this.name = name
+        fun name(value: String) = apply {
+            name = value.requireValue("Name")
         }
 
-        fun phone(phone: String) = apply {
-            validateString(phone,"Phone")
-            this.phone = phone
+        fun phone(value: String) = apply {
+            phone = value.requireValue("Phone")
         }
 
-        fun email(email: String) = apply {
-            validateString(email, "Email")
-            this.email = email
+        fun email(value: String) = apply {
+            email = value.requireValue("Email")
         }
 
-        fun password(password: String) = apply {
-            validateString(password, "Password")
-            this.password = password
+        fun password(value: String) = apply {
+            password = value.requireValue("Password")
         }
 
-        fun role(role: UserRole) = apply {
-            this.role = role
+        fun role(value: UserRole) = apply {
+            role = value
         }
 
-        fun build(): UserRegistrationData {
-            return UserRegistrationData(
-                name ?: throw CabBookingException("Name is required."),
-                phone ?: throw CabBookingException("Phone is required."),
-                email ?: throw CabBookingException("Email is required."),
-                password ?: throw CabBookingException("Password is required."),
-                role ?: throw CabBookingException("Role is required.")
-            )
-        }
+        fun build() = UserRegistrationData(
+            name = name.required("Name"),
+            phone = phone.required("Phone"),
+            email = email.required("Email"),
+            password = password.required("Password"),
+            role = role.required("Role")
+        )
 
-        private fun validateString(value: String?, fieldName: String) {
-            if (value.isNullOrBlank()) {
-                throw CabBookingException("$fieldName is required.")
+        private fun String.requireValue(field: String): String {
+            if (isBlank()) {
+                throw CabBookingException("$field is required.")
             }
+            return trim()
         }
 
+        private fun <T> T?.required(field: String): T =
+            this ?: throw CabBookingException("$field is required.")
     }
 }

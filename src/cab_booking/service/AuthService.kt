@@ -46,4 +46,20 @@ class AuthService() {
         }
         return user
     }
+
+    fun changePassword(
+        user: User,
+        currentPassword: String,
+        newPassword: String
+    ) {
+
+        if (!AuthRepo.validateCredentials(user.userId, currentPassword)) {
+            throw CabBookingException("Current password is incorrect.")
+        }
+
+        val authInfo = AuthRepo.findByUserId(user.userId)
+            ?: throw CabBookingException("Authentication details not found.")
+
+        authInfo.updatePassword(newPassword)
+    }
 }

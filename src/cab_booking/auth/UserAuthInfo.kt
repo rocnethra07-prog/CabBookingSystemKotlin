@@ -27,4 +27,11 @@ class UserAuthInfo(val userId: String, password: String) {
     private fun matches(password: String): Boolean {
         return BCrypt.checkpw(password, passwordHash)
     }
+
+    fun updatePassword(newPassword: String) {
+        require(Validator.isValidPassword(newPassword)) {
+            "Invalid password format."
+        }
+        passwordHash = hash(newPassword)
+    }
 }
