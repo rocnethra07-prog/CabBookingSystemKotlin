@@ -8,35 +8,30 @@ object RideRepo : InMemoryRepo<Ride>() {
     override fun getKey(entity: Ride): String = entity.rideId
 
     fun findRidesByRider(riderId: String): List<Ride> =
-        storage.values.filter {
-            it.riderId == riderId
-        }
+        findRides{ ride -> ride.riderId == riderId}
 
     fun findRidesByDriver(driverId: String): List<Ride> =
-        storage.values.filter {
-            it.driverId == driverId
-        }
-
-    fun findCurrentRideOfDriver(driverId: String): Ride? =
-        storage.values.find {
-            it.driverId == driverId &&
-                    it.rideStatus == RideStatus.BOOKED
-        }
-
-    fun findCurrentRideOfRider(riderId: String): Ride? =
-        storage.values.find {
-            it.riderId == riderId &&
-                    it.rideStatus == RideStatus.BOOKED
-        }
+        findRides{ it.driverId == driverId} //it ->
 
     fun findRidesByStatus(status: RideStatus): List<Ride> =
-        storage.values.filter {
-            it.rideStatus == status
-        }
+        findRides { it.rideStatus == status }
+
+    //returns list of rides based on the predicate passed
+    private fun findRides(predicate: (Ride) -> Boolean ) : List<Ride> =
+        storage.values.filter(predicate)
+
+    fun findCurrentRideOfDriver(driverId: String): Ride? =
+        findRide{ it.driverId == driverId && it.rideStatus == RideStatus.BOOKED }
+
+    fun findCurrentRideOfRider(riderId: String): Ride? =
+        findRide { it.riderId == riderId && it.rideStatus == RideStatus.BOOKED }
+
+    //returns a ride or null based on the predicate passed
+    private fun findRide(predicate : (Ride) -> Boolean) : Ride? =
+        storage.values.find(predicate)
 
     fun findLastCompletedRide(riderId: String): Ride? =
-        storage.values
-            .filter {
+        findRides{
                 it.riderId == riderId && it.rideStatus == RideStatus.COMPLETED
             }
             .maxByOrNull {
