@@ -8,10 +8,10 @@ object RideRepo : InMemoryRepo<Ride>() {
     override fun getKey(entity: Ride): String = entity.rideId
 
     fun findRidesByRider(riderId: String): List<Ride> =
-        findRides{ ride -> ride.riderId == riderId}
+        findRides{ it.riderId == riderId}
 
     fun findRidesByDriver(driverId: String): List<Ride> =
-        findRides{ it.driverId == driverId} //it ->
+        findRides{ it.driverId == driverId}
 
     fun findRidesByStatus(status: RideStatus): List<Ride> =
         findRides { it.rideStatus == status }
