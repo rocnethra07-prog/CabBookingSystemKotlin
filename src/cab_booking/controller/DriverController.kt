@@ -43,12 +43,8 @@ class DriverController(
         }
     }
 
-    // --------------------------------------------------
     // CURRENT RIDE
-    // --------------------------------------------------
-
     private fun viewCurrentRide(driver: Driver) {
-
         val ride = driverService.getCurrentRide(driver)
 
         if (ride == null) {
@@ -95,10 +91,7 @@ class DriverController(
             }
         }
     }
-    // --------------------------------------------------
     // UPDATE PROFILE
-    // --------------------------------------------------
-
     private fun updateProfile(driver: Driver) {
 
         println("\n========== UPDATE PROFILE ==========")
@@ -143,15 +136,11 @@ class DriverController(
             println("License Number   : ${driver.licenseNumber}")
 
         } catch (e: CabBookingException) {
-
-            println(e.message)
+            println("[!]" + e.message)
         }
     }
 
-    // --------------------------------------------------
     // EARNINGS
-    // --------------------------------------------------
-
     private fun showEarnings(driver: Driver) {
 
         println("\n========== DRIVER EARNINGS ==========")
@@ -159,96 +148,68 @@ class DriverController(
         println("Total Earnings : ₹${driver.earnings}")
 
         if (driver.averageRating == 0.0) {
-
             println("Average Rating : No ratings yet")
-
         } else {
-
-            println(
-                "Average Rating : %.2f"
-                    .format(driver.averageRating)
-            )
+            println("Average Rating : %.2f".format(driver.averageRating))
         }
     }
 
-    // --------------------------------------------------
     // RIDE HISTORY
-    // --------------------------------------------------
-
     private fun viewRideHistory(driver: Driver) {
 
         val rides = driverService.getRidesByDriver(driver)
 
         if (rides.isEmpty()) {
-
             println("\nNo rides found.")
-
             return
         }
 
         println("\n========== RIDE HISTORY ==========")
 
         rides.forEach {
-
             println(it)
-
             println("-".repeat(50))
         }
     }
-    // --------------------------------------------------
     // COMPLETE RIDE
-    // --------------------------------------------------
-
     private fun completeRide(
         ride: Ride,
         driver: Driver
     ) {
 
         try {
-
             driverService.completeRide(
                 ride,
                 driver
             )
-
             println("\nRide completed successfully!")
-
             showEarnings(driver)
-
         } catch (e: CabBookingException) {
 
-            println(e.message)
+            println( "[!]"+ e.message)
         }
     }
 
-    // --------------------------------------------------
     // CANCEL RIDE
-    // --------------------------------------------------
-
     private fun cancelRide(
         ride: Ride,
         driver: Driver
     ) {
 
         try {
-
             driverService.cancelRide(
                 ride,
                 driver
             )
-
             println("\nRide cancelled successfully.")
 
         } catch (e: CabBookingException) {
 
-            println(e.message)
+            println("[!]" +e.message)
         }
     }
 
-    // --------------------------------------------------
     // CHANGE PASSWORD
-    // --------------------------------------------------
-
     private fun changePassword(driver: Driver) {
 
         println("\n========== CHANGE PASSWORD ==========")
@@ -266,14 +227,11 @@ class DriverController(
         )
 
         if (newPassword != confirmPassword) {
-
             println("\nPasswords do not match.")
-
             return
         }
 
         try {
-
             authService.changePassword(
                 driver,
                 currentPassword,
@@ -283,8 +241,7 @@ class DriverController(
             println("\nPassword changed successfully.")
 
         } catch (e: CabBookingException) {
-
-            println(e.message)
+            println("[!]" +e.message)
         }
     }
 }

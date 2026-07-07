@@ -83,6 +83,7 @@ class DriverService {
     ): List<Ride> =
         RideRepo.findRidesByDriver(driver.userId)
 
+    //method used for routing the User object -> DriverController
     fun findDriverById(
         driverId: String
     ): Driver =

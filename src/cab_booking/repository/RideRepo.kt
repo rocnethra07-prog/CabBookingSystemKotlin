@@ -37,8 +37,7 @@ object RideRepo : InMemoryRepo<Ride>() {
     fun findLastCompletedRide(riderId: String): Ride? =
         storage.values
             .filter {
-                it.riderId == riderId &&
-                        it.rideStatus == RideStatus.COMPLETED
+                it.riderId == riderId && it.rideStatus == RideStatus.COMPLETED
             }
             .maxByOrNull {
                 it.bookedAt

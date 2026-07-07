@@ -1,6 +1,6 @@
 package cab_booking.repository
 
-interface Repository<T> {
+interface RepositoryContract<T> {
     fun save(entity: T)
     fun findByKey(key: String) : T
     fun deleteByKey(key: String)

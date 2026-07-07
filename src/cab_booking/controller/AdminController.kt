@@ -42,9 +42,7 @@ class AdminController(
         }
     }
 
-    // --------------------------------------------------------
     // DRIVER MANAGEMENT
-    // --------------------------------------------------------
 
     private fun driverManagementMenu() {
 
@@ -97,6 +95,7 @@ class AdminController(
 
             email = InputUtil.getEmail()
 
+            //Pre-check for UX
             if (!adminService.isEmailRegistered(email))
                 break
 
@@ -116,6 +115,7 @@ class AdminController(
                 "License number cannot be empty."
             )
 
+            //Pre-check for UX
             if (!adminService.isLicenseNumberExists(licenseNumber))
                 break
 
@@ -136,6 +136,7 @@ class AdminController(
                 "Registration number cannot be empty."
             )
 
+            //Pre-check for UX
             if (!adminService.isRegistrationNumberExists(registrationNumber))
                 break
 
@@ -166,7 +167,7 @@ class AdminController(
 
         } catch (e: CabBookingException) {
 
-            println(e.message)
+            println("[!]" + e.message)
         }
     }
 
@@ -197,8 +198,9 @@ class AdminController(
                 println("Driver has an active ride and cannot be deleted.")
             }
 
-        } catch (e: Exception) {
-            println(e.message)
+        }
+        catch (e: CabBookingException) {
+            println( "[!]"+e.message)
         }
     }
 
@@ -270,8 +272,8 @@ class AdminController(
             println("\nAssigned Cab")
             println(adminService.getCabForDriver(driver))
 
-        } catch (e: Exception) {
-            println(e.message)
+        } catch (e: CabBookingException) {
+            println("[!]"+e.message)
         }
     }
 
@@ -282,31 +284,21 @@ class AdminController(
             "Driver ID cannot be empty."
         )
 
-        try {
-
-            val rides = adminService.getDriverRideHistory(driverId)
-
-            if (rides.isEmpty()) {
-                println("\nNo rides found.")
-                return
-            }
-
-            println("\n========== DRIVER RIDE HISTORY ==========")
-
-            rides.forEach {
-                println(it)
-                println("-".repeat(50))
-            }
-
-        } catch (e: Exception) {
-            println(e.message)
+        val rides = adminService.getDriverRideHistory(driverId)
+        if (rides.isEmpty()) {
+            println("\nNo rides found.")
+            return
         }
+        println("\n========== DRIVER RIDE HISTORY ==========")
+
+        rides.forEach {
+            println(it)
+            println("-".repeat(50))
+        }
+
     }
 
-    // --------------------------------------------------------
     // RIDER MANAGEMENT
-    // --------------------------------------------------------
-
     private fun riderManagementMenu() {
 
         while (true) {
@@ -352,31 +344,24 @@ class AdminController(
             "Enter Rider ID : ",
             "Rider ID cannot be empty."
         )
+        val rides = adminService.getRiderRideHistory(riderId)
 
-        try {
+        if (rides.isEmpty()) {
+            println("\nNo rides found.")
+            return
+        }
 
-            val rides = adminService.getRiderRideHistory(riderId)
+        println("\n========== RIDER RIDE HISTORY ==========")
 
-            if (rides.isEmpty()) {
-                println("\nNo rides found.")
-                return
-            }
-
-            println("\n========== RIDER RIDE HISTORY ==========")
-
-            rides.forEach {
-                println(it)
-                println("-".repeat(50))
-            }
-
-        } catch (e: Exception) {
-            println(e.message)
+        rides.forEach {
+            println(it)
+            println("-".repeat(50))
         }
     }
 
-    // --------------------------------------------------------
+
+
     // RIDE MANAGEMENT
-    // --------------------------------------------------------
 
     private fun rideManagementMenu() {
 
@@ -443,6 +428,8 @@ class AdminController(
             println("-".repeat(50))
         }
     }
+
+
 
     // CAB MANAGEMENT
 

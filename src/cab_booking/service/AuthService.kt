@@ -23,6 +23,7 @@ class AuthService() {
     }
 
     fun registerUserCredentials(user: User, password: String) {
+        //Double check for proper data consistency
         if (isEmailRegistered(user.email)) {
             throw CabBookingException("An account with this email already exists.")
         }

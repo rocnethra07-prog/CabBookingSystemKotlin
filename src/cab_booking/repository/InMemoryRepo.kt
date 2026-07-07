@@ -2,7 +2,9 @@ package cab_booking.repository
 
 import cab_booking.exception.CabBookingException
 
-abstract class InMemoryRepo<T> : Repository<T>{
+// implementation of repository
+// Generic in-memory repository implementation using a MutableMap.
+abstract class InMemoryRepo<T> : RepositoryContract<T>{
     protected val storage = mutableMapOf<String, T>()
 
     protected abstract fun getKey(entity: T): String

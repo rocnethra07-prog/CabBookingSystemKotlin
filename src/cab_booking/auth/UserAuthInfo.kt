@@ -7,7 +7,11 @@ import org.mindrot.jbcrypt.BCrypt
 //Credentials related class
 class UserAuthInfo(val userId: String, password: String) {
 
+    //fields are private, cannot be seen outside this class
     private var passwordHash: String
+    private var failedAttempts: Int = 0
+    private var isAccountLocked: Boolean = false
+
     init {
         if(!Validator.isValidPassword(password)) {
             throw CabBookingException("Invalid password format.")
@@ -17,8 +21,37 @@ class UserAuthInfo(val userId: String, password: String) {
     }
 
     fun verifyPassword(password: String): Boolean {
+        if (isAccountLocked){
+            return false
+        }
+
         val isValid = matches(password)
+
+        if(isValid){
+            resetFailedAttempts()
+        }
+        else{
+            failedAttempts++
+            if(failedAttempts >= 3){
+                lockAccount()
+            }
+        }
+
         return isValid
+    }
+
+    private fun lockAccount(){
+        isAccountLocked = true
+    }
+
+    private fun resetFailedAttempts(){
+        failedAttempts = 0
+    }
+
+    //Unlock account is not used anywhere yet (for future purpose)
+    fun unlockAccount(){
+        isAccountLocked = false
+        resetFailedAttempts()
     }
 
     private fun hash(password: String): String {

@@ -20,6 +20,8 @@ class Driver(
     userRole = UserRole.DRIVER
 ) {
 
+    // Public properties are used for simple property access (driver.licenseNumber)
+    // Private set for public var so that properties cannot be modified directly but can be read easily (driver.earnings)
     val licenseNumber: String = licenseNumber.trim().uppercase()
 
     var currentLocation: Location = currentLocation
@@ -35,6 +37,9 @@ class Driver(
         }
 
 
+    // Private fields used to calculate the driver's average rating.
+    // They are kept private because they are not needed outside this class.
+    // Only the calculated averageRating is exposed.
     private var totalRating: Int = 0
     private var ratingCount: Int = 0
 

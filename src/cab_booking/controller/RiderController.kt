@@ -46,10 +46,7 @@ class RiderController(
         }
     }
 
-    // --------------------------------------------------
     // BOOK RIDE
-    // --------------------------------------------------
-
     private fun bookRide(rider: User) {
 
         if (riderService.hasActiveRide(rider)) {
@@ -73,7 +70,6 @@ class RiderController(
         }
 
         val cabType = InputUtil.selectCabType()
-
         try {
 
             val ride = riderService.bookRide(
@@ -95,23 +91,17 @@ class RiderController(
             println("Phone  : ${driver.phone}")
 
         } catch (e: CabBookingException) {
-
-            println(e.message)
+            println("[!]" + e.message)
         }
     }
 
-    // --------------------------------------------------
     // CURRENT RIDE
-    // --------------------------------------------------
-
     private fun viewCurrentRide(rider: User) {
 
         val ride = riderService.getCurrentBookedRide(rider)
 
         if (ride == null) {
-
             println("\nNo active ride.")
-
             return
         }
 
@@ -142,55 +132,39 @@ class RiderController(
             when (readln().trim()) {
 
                 "1" -> {
-
                     cancelRide(ride, rider)
-
                     return
                 }
 
                 "0" -> return
-
                 else -> println("Invalid choice.")
             }
         }
     }
-    // --------------------------------------------------
-    // CANCEL RIDE
-    // --------------------------------------------------
 
+    // CANCEL RIDE
     private fun cancelRide(
         ride: Ride,
         rider: User
     ) {
-
         try {
-
             riderService.cancelRide(ride, rider)
-
             println("\nRide cancelled successfully.")
-
-        } catch (e: CabBookingException) {
-
-            println(e.message)
+        }
+        catch (e: CabBookingException) {
+            println("[!]" + e.message)
         }
     }
 
-    // --------------------------------------------------
     // UPDATE PROFILE
-    // --------------------------------------------------
-
     private fun updateProfile(rider: User) {
 
         println("\n========== UPDATE PROFILE ==========")
         println("(Press Enter to keep the current value)\n")
 
-        val name = InputUtil.getOptionalName(
-            currentValue = rider.name
-        )
+        val name = InputUtil.getOptionalName(rider.name)
 
-        val phone = InputUtil.getOptionalPhone(
-            currentValue = rider.phone
-        )
+        val phone = InputUtil.getOptionalPhone(rider.phone)
 
         if (name == rider.name && phone == rider.phone) {
             println("\nNo changes made.")
@@ -210,40 +184,30 @@ class RiderController(
             println("Email : ${rider.email}")
 
         } catch (e: CabBookingException) {
-
-            println(e.message)
+            println("[!]" + e.message)
         }
     }
 
-    // --------------------------------------------------
     // RIDE HISTORY
-    // --------------------------------------------------
 
     private fun viewRideHistory(rider: User) {
 
         val rides = riderService.getRidesByRider(rider)
 
         if (rides.isEmpty()) {
-
             println("\nNo rides found.")
-
             return
         }
 
         println("\n========== RIDE HISTORY ==========")
 
         rides.forEach {
-
             println(it)
-
             println("-".repeat(50))
         }
     }
 
-    // --------------------------------------------------
     // RATE LAST RIDE
-    // --------------------------------------------------
-
     private fun rateLastRide(rider: User) {
 
         val ride = riderService.getLastCompletedRide(rider)
@@ -306,23 +270,16 @@ class RiderController(
                 rider,
                 rating
             )
-
-            println()
-
-            println("Thank you for rating ${driver.name}")
+            println("\nThank you for rating ${driver.name}")
 
             println("★".repeat(rating) + "☆".repeat(5 - rating))
 
         } catch (e: CabBookingException) {
-
-            println(e.message)
+            println("[!" +e.message)
         }
     }
 
-    // --------------------------------------------------
     // CHANGE PASSWORD
-    // --------------------------------------------------
-
     private fun changePassword(rider: User) {
 
         println("\n========== CHANGE PASSWORD ==========")
@@ -340,9 +297,7 @@ class RiderController(
         )
 
         if (newPassword != confirmPassword) {
-
             println("\nPasswords do not match.")
-
             return
         }
 
@@ -357,8 +312,7 @@ class RiderController(
             println("\nPassword changed successfully.")
 
         } catch (e: CabBookingException) {
-
-            println(e.message)
+            println("[!]" + e.message)
         }
     }
 }

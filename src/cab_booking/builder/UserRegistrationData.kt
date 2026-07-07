@@ -21,8 +21,6 @@ data class UserRegistrationData(
         Validator.validateString(phone, "Phone")
         Validator.validateString(email, "Email")
         Validator.validateString(password, "Password")
-        if (role == null) {
-            throw CabBookingException("Role is required.")
-        }
+        //role is non-nullable type (no check needed)
     }
 }

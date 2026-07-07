@@ -11,7 +11,7 @@ open class User(
     email: String,
     val userRole: UserRole
 ) {
-
+    // Public properties are used for simple property access (user.name, user.phone)
     val userId: String = IdGenerator.generateUserId()
 
     var name: String = name.trim()

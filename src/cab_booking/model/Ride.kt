@@ -15,6 +15,7 @@ data class Ride(
     val fare: BigDecimal
 ) {
 
+    // Public properties are used for simple property access
     val rideId: String = IdGenerator.generateRideId()
 
     var rideStatus: RideStatus = RideStatus.BOOKED

@@ -20,19 +20,8 @@ class AdminService(private val authService: AuthService) {
 
     // Driver Management
     fun addDriver(driverData: DriverRegistrationData): Driver {
-
-        if (isEmailRegistered(driverData.email)) {
-            throw CabBookingException("An account with this email already exists.")
-        }
-
-        if (isLicenseNumberExists(driverData.licenseNumber)) {
-            throw CabBookingException("License number already exists.")
-        }
-
-        if (isRegistrationNumberExists(driverData.registrationNumber)) {
-            throw CabBookingException("Registration number already exists.")
-        }
-
+        // No duplication check
+        // Duplication check for email, license number, registration number is done already by controller
         val cab = Cab(
             registrationNumber = driverData.registrationNumber,
             model = driverData.model,
@@ -61,7 +50,7 @@ class AdminService(private val authService: AuthService) {
 
             return driver
 
-        } catch (e: Exception) {
+        } catch (e: CabBookingException) {
 
             runCatching {
                 DriverRepo.deleteByKey(driver.userId)
@@ -79,8 +68,7 @@ class AdminService(private val authService: AuthService) {
 
         val driver = DriverRepo.findByKey(driverId)
 
-        val activeRide =
-            RideRepo.findCurrentRideOfDriver(driverId)
+        val activeRide = RideRepo.findCurrentRideOfDriver(driverId)
 
         if (activeRide != null) {
             return false
@@ -118,7 +106,6 @@ class AdminService(private val authService: AuthService) {
         RideRepo.findRidesByDriver(driverId)
 
     // Rider Management
-
     fun getAllRiders(): List<User> =
         UserRepo.findAll()
             .filter { it.userRole == UserRole.RIDER }

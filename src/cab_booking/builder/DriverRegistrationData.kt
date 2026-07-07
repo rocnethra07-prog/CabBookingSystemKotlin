@@ -27,14 +27,7 @@ data class DriverRegistrationData(
         Validator.validateString(licenseNumber, "License Number")
         Validator.validateString(model, "Cab Model")
         Validator.validateString(registrationNumber, "Registration Number")
-
-        // Non-null checks for object fields (Location, CabType).
-        if (currentLocation == null) {
-            throw CabBookingException("Location is required.")
-        }
-        if (cabType == null) {
-            throw CabBookingException("Cab Type is required.")
-        }
+        //cab type and location are non-nullable (no check needed)
     }
 
 }

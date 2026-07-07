@@ -78,20 +78,20 @@ class RiderService {
     fun hasActiveRide(user: User): Boolean =
         getCurrentBookedRide(user) != null
 
+    //calculateFare returns the base pay bound with the enum values for now (have to implement some other fare calculation)
     private fun calculateFare(cabType: CabType): BigDecimal =
         cabType.basePay
 
     fun getCurrentBookedRide(user: User): Ride? =
         RideRepo.findCurrentRideOfRider(user.userId)
+
     fun cancelRide(
         ride: Ride,
         rider: User
     ) {
 
         if (ride.riderId != rider.userId) {
-            throw CabBookingException(
-                "Only the rider who booked this ride can cancel it."
-            )
+            throw CabBookingException("Only the rider who booked this ride can cancel it.")
         }
 
         cancelRide(ride)
@@ -138,9 +138,7 @@ class RiderService {
     ) {
 
         if (ride.riderId != rider.userId) {
-            throw CabBookingException(
-                "Only the rider who booked this ride can rate it."
-            )
+            throw CabBookingException("Only the rider who booked this ride can rate it.")
         }
 
         ride.rating = rating

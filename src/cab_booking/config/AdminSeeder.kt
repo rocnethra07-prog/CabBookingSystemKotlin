@@ -5,7 +5,7 @@ import cab_booking.model.types.UserRole
 import cab_booking.service.AuthService
 
 
-//object instead of class because there is no need of creating a AdminSeeder object
+//object instead of class so that there is no need of creating a AdminSeeder object
 object AdminSeeder {
 
    //constant values
