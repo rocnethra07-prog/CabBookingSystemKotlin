@@ -8,7 +8,7 @@ import cab_booking.model.types.RideStatus
 import cab_booking.model.types.UserRole
 import cab_booking.repository.*
 
-class AdminService {
+class AdminService(private val authService: AuthService) {
     fun isEmailRegistered(email: String): Boolean =
         UserRepo.existsByEmail(email)
 
@@ -54,7 +54,7 @@ class AdminService {
 
             CabRepo.save(cab)
 
-            AuthService().registerUserCredentials(
+            authService.registerUserCredentials(
                 driver,
                 driverData.password
             )

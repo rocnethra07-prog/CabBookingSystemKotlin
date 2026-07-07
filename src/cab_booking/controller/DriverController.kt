@@ -8,8 +8,8 @@ import cab_booking.service.DriverService
 import cab_booking.util.InputUtil
 
 class DriverController(
-    private val driverService: DriverService = DriverService(),
-    private val authService: AuthService = AuthService()
+    private val driverService: DriverService ,
+    private val authService: AuthService
 ) {
 
     fun driverDashboard(driver: Driver) {

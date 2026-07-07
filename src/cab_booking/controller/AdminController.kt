@@ -8,7 +8,7 @@ import cab_booking.util.InputUtil
 import cab_booking.builder.DriverRegistrationData
 
 class AdminController(
-    private val adminService: AdminService = AdminService()
+    private val adminService: AdminService
 ) {
 
     fun adminDashboard() {

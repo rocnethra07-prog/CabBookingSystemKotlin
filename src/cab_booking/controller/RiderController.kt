@@ -8,8 +8,8 @@ import cab_booking.service.RiderService
 import cab_booking.util.InputUtil
 
 class RiderController(
-    private val riderService: RiderService = RiderService(),
-    private val authService: AuthService = AuthService()
+    private val riderService: RiderService ,
+    private val authService: AuthService
 ) {
 
     fun riderDashboard(rider: User) {

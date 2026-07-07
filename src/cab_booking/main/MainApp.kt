@@ -7,18 +7,22 @@ import cab_booking.controller.DriverController
 import cab_booking.controller.RiderController
 import cab_booking.model.User
 import cab_booking.router.UserRouter
+import cab_booking.service.AdminService
 import cab_booking.service.AuthService
 import cab_booking.service.DriverService
+import cab_booking.service.RiderService
 
 fun main(){
 
     val authService = AuthService()
+    val adminService = AdminService(authService)
     val driverService = DriverService()
+    val riderService = RiderService()
 
     val authController = AuthController(authService)
-    val adminController = AdminController()
-    val driverController = DriverController()
-    val riderController = RiderController()
+    val adminController = AdminController(adminService)
+    val driverController = DriverController(driverService, authService)
+    val riderController = RiderController(riderService, authService)
 
     val router = UserRouter(adminController,driverController,riderController,driverService)
 
