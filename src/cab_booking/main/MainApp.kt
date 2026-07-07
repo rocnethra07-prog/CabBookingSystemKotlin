@@ -5,7 +5,6 @@ import cab_booking.controller.AdminController
 import cab_booking.controller.AuthController
 import cab_booking.controller.DriverController
 import cab_booking.controller.RiderController
-import cab_booking.exception.CabBookingException
 import cab_booking.model.User
 import cab_booking.router.UserRouter
 import cab_booking.service.AdminService
