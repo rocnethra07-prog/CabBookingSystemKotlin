@@ -34,7 +34,7 @@ class AuthController(val authService: AuthService) {
 
             //Pre-check for UX
             if(authService.isEmailRegistered(email)){
-                print("! This email is already registered. Please use a different email !")
+                println("! This email is already registered. Please use a different email !")
                 continue
             }
             break
@@ -52,11 +52,11 @@ class AuthController(val authService: AuthService) {
                     role = UserRole.RIDER)
 
             val user: User = authService.registerUser(userRegistrationData)
-            System.out.println("\n  Account created successfully.\n  Welcome, " + user.name + "!")
+            println("\n  Account created successfully.\n  Welcome, " + user.name + "!")
             return user
         }
         catch (e : CabBookingException) {
-            System.out.println("[!] Registration failed: " + e.message)
+            println("[!] Registration failed: " + e.message)
             return null
         }
     }
