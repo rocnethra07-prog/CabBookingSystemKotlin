@@ -81,7 +81,7 @@ class AdminService(private val authService: AuthService) {
         UserRepo.deleteByEmail(driver.email)
 
         AuthRepo.findByUserId(driver.userId)?.let {
-            AuthRepo.deleteByKey(driver.userId)
+            AuthRepo.deleteByKey(it.userId)
         }
 
         return true

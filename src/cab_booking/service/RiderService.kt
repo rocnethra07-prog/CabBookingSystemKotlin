@@ -8,8 +8,9 @@ import cab_booking.model.types.RideStatus
 import cab_booking.repository.CabRepo
 import cab_booking.repository.DriverRepo
 import cab_booking.repository.RideRepo
-import java.math.BigDecimal
+import cab_booking.service.pricing.FareCalculator
 import java.time.LocalDateTime
+import java.time.LocalTime
 
 class RiderService {
 
@@ -39,7 +40,7 @@ class RiderService {
             driverId = driver.userId,
             pickupLocation = pickupLocation,
             dropLocation = dropLocation,
-            fare = calculateFare(cabType)
+            fare = FareCalculator.calculateFare(cabType, pickupLocation, dropLocation, LocalTime.now())
         )
 
         RideRepo.save(ride)
@@ -57,9 +58,7 @@ class RiderService {
         val matchingDrivers = DriverRepo
             .findAvailableDrivers()
             .filter { driver ->
-
                 val cab = CabRepo.findByKey(driver.cabId)
-
                 cab.cabType == cabType
             }
 
@@ -78,9 +77,9 @@ class RiderService {
     fun hasActiveRide(user: User): Boolean =
         getCurrentBookedRide(user) != null
 
-    //calculateFare returns the base pay bound with the enum values for now (have to implement some other fare calculation)
-    private fun calculateFare(cabType: CabType): BigDecimal =
-        cabType.basePay
+//    calculateFare returns the base pay bound with the enum values for now (have to implement some other fare calculation)
+//    private fun calculateFare(cabType: CabType): BigDecimal =
+//        cabType.basePay
 
     fun getCurrentBookedRide(user: User): Ride? =
         RideRepo.findCurrentRideOfRider(user.userId)
@@ -95,7 +94,6 @@ class RiderService {
         }
 
         cancelRide(ride)
-
         markDriverAvailable(ride)
     }
 
@@ -142,9 +140,7 @@ class RiderService {
         }
 
         ride.rating = rating
-
         val driver = DriverRepo.findByKey(ride.driverId)
-
         driver.addRating(rating)
     }
 }

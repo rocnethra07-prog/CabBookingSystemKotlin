@@ -7,7 +7,9 @@ import cab_booking.model.types.UserRole
 import cab_booking.service.AuthService
 import cab_booking.util.InputUtil
 
-class AuthController(val authService: AuthService) {
+class AuthController(
+    private val authService: AuthService
+) {
 
     fun login() : User?{
 
@@ -45,7 +47,7 @@ class AuthController(val authService: AuthService) {
         try {
             val userRegistrationData =
                 UserRegistrationData(
-                    name =name,
+                    name = name,
                     phone = phone,
                     email = email,
                     password = password,

@@ -8,14 +8,15 @@ import cab_booking.service.RiderService
 import cab_booking.util.InputUtil
 
 class RiderController(
-    private val riderService: RiderService ,
+    private val riderService: RiderService,
     private val authService: AuthService
 ) {
 
     fun riderDashboard(rider: User) {
 
-        while (true) {
+        promptPendingRating(rider)
 
+        while (true) {
             println("\n========== RIDER MENU ==========")
             println("1. Book Ride")
             println("2. View Current Ride")
@@ -43,6 +44,21 @@ class RiderController(
 
                 else -> println("Invalid choice.")
             }
+        }
+    }
+
+    private fun promptPendingRating(rider: User) {
+
+        val ride = riderService.getLastCompletedRide(rider)
+
+        if (ride == null || ride.rating != null) {
+            return
+        }
+
+        println("\nYou haven't rated your last ride yet.")
+
+        if (InputUtil.getYesOrNo("Would you like to rate it now?")) {
+            showRatingScreen(ride, rider)
         }
     }
 
@@ -223,6 +239,13 @@ class RiderController(
             return
         }
 
+        showRatingScreen(ride, rider)
+    }
+
+    private fun showRatingScreen(
+        ride: Ride,
+        rider: User
+    ) {
         val driver = riderService.getDriverForRide(ride)
 
         println("\n========== RATE RIDE ==========")
@@ -271,11 +294,10 @@ class RiderController(
                 rating
             )
             println("\nThank you for rating ${driver.name}")
-
             println("★".repeat(rating) + "☆".repeat(5 - rating))
 
         } catch (e: CabBookingException) {
-            println("[!" +e.message)
+            println("[!]" +e.message)
         }
     }
 
@@ -302,7 +324,6 @@ class RiderController(
         }
 
         try {
-
             authService.changePassword(
                 rider,
                 currentPassword,
