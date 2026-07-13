@@ -8,7 +8,7 @@ import cab_booking.model.types.RideStatus
 import cab_booking.repository.CabRepo
 import cab_booking.repository.DriverRepo
 import cab_booking.repository.RideRepo
-import cab_booking.service.pricing.FareCalculator
+import cab_booking.service.pricing.FareCalculatorService
 import java.time.LocalDateTime
 import java.time.LocalTime
 
@@ -40,7 +40,7 @@ class RiderService {
             driverId = driver.userId,
             pickupLocation = pickupLocation,
             dropLocation = dropLocation,
-            fare = FareCalculator.calculateFare(cabType, pickupLocation, dropLocation, LocalTime.now())
+            fare = FareCalculatorService.calculateFare(cabType, pickupLocation, dropLocation, LocalTime.now())
         )
 
         RideRepo.save(ride)
