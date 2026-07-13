@@ -87,11 +87,11 @@ class Driver(
     override fun toString(): String {
         return """
             ${super.toString()}
-            Cab ID           : $cabId
-            License Number   : $licenseNumber
-            Current Location : $currentLocation
-            Available        : $isAvailable
-            Earnings         : ₹$earnings
+Cab ID           : $cabId
+License Number   : $licenseNumber
+Current Location : $currentLocation
+Available        : $isAvailable
+Earnings         : ₹$earnings
         """.trimIndent()
     }
 }

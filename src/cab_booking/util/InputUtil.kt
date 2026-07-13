@@ -11,7 +11,7 @@ object InputUtil {
             if(validator(input)){
                 return input
             }
-            print("! $errorMessage !")
+            println("! $errorMessage !")
         }
     }
 
