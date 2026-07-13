@@ -7,7 +7,7 @@ import java.math.BigDecimal
 import java.math.RoundingMode
 import java.time.LocalTime
 
-object FareCalculator {
+object FareCalculatorService {
 
     private val surgeMultiple : BigDecimal = BigDecimal("1.5")
 
