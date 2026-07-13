@@ -6,7 +6,8 @@ import cab_booking.util.DistanceMatrix
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.time.LocalTime
-
+// Object is used because fare calculation is common for all rides
+// and does not require creating a separate FareCalculatorService instance.
 object FareCalculatorService {
 
     private val surgeMultiple : BigDecimal = BigDecimal("1.5")
