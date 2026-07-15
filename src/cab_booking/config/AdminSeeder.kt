@@ -15,7 +15,6 @@ object AdminSeeder {
     private const val ADMIN_PASSWORD = "Admin@123"
 
     fun seed(authService: AuthService) {
-
         if (!authService.isEmailRegistered(ADMIN_EMAIL)) {
             authService.registerUser(ADMIN_NAME,ADMIN_PHONE,ADMIN_EMAIL, ADMIN_PASSWORD, UserRole.ADMIN)
         }
