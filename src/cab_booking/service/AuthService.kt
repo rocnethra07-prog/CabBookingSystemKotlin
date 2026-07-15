@@ -1,9 +1,9 @@
 package cab_booking.service
 
-import cab_booking.builder.UserRegistrationData
 import cab_booking.exception.CabBookingException
 import cab_booking.model.User
 import cab_booking.model.UserAuthInfo
+import cab_booking.model.types.UserRole
 import cab_booking.repository.AuthRepo
 import cab_booking.repository.UserRepo
 
@@ -12,13 +12,19 @@ class AuthService() {
         return UserRepo.existsByEmail(email)
     }
 
-    fun registerUser(userData : UserRegistrationData): User {
+    fun registerUser(
+        name: String,
+        phone: String,
+        email: String,
+        password: String,
+        role: UserRole
+    ): User {
         val user = User(
-            userData.name,
-            userData.phone,
-            userData.email,
-            userData.role)
-        registerUserCredentials(user, userData.password)
+            name,
+            phone,
+            email,
+            role)
+        registerUserCredentials(user, password)
         return user
     }
 

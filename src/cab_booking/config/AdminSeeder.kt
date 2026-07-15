@@ -1,6 +1,6 @@
 package cab_booking.config
 
-import cab_booking.builder.UserRegistrationData
+import cab_booking.model.User
 import cab_booking.model.types.UserRole
 import cab_booking.service.AuthService
 
@@ -17,15 +17,7 @@ object AdminSeeder {
     fun seed(authService: AuthService) {
 
         if (!authService.isEmailRegistered(ADMIN_EMAIL)) {
-
-            val adminData = UserRegistrationData(
-                name = ADMIN_NAME,
-                phone = ADMIN_PHONE,
-                email = ADMIN_EMAIL,
-                password = ADMIN_PASSWORD,
-                role = UserRole.ADMIN)
-
-            authService.registerUser(adminData)
+            authService.registerUser(ADMIN_NAME,ADMIN_PHONE,ADMIN_EMAIL, ADMIN_PASSWORD, UserRole.ADMIN)
         }
     }
 }

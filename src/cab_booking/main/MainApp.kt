@@ -1,6 +1,7 @@
 package cab_booking.main
 
 import cab_booking.config.AdminSeeder
+import cab_booking.config.DriverSeeder
 import cab_booking.controller.AdminController
 import cab_booking.controller.AuthController
 import cab_booking.controller.DriverController
@@ -27,6 +28,7 @@ fun main(){
     val router = UserRouter(adminController,driverController,riderController,driverService)
 
     AdminSeeder.seed(authService)
+    DriverSeeder.seed()
 
     println("\n---------------------------")
     println("--- CAB BOOKING SERVICE ---")

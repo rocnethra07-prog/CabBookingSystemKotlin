@@ -44,15 +44,6 @@ open class User(
         }
     }
 
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other !is User) return false
-
-        return email == other.email
-    }
-
-    override fun hashCode(): Int = email.hashCode()
-
     override fun toString(): String {
         return """
             User ID          : $userId

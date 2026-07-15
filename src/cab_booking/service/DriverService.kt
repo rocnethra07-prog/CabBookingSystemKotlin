@@ -19,7 +19,7 @@ class DriverService {
     ) {
         driver.name = name
         driver.phone = phone
-        driver.updateLocation(location)
+        driver.currentLocation = location
     }
 
     fun getCurrentRide(driver: Driver): Ride? =
@@ -30,7 +30,7 @@ class DriverService {
         driver: Driver
     ) {
         endRide(ride, driver){ ride -> markRideAsCompleted(ride)}
-        driver.updateLocation(ride.dropLocation)
+        driver.currentLocation = ride.dropLocation
         driver.addEarnings(ride.fare)
     }
 

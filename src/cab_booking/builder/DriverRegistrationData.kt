@@ -1,6 +1,5 @@
 package cab_booking.builder
 
-import cab_booking.exception.CabBookingException
 import cab_booking.model.types.CabType
 import cab_booking.model.types.Location
 import cab_booking.util.Validator

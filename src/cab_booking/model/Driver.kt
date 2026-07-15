@@ -25,14 +25,17 @@ class Driver(
     val licenseNumber: String = licenseNumber.trim().uppercase()
 
     var currentLocation: Location = currentLocation
-        private set
+        set(value){
+            if(value == field) return
+            field = value
+        }
 
     var earnings: BigDecimal = BigDecimal.ZERO
         private set
 
     var isAvailable: Boolean = true
         set(value){
-            if(value == isAvailable) return
+            if(value == field) return
             field = value
         }
 
@@ -61,11 +64,6 @@ class Driver(
         if(licenseNumber.isBlank()) {
             throw CabBookingException("Invalid license number.")
         }
-    }
-
-    fun updateLocation(location: Location) {
-        if(currentLocation == location) return
-        currentLocation = location
     }
 
     fun addEarnings(amount: BigDecimal) {
