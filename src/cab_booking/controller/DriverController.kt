@@ -152,7 +152,8 @@ class DriverController(
 
         if (driver.averageRating == 0.0) {
             println("Average Rating : No ratings yet")
-        } else {
+        }
+        else {
             println("Average Rating : %.2f".format(driver.averageRating))
         }
     }
