@@ -4,8 +4,10 @@ import cab_booking.model.Ride
 import cab_booking.service.AdminService
 import cab_booking.util.InputUtil
 import cab_booking.builder.DriverRegistrationData
+import exception.AuthenticationException
 import exception.CabNotFoundException
 import exception.DriverNotFoundException
+import exception.UserNotFoundException
 
 class AdminController(
     private val adminService: AdminService
@@ -20,6 +22,7 @@ class AdminController(
             println("2. Rider Management")
             println("3. Ride Management")
             println("4. Cab Management")
+            println("5. User Account Management")
             println("0. Logout")
 
             when (readln().trim()) {
@@ -31,6 +34,8 @@ class AdminController(
                 "3" -> rideManagementMenu()
 
                 "4" -> cabManagementMenu()
+
+                "5" -> userAccountManagement()
 
                 "0" -> {
                     println("\nLogged out successfully.")
@@ -488,6 +493,90 @@ class AdminController(
         cabs.forEach {
             println(it)
             println("-".repeat(50))
+        }
+    }
+
+    private fun userAccountManagement() {
+
+        while (true) {
+
+            println("\n========== USER ACCOUNT MANAGEMENT ==========")
+            println("1. Unlock User Account")
+            println("2. View Locked Accounts")
+            println("3. Reset User Password")
+            println("4. Search User")
+            println("0. Back")
+
+            when (readln().trim()) {
+
+                "1" -> unlockUserAccount()
+
+                "2" -> viewLockedAccounts()
+
+                "3" -> searchUser()
+
+                "0" -> return
+
+                else -> println("Invalid choice.")
+            }
+        }
+    }
+
+    private fun unlockUserAccount() {
+
+        println("\n========== UNLOCK USER ACCOUNT ==========")
+
+        val userId = InputUtil.getNonEmptyInput(
+            "Enter User ID : ",
+            "User ID cannot be empty."
+        )
+
+        try {
+            adminService.unlockUserAccount(userId)
+            println("User account unlocked successfully.")
+        }
+        catch (e: AuthenticationException) {
+            println("[!] Unable to unlock account. " + e.message)
+        }
+    }
+
+    private fun viewLockedAccounts() {
+
+        val lockedAccounts = adminService.getLockedAccounts()
+
+        if (lockedAccounts.isEmpty()) {
+            println("\nNo locked user accounts found.")
+            return
+        }
+
+        println("\n========== LOCKED USER ACCOUNTS ==========")
+
+        lockedAccounts.forEach {
+            println(it)
+            println("-".repeat(50))
+        }
+    }
+
+    private fun searchUser() {
+
+        println("\n========== SEARCH USER ==========")
+
+        val userId = InputUtil.getNonEmptyInput(
+            "Enter User ID : ",
+            "User ID cannot be empty."
+        )
+
+        try {
+
+            val user = adminService.findUserById(userId)
+
+            println("\n========== USER DETAILS ==========")
+            println(user)
+
+        } catch (e: UserNotFoundException) {
+            println("[!] "+e.message)
+        } catch (e: IllegalArgumentException) {
+            println("[!] Invalid Input, "+e.message)
         }
     }
 }

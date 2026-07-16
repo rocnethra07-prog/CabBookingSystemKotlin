@@ -11,4 +11,8 @@ object AuthRepo : InMemoryRepo<UserAuthInfo>() {
     fun findByUserId(userId: String): UserAuthInfo? {
         return findByKey(userId)
     }
+
+    fun getLockedAccounts(): List<UserAuthInfo> {
+        return storage.values.filter { it.isAccountLocked }
+    }
 }

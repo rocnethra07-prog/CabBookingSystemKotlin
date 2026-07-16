@@ -6,8 +6,10 @@ import cab_booking.model.types.CabType
 import cab_booking.model.types.RideStatus
 import cab_booking.model.types.UserRole
 import cab_booking.repository.*
+import exception.AuthenticationException
 import exception.CabNotFoundException
 import exception.DriverNotFoundException
+import exception.UserNotFoundException
 
 class AdminService(private val authService: AuthService) {
     fun isEmailRegistered(email: String): Boolean =
@@ -129,4 +131,25 @@ class AdminService(private val authService: AuthService) {
 
     fun getCabsByType(cabType: CabType): List<Cab> =
         CabRepo.findByCabType(cabType)
+
+    fun unlockUserAccount(userId: String) {
+
+        val auth = AuthRepo.findByUserId(userId)
+            ?: throw AuthenticationException("User authentication details not found.")
+
+        if (!auth.isAccountLocked) {
+            throw AuthenticationException("User account is already unlocked.")
+        }
+
+        auth.unlockAccount()
+    }
+
+    fun getLockedAccounts(): List<UserAuthInfo> {
+        return AuthRepo.getLockedAccounts()
+    }
+
+    fun findUserById(userId: String): User {
+        return UserRepo.findByUserId(userId)
+            ?: throw UserNotFoundException("User not found for ID: $userId")
+    }
 }

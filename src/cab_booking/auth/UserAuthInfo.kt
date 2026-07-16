@@ -8,7 +8,8 @@ class UserAuthInfo(val userId: String, password: String) {
 
     private var passwordHash: String
     private var failedAttempts: Int = 0
-    private var isAccountLocked: Boolean = false
+    var isAccountLocked: Boolean = false
+        private set
 
     init {
         require(Validator.isValidPassword(password)) { "Invalid password format." }

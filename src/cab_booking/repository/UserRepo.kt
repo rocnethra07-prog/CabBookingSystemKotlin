@@ -35,4 +35,8 @@ object UserRepo : InMemoryRepo<User>() {
         val trimmedEmail = email.trim().lowercase()
         deleteByKey(trimmedEmail)
     }
+
+    fun findByUserId(userId: String): User? {
+        return storage.values.firstOrNull { it.userId == userId }
+    }
 }
