@@ -1,6 +1,6 @@
 package cab_booking.model
 
-import cab_booking.exception.CabBookingException
+import exception.InvalidRideStateException
 import cab_booking.model.types.Location
 import cab_booking.model.types.RideStatus
 import cab_booking.util.IdGenerator
@@ -24,12 +24,12 @@ data class Ride(
             if ((value == RideStatus.CANCELLED || value == RideStatus.COMPLETED) &&
                 field != RideStatus.BOOKED
             ) {
-                throw CabBookingException("Only booked rides can be completed or cancelled.")
+                throw InvalidRideStateException("Only booked rides can be completed or cancelled.")
             }
             if (value == RideStatus.BOOKED &&
                 (field == RideStatus.CANCELLED || field == RideStatus.COMPLETED)
             ) {
-                throw CabBookingException("Completed or cancelled rides cannot be booked again.")
+                throw InvalidRideStateException("Completed or cancelled rides cannot be booked again.")
             }
             field = value
         }
@@ -43,36 +43,26 @@ data class Ride(
     var rating: Int? = null  // 1–5, null if not yet rated
         set(value) {
             if(rideStatus != RideStatus.COMPLETED) {
-                throw CabBookingException("Only completed rides can be rated.")
+                throw InvalidRideStateException("Only completed rides can be rated.")
             }
 
             if(field != null) {
-                throw CabBookingException("Ride has already been rated.")
+                throw InvalidRideStateException("Ride has already been rated.")
             }
 
-            if(value !in 1..5) {
-                throw CabBookingException("Rating must be between 1 and 5.")
-            }
+            require(value in 1..5) { "Rating must be between 1 and 5." }
 
             field = value
         }
 
     init {
-        if(riderId.isBlank()) {
-            throw CabBookingException("Rider ID cannot be blank.")
-        }
+        require(riderId.isNotBlank()) { "Rider ID cannot be blank." }
 
-        if(driverId.isBlank()) {
-            throw CabBookingException("Driver ID cannot be blank.")
-        }
+        require(driverId.isNotBlank()) { "Driver ID cannot be blank." }
 
-        if(pickupLocation == dropLocation) {
-            throw CabBookingException("Pickup and drop locations cannot be the same.")
-        }
+        require(pickupLocation != dropLocation) { "Pickup and drop locations cannot be the same." }
 
-        if(fare <= BigDecimal.ZERO) {
-            throw CabBookingException("Fare must be greater than zero.")
-        }
+        require(fare > BigDecimal.ZERO) { "Fare must be greater than zero." }
     }
 
     override fun toString(): String {

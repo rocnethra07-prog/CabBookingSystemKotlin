@@ -1,12 +1,14 @@
 package cab_booking.service
 
-import cab_booking.exception.CabBookingException
+import exception.DriverNotFoundException
 import cab_booking.model.Driver
 import cab_booking.model.types.Location
 import cab_booking.model.Ride
 import cab_booking.model.types.RideStatus
 import cab_booking.repository.DriverRepo
 import cab_booking.repository.RideRepo
+import exception.InvalidRideStateException
+import exception.UnauthorizedRideActionException
 import java.time.LocalDateTime
 
 class DriverService {
@@ -47,7 +49,7 @@ class DriverService {
 
     private fun markRideAsCompleted(ride: Ride){
         if(ride.rideStatus != RideStatus.BOOKED) {
-            throw CabBookingException("Only booked rides can be completed.")
+            throw InvalidRideStateException("Only booked rides can be completed.")
         }
 
         ride.rideStatus = RideStatus.COMPLETED
@@ -62,7 +64,7 @@ class DriverService {
 
     private fun markRideAsCancelled(ride: Ride){
         if(ride.rideStatus != RideStatus.BOOKED) {
-            throw CabBookingException("Only booked rides can be cancelled.")
+            throw InvalidRideStateException("Only booked rides can be cancelled.")
         }
 
         ride.rideStatus = RideStatus.CANCELLED
@@ -75,7 +77,7 @@ class DriverService {
     ) {
 
         if (ride.driverId != driver.userId) {
-            throw CabBookingException("Only the assigned driver can perform this action.")
+            throw UnauthorizedRideActionException("Only the assigned driver can perform this action.")
         }
     }
     fun getRidesByDriver(
@@ -86,6 +88,8 @@ class DriverService {
     //method used for routing the User object -> DriverController
     fun findDriverById(
         driverId: String
-    ): Driver =
-        DriverRepo.findByKey(driverId)
+    ): Driver {
+        return DriverRepo.findByKey(driverId) ?: throw DriverNotFoundException("Driver not found: $driverId")
+    }
+
 }

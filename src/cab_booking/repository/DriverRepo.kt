@@ -1,6 +1,5 @@
 package cab_booking.repository
 
-import cab_booking.exception.CabBookingException
 import cab_booking.model.Driver
 
 object DriverRepo : InMemoryRepo<Driver>() {
@@ -18,9 +17,7 @@ object DriverRepo : InMemoryRepo<Driver>() {
         }
 
     fun existsByLicense(license: String): Boolean {
-        if(license.isBlank()) {
-            throw CabBookingException("License number cannot be blank")
-        }
+        require(license.isNotBlank()) {"License number cannot be blank"}
 
         return storage.values.any {
             it.licenseNumber.equals(license, ignoreCase = true)

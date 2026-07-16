@@ -1,11 +1,11 @@
 package cab_booking.controller
 
-import cab_booking.exception.CabBookingException
-import cab_booking.model.Driver
 import cab_booking.model.Ride
 import cab_booking.service.AdminService
 import cab_booking.util.InputUtil
 import cab_booking.builder.DriverRegistrationData
+import exception.CabNotFoundException
+import exception.DriverNotFoundException
 
 class AdminController(
     private val adminService: AdminService
@@ -158,16 +158,12 @@ class AdminController(
         )
 
         try {
-
             val driver = adminService.addDriver(driverData)
-
             println("\nDriver Registered Successfully.\n")
-
             println(driver)
-
-        } catch (e: CabBookingException) {
-
-            println("[!]" + e.message)
+        }
+        catch (e: IllegalArgumentException) {
+            println("[!] Invalid Input," + e.message)
         }
     }
 
@@ -181,9 +177,7 @@ class AdminController(
         )
 
         try {
-
             val driver = adminService.findDriverById(driverId)
-
             println("\nDriver Details")
             println(driver)
 
@@ -192,15 +186,18 @@ class AdminController(
                 return
             }
 
-            if (adminService.deleteDriver(driverId)) {
+            if (adminService.deleteDriver(driver)) {
                 println("Driver deleted successfully.")
             } else {
                 println("Driver has an active ride and cannot be deleted.")
             }
 
         }
-        catch (e: CabBookingException) {
-            println( "[!]"+e.message)
+        catch (e : DriverNotFoundException) {
+            println( "[!] "+e.message)
+        }
+        catch (e : IllegalArgumentException){
+            println("[!] Invalid Input, " + e.message)
         }
     }
 
@@ -263,7 +260,6 @@ class AdminController(
         )
 
         try {
-
             val driver = adminService.findDriverById(driverId)
 
             println("\nDriver Details")
@@ -272,8 +268,12 @@ class AdminController(
             println("\nAssigned Cab")
             println(adminService.getCabForDriver(driver))
 
-        } catch (e: CabBookingException) {
-            println("[!]"+e.message)
+        }
+        catch (e: DriverNotFoundException) {
+            println("[!] "+e.message)
+        }
+        catch (e: CabNotFoundException){
+            println("[!] "+e.message)
         }
     }
 

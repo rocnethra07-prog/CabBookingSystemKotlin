@@ -1,7 +1,5 @@
 package cab_booking.repository
 
-import cab_booking.exception.CabBookingException
-
 // implementation of repository
 // Generic in-memory repository implementation using a MutableMap.
 abstract class InMemoryRepo<T> : RepositoryContract<T>{
@@ -11,10 +9,7 @@ abstract class InMemoryRepo<T> : RepositoryContract<T>{
 
     override fun save(entity: T) {
         val key = getKey(entity)
-        if(key.isBlank()){
-            throw CabBookingException("Key cannot be blank")
-        }
-        storage[key.trim()] = entity
+        storage[validateKey(key)] = entity
     }
 
     override fun findAll(): List<T> {
@@ -22,23 +17,19 @@ abstract class InMemoryRepo<T> : RepositoryContract<T>{
     }
 
     override fun existsByKey(key: String): Boolean {
-        if(key.isBlank()){
-            throw CabBookingException("Key cannot be blank")
-        }
-        return storage.containsKey(key.trim())
+        return storage.containsKey(validateKey(key))
     }
 
-
-    override fun findByKey(key: String): T {
-        return storage[key.trim()] ?: throw CabBookingException("Record not found for key: $key")
+    override fun findByKey(key: String): T?{
+        return storage[validateKey(key)]
     }
 
     override fun deleteByKey(key: String) {
-        if(key.isBlank()){
-            throw CabBookingException("Key cannot be blank")
-        }
-        if (storage.remove(key.trim()) == null) {
-            throw CabBookingException("Record not found for key: $key")
-        }
+        storage.remove(validateKey(key))
+    }
+
+    private fun validateKey(key: String): String {
+        require(key.isNotBlank()) { "Key cannot be blank." }
+        return key.trim()
     }
 }

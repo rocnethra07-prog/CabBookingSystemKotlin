@@ -1,12 +1,13 @@
 package cab_booking.service
 
 import cab_booking.builder.DriverRegistrationData
-import cab_booking.exception.CabBookingException
 import cab_booking.model.*
 import cab_booking.model.types.CabType
 import cab_booking.model.types.RideStatus
 import cab_booking.model.types.UserRole
 import cab_booking.repository.*
+import exception.CabNotFoundException
+import exception.DriverNotFoundException
 
 class AdminService(private val authService: AuthService) {
     fun isEmailRegistered(email: String): Boolean =
@@ -20,8 +21,6 @@ class AdminService(private val authService: AuthService) {
 
     // Driver Management
     fun addDriver(driverData: DriverRegistrationData): Driver {
-        // No duplication check
-        // Duplication check for email, license number, registration number is done already by controller
         val cab = Cab(
             registrationNumber = driverData.registrationNumber,
             model = driverData.model,
@@ -43,43 +42,39 @@ class AdminService(private val authService: AuthService) {
 
             CabRepo.save(cab)
 
-            authService.registerUserCredentials(
+            authService.saveUserCredentials(
                 driver,
                 driverData.password
             )
 
             return driver
 
-        } catch (e: CabBookingException) {
-
-            runCatching {
+        }
+        catch (e: IllegalArgumentException) {
+            try {
                 DriverRepo.deleteByKey(driver.userId)
             }
+            catch (_ : NoSuchElementException){ }
 
-            runCatching {
+            try {
                 CabRepo.deleteByKey(cab.cabId)
             }
-
-            throw CabBookingException(e.message ?: "Unable to register driver.")
+            catch (_ : IllegalArgumentException){ }
+            throw IllegalArgumentException(e.message ?: "Unable to register driver.")
         }
     }
 
-    fun deleteDriver(driverId: String): Boolean {
+    fun deleteDriver(driver: Driver): Boolean {
 
-        val driver = DriverRepo.findByKey(driverId)
-
-        val activeRide = RideRepo.findCurrentRideOfDriver(driverId)
+        val activeRide = RideRepo.findCurrentRideOfDriver(driver.userId)
 
         if (activeRide != null) {
             return false
         }
 
         CabRepo.deleteByKey(driver.cabId)
-
-        DriverRepo.deleteByKey(driverId)
-
+        DriverRepo.deleteByKey(driver.userId)
         UserRepo.deleteByEmail(driver.email)
-
         AuthRepo.findByUserId(driver.userId)?.let {
             AuthRepo.deleteByKey(it.userId)
         }
@@ -88,7 +83,7 @@ class AdminService(private val authService: AuthService) {
     }
 
     fun findDriverById(driverId: String): Driver =
-        DriverRepo.findByKey(driverId)
+        DriverRepo.findByKey(driverId) ?: throw DriverNotFoundException("Driver not found for ID: $driverId")
 
     fun getAllDrivers(): List<Driver> =
         DriverRepo.findAll()
@@ -100,7 +95,7 @@ class AdminService(private val authService: AuthService) {
         DriverRepo.findUnavailableDrivers()
 
     fun getCabForDriver(driver: Driver): Cab =
-        CabRepo.findByKey(driver.cabId)
+        CabRepo.findByKey(driver.cabId) ?: throw CabNotFoundException("Cab not found for ID: ${driver.cabId}")
 
     fun getDriverRideHistory(driverId: String): List<Ride> =
         RideRepo.findRidesByDriver(driverId)
@@ -114,7 +109,6 @@ class AdminService(private val authService: AuthService) {
         RideRepo.findRidesByRider(riderId)
 
     // Ride Management
-
     fun getAllRides(): List<Ride> = RideRepo.findAll()
 
     fun getRidesByStatus(status: RideStatus): List<Ride> =

@@ -1,9 +1,7 @@
 package cab_booking.model
 
-import cab_booking.exception.CabBookingException
 import cab_booking.model.types.Location
 import cab_booking.model.types.UserRole
-import cab_booking.util.Validator
 import java.math.BigDecimal
 
 class Driver(
@@ -57,27 +55,17 @@ class Driver(
         }
 
     init {
-        if(cabId.isBlank()) {
-            throw CabBookingException("Cab ID cannot be blank.")
-        }
-
-        if(licenseNumber.isBlank()) {
-            throw CabBookingException("Invalid license number.")
-        }
+        require(cabId.isNotBlank()) { "Cab ID cannot be blank." }
+        require(licenseNumber.isNotBlank()) { "Invalid license number." }
     }
 
     fun addEarnings(amount: BigDecimal) {
-        if(amount <= BigDecimal.ZERO) {
-            throw CabBookingException("Amount must be greater than zero.")
-        }
+        require(amount > BigDecimal.ZERO) { "Amount must be greater than zero." }
         earnings += amount
     }
 
     fun addRating(rating: Int) {
-        if(rating !in 1..5) {
-            throw CabBookingException("Rating must be between 1 and 5.")
-        }
-
+        require(rating in 1..5) { "Rating must be between 1 and 5." }
         totalRating += rating
         ratingCount++
     }

@@ -1,11 +1,14 @@
 package cab_booking.service
 
-import cab_booking.exception.CabBookingException
 import cab_booking.model.User
 import cab_booking.model.UserAuthInfo
 import cab_booking.model.types.UserRole
 import cab_booking.repository.AuthRepo
 import cab_booking.repository.UserRepo
+import exception.AuthenticationException
+import exception.EmailAlreadyRegisteredException
+import exception.InvalidCredentialsException
+import exception.UserNotFoundException
 
 class AuthService() {
     fun isEmailRegistered(email: String) : Boolean{
@@ -24,19 +27,11 @@ class AuthService() {
             phone,
             email,
             role)
-        registerUserCredentials(user, password)
+        saveUserCredentials(user, password)
         return user
     }
 
-    fun registerUserCredentials(user: User, password: String) {
-        //Double check for proper data consistency
-        if (isEmailRegistered(user.email)) {
-            throw CabBookingException("An account with this email already exists.")
-        }
-        saveUserCredentials(user, password)
-    }
-
-    private fun saveUserCredentials(user: User, password: String) {
+     fun saveUserCredentials(user: User, password: String) {
         UserRepo.save(user)
         AuthRepo.save(UserAuthInfo(user.userId,password))
     }
@@ -45,16 +40,16 @@ class AuthService() {
         val user: User? = UserRepo.findByEmail(email)
 
         if (user == null) {
-            throw CabBookingException("Account does not exist. Please register.")
+            throw UserNotFoundException("Account does not exist. Please register.")
         }
 
         val userAuth: UserAuthInfo? = AuthRepo.findByUserId(user.userId)
         if(userAuth == null){
-            throw CabBookingException("Authentication details not found. Please register")
+            throw AuthenticationException("Authentication details not found. Please register")
         }
 
         if(!userAuth.verifyPassword(password)){
-            throw CabBookingException("Invalid credentials.")
+            throw AuthenticationException("Invalid credentials.")
         }
         return user
     }
@@ -67,11 +62,11 @@ class AuthService() {
 
         val userAuth: UserAuthInfo? = AuthRepo.findByUserId(user.userId)
         if(userAuth == null){
-            throw CabBookingException("Authentication details not found. Please register")
+            throw AuthenticationException("Authentication details not found. Please register")
         }
 
         if(!userAuth.verifyPassword(currentPassword)){
-            throw CabBookingException("Invalid credentials.")
+            throw InvalidCredentialsException("Invalid credentials.")
         }
 
         userAuth.updatePassword(newPassword)

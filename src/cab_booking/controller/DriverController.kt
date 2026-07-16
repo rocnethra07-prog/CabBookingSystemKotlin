@@ -1,11 +1,13 @@
 package cab_booking.controller
 
-import cab_booking.exception.CabBookingException
 import cab_booking.model.Driver
 import cab_booking.model.Ride
 import cab_booking.service.AuthService
 import cab_booking.service.DriverService
 import cab_booking.util.InputUtil
+import exception.AuthenticationException
+import exception.InvalidCredentialsException
+import exception.UnauthorizedRideActionException
 
 class DriverController(
     private val driverService: DriverService ,
@@ -135,8 +137,9 @@ class DriverController(
             println("Location         : ${driver.currentLocation}")
             println("License Number   : ${driver.licenseNumber}")
 
-        } catch (e: CabBookingException) {
-            println("[!]" + e.message)
+        }
+        catch (e: IllegalArgumentException) {
+            println("[!] Invalid Input, " + e.message)
         }
     }
 
@@ -184,9 +187,12 @@ class DriverController(
             )
             println("\nRide completed successfully!")
             showEarnings(driver)
-        } catch (e: CabBookingException) {
-
-            println( "[!]"+ e.message)
+        }
+        catch (e: UnauthorizedRideActionException) {
+            println("[!] "+ e.message)
+        }
+        catch (e : IllegalArgumentException){
+            println("[!] " +e.message)
         }
     }
 
@@ -203,9 +209,12 @@ class DriverController(
             )
             println("\nRide cancelled successfully.")
 
-        } catch (e: CabBookingException) {
-
-            println("[!]" +e.message)
+        }
+        catch (e: UnauthorizedRideActionException) {
+            println("[!] "+ e.message)
+        }
+        catch (e : IllegalArgumentException){
+            println("[!] " +e.message)
         }
     }
 
@@ -240,8 +249,12 @@ class DriverController(
 
             println("\nPassword changed successfully.")
 
-        } catch (e: CabBookingException) {
-            println("[!]" +e.message)
+        }
+        catch (e : AuthenticationException){
+            println("[!] Authentication Exception, "+ e.message)
+        }
+        catch (e: InvalidCredentialsException) {
+            println("[!] " +e.message)
         }
     }
 }

@@ -2,9 +2,8 @@ package cab_booking.builder
 
 import cab_booking.model.types.CabType
 import cab_booking.model.types.Location
-import cab_booking.util.Validator
 
-//builder class replacement with data class: takes in all the parameters required to create a driver and checks for non-null and not blank values in init block
+//builder class replacement with data class
 data class DriverRegistrationData(
     val name: String,
     val phone: String,
@@ -15,18 +14,4 @@ data class DriverRegistrationData(
     val model: String,
     val registrationNumber: String,
     val cabType: CabType
-) {
-
-    // init block: replaces builder's "required fields" checks.
-    init {
-        Validator.validateString(name, "Name")
-        Validator.validateString(phone, "Phone")
-        Validator.validateString(email, "Email")
-        Validator.validateString(password, "Password")
-        Validator.validateString(licenseNumber, "License Number")
-        Validator.validateString(model, "Cab Model")
-        Validator.validateString(registrationNumber, "Registration Number")
-        //cab type and location are non-nullable (no check needed)
-    }
-
-}
+)

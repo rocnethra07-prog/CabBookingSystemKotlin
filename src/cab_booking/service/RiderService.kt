@@ -1,14 +1,16 @@
 package cab_booking.service
 
-import cab_booking.exception.CabBookingException
 import cab_booking.model.*
-import cab_booking.model.types.CabType
-import cab_booking.model.types.Location
-import cab_booking.model.types.RideStatus
+import cab_booking.model.types.*
 import cab_booking.repository.CabRepo
 import cab_booking.repository.DriverRepo
 import cab_booking.repository.RideRepo
 import cab_booking.service.pricing.FareCalculatorService
+import exception.CabNotFoundException
+import exception.DriverNotFoundException
+import exception.DriverUnavailableException
+import exception.InvalidRideStateException
+import exception.UnauthorizedRideActionException
 import java.time.LocalDateTime
 import java.time.LocalTime
 
@@ -31,7 +33,7 @@ class RiderService {
     ): Ride {
 
         val driver = findAvailableDriver(cabType, pickupLocation)
-            ?: throw CabBookingException(
+            ?: throw DriverUnavailableException(
                 "No $cabType drivers are available right now."
             )
 
@@ -58,7 +60,7 @@ class RiderService {
         val matchingDrivers = DriverRepo
             .findAvailableDrivers()
             .filter { driver ->
-                val cab = CabRepo.findByKey(driver.cabId)
+                val cab = CabRepo.findByKey(driver.cabId) ?: throw CabNotFoundException("Cab not found for ID: ${driver.cabId}")
                 cab.cabType == cabType
             }
 
@@ -72,14 +74,10 @@ class RiderService {
     }
 
     fun getDriverForRide(ride: Ride): Driver =
-        DriverRepo.findByKey(ride.driverId)
+        DriverRepo.findByKey(ride.driverId) ?: throw DriverNotFoundException("Driver not found for ID: ${ride.driverId}")
 
     fun hasActiveRide(user: User): Boolean =
         getCurrentBookedRide(user) != null
-
-//    calculateFare returns the base pay bound with the enum values for now (have to implement some other fare calculation)
-//    private fun calculateFare(cabType: CabType): BigDecimal =
-//        cabType.basePay
 
     fun getCurrentBookedRide(user: User): Ride? =
         RideRepo.findCurrentRideOfRider(user.userId)
@@ -90,16 +88,16 @@ class RiderService {
     ) {
 
         if (ride.riderId != rider.userId) {
-            throw CabBookingException("Only the rider who booked this ride can cancel it.")
+            throw UnauthorizedRideActionException("Only the rider who booked this ride can cancel it.")
         }
 
-        cancelRide(ride)
+        markRideAsCancelled(ride)
         markDriverAvailable(ride)
     }
 
-    private fun cancelRide(ride: Ride) {
+    private fun markRideAsCancelled(ride: Ride) {
         if(ride.rideStatus != RideStatus.BOOKED) {
-            throw CabBookingException("Only booked rides can be cancelled.")
+            throw InvalidRideStateException("Only booked rides can be cancelled.")
         }
 
         ride.rideStatus = RideStatus.CANCELLED
@@ -136,11 +134,11 @@ class RiderService {
     ) {
 
         if (ride.riderId != rider.userId) {
-            throw CabBookingException("Only the rider who booked this ride can rate it.")
+            throw UnauthorizedRideActionException("Only the rider who booked this ride can rate it.")
         }
 
         ride.rating = rating
-        val driver = DriverRepo.findByKey(ride.driverId)
+        val driver = DriverRepo.findByKey(ride.driverId) ?: throw DriverNotFoundException("Driver not found for ID: ${ride.driverId}")
         driver.addRating(rating)
     }
 }

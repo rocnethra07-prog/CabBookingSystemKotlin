@@ -1,10 +1,11 @@
 package cab_booking.controller
 
-import cab_booking.exception.CabBookingException
 import cab_booking.model.User
 import cab_booking.model.types.UserRole
 import cab_booking.service.AuthService
 import cab_booking.util.InputUtil
+import exception.AuthenticationException
+import exception.UserNotFoundException
 
 class AuthController(
     private val authService: AuthService
@@ -20,8 +21,12 @@ class AuthController(
             println("\nWelcome back, " + user.name)
             return user
         }
-        catch (e: CabBookingException) {
+        catch (e: UserNotFoundException) {
             println("[!] Login failed: " + e.message)
+            return null
+        }
+        catch (e : AuthenticationException){
+            println("[!] Authentication Exception, " + e.message)
             return null
         }
     }
@@ -48,7 +53,8 @@ class AuthController(
             println("\n  Account created successfully.\n  Welcome, " + user.name + "!")
             return user
         }
-        catch (e : CabBookingException) {
+        catch (e : IllegalArgumentException) {
+            println("[!] Invalid Input,")
             println("[!] Registration failed: " + e.message)
             return null
         }

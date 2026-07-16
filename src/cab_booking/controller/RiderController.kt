@@ -1,11 +1,16 @@
 package cab_booking.controller
 
-import cab_booking.exception.CabBookingException
 import cab_booking.model.*
 import cab_booking.model.types.Location
 import cab_booking.service.AuthService
 import cab_booking.service.RiderService
 import cab_booking.util.InputUtil
+import exception.AuthenticationException
+import exception.DriverNotFoundException
+import exception.DriverUnavailableException
+import exception.InvalidCredentialsException
+import exception.InvalidRideStateException
+import exception.UnauthorizedRideActionException
 
 class RiderController(
     private val riderService: RiderService,
@@ -98,16 +103,25 @@ class RiderController(
             val driver = riderService.getDriverForRide(ride)
 
             println("\nRide Booked Successfully\n")
-
             println(ride)
 
             println("\nDriver Details")
-
             println("Driver : ${driver.name}")
             println("Phone  : ${driver.phone}")
 
-        } catch (e: CabBookingException) {
-            println("[!]" + e.message)
+        }
+        catch (e : DriverUnavailableException){
+            println("[!] " + e.message)
+            val retry = InputUtil.getYesOrNo("Would you like to try again? (Y/N) : ")
+            if(retry){
+                bookRide(rider)
+            }
+        }
+        catch (e: DriverNotFoundException) {
+            println("[!] " + e.message)
+        }
+        catch (e : IllegalArgumentException){
+            println("[!] " + e.message)
         }
     }
 
@@ -167,8 +181,14 @@ class RiderController(
             riderService.cancelRide(ride, rider)
             println("\nRide cancelled successfully.")
         }
-        catch (e: CabBookingException) {
-            println("[!]" + e.message)
+        catch (e: UnauthorizedRideActionException) {
+            println("[!] " + e.message)
+        }
+        catch (e : InvalidRideStateException){
+            println("[!] "+ e.message)
+        }
+        catch (e : DriverNotFoundException){
+            println("[!] "+ e.message)
         }
     }
 
@@ -199,8 +219,9 @@ class RiderController(
             println("Phone : ${rider.phone}")
             println("Email : ${rider.email}")
 
-        } catch (e: CabBookingException) {
-            println("[!]" + e.message)
+        }
+        catch (e: IllegalArgumentException) {
+            println("[!] Invalid Input, " + e.message)
         }
     }
 
@@ -296,8 +317,14 @@ class RiderController(
             println("\nThank you for rating ${driver.name}")
             println("★".repeat(rating) + "☆".repeat(5 - rating))
 
-        } catch (e: CabBookingException) {
-            println("[!]" +e.message)
+        }
+        catch (e: UnauthorizedRideActionException) {
+            println("[!] "+ e.message)
+
+        }
+        catch (e: DriverNotFoundException) {
+            println("[!] Unable to submit your rating at the moment")
+            println(e.message)
         }
     }
 
@@ -332,8 +359,12 @@ class RiderController(
 
             println("\nPassword changed successfully.")
 
-        } catch (e: CabBookingException) {
-            println("[!]" + e.message)
+        }
+        catch (e : AuthenticationException){
+            println("[!] Authentication Exception, "+ e.message)
+        }
+        catch (e: InvalidCredentialsException) {
+            println("[!] " +e.message)
         }
     }
 }

@@ -1,6 +1,5 @@
 package cab_booking.model
 
-import cab_booking.exception.CabBookingException
 import cab_booking.util.Validator
 import org.mindrot.jbcrypt.BCrypt
 
@@ -13,10 +12,7 @@ class UserAuthInfo(val userId: String, password: String) {
     private var isAccountLocked: Boolean = false
 
     init {
-        if(!Validator.isValidPassword(password)) {
-            throw CabBookingException("Invalid password format.")
-        }
-
+        require(Validator.isValidPassword(password)) { "Invalid password format." }
         passwordHash = hash(password)
     }
 
@@ -63,9 +59,7 @@ class UserAuthInfo(val userId: String, password: String) {
     }
 
     fun updatePassword(newPassword: String) {
-        if(!Validator.isValidPassword(newPassword)) {
-            throw CabBookingException("Invalid password format.")
-        }
+        require(Validator.isValidPassword(newPassword)) { "Invalid password format." }
         passwordHash = hash(newPassword)
     }
 }
