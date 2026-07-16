@@ -44,7 +44,6 @@ class UserAuthInfo(val userId: String, password: String) {
         failedAttempts = 0
     }
 
-    //Unlock account is not used anywhere yet (for future purpose)
     fun unlockAccount(){
         isAccountLocked = false
         resetFailedAttempts()
