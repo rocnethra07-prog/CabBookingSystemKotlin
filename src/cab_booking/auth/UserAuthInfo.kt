@@ -6,7 +6,6 @@ import org.mindrot.jbcrypt.BCrypt
 //Credentials related class
 class UserAuthInfo(val userId: String, password: String) {
 
-    //fields are private, cannot be seen outside this class
     private var passwordHash: String
     private var failedAttempts: Int = 0
     private var isAccountLocked: Boolean = false
