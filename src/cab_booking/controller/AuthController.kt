@@ -20,6 +20,7 @@ class AuthController(
             val user: User = authService.loginUser(email, password)
             println("\nWelcome back, " + user.name)
             return user
+
         }
         catch (e: UserNotFoundException) {
             println("[!] Login failed: " + e.message)
