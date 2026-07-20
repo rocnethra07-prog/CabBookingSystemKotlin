@@ -55,6 +55,14 @@ object DriverSeeder {
             return
         }
 
+        if(CabRepo.existsByRegistrationNumber(registrationNumber)){
+            return
+        }
+
+        if(DriverRepo.existsByLicense(licenseNumber)){
+            return
+        }
+
         val cab = Cab(
             registrationNumber = registrationNumber,
             model = model,
