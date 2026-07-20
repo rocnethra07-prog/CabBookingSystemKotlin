@@ -15,8 +15,7 @@ object DriverSeeder {
 
     private const val SEED_PASSWORD = "Driver@123"
 
-    //Loads sample cabs and drivers straight into the repositories, the same way
-    //AdminService.addDriver does internally, just without the registration/service layer.
+    //Loads sample cabs and drivers straight into the repositories
     fun seed() {
 
         // ---- MINI ----
