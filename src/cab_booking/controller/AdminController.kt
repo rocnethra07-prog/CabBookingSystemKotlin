@@ -3,7 +3,7 @@ package cab_booking.controller
 import cab_booking.model.Ride
 import cab_booking.service.AdminService
 import cab_booking.util.InputUtil
-import cab_booking.builder.DriverRegistrationData
+import cab_booking.data.DriverRegistrationData
 import exception.AuthenticationException
 import exception.CabNotFoundException
 import exception.DriverNotFoundException

@@ -1,6 +1,6 @@
 package cab_booking.service
 
-import cab_booking.builder.DriverRegistrationData
+import cab_booking.data.DriverRegistrationData
 import cab_booking.model.*
 import cab_booking.model.types.CabType
 import cab_booking.model.types.RideStatus
