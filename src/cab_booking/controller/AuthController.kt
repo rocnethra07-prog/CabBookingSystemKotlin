@@ -4,8 +4,8 @@ import cab_booking.model.User
 import cab_booking.model.types.UserRole
 import cab_booking.service.AuthService
 import cab_booking.util.InputUtil
-import exception.AuthenticationException
-import exception.UserNotFoundException
+import cab_booking.exception.AuthenticationException
+import cab_booking.exception.UserNotFoundException
 
 class AuthController(
     private val authService: AuthService

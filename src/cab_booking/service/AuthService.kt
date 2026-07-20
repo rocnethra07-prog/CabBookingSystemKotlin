@@ -5,10 +5,9 @@ import cab_booking.model.UserAuthInfo
 import cab_booking.model.types.UserRole
 import cab_booking.repository.AuthRepo
 import cab_booking.repository.UserRepo
-import exception.AuthenticationException
-import exception.EmailAlreadyRegisteredException
-import exception.InvalidCredentialsException
-import exception.UserNotFoundException
+import cab_booking.exception.AuthenticationException
+import cab_booking.exception.InvalidCredentialsException
+import cab_booking.exception.UserNotFoundException
 
 class AuthService() {
     fun isEmailRegistered(email: String) : Boolean{

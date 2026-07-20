@@ -1,6 +1,6 @@
 package cab_booking.router
 
-import exception.DriverNotFoundException
+import cab_booking.exception.DriverNotFoundException
 import cab_booking.controller.*
 import cab_booking.model.Driver
 import cab_booking.model.User

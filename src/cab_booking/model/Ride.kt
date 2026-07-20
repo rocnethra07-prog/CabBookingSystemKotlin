@@ -1,6 +1,6 @@
 package cab_booking.model
 
-import exception.InvalidRideStateException
+import cab_booking.exception.InvalidRideStateException
 import cab_booking.model.types.Location
 import cab_booking.model.types.RideStatus
 import cab_booking.util.IdGenerator

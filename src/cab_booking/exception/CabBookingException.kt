@@ -1,4 +1,4 @@
-package exception
+package cab_booking.exception
 
 open class CabBookingException(message: String) : RuntimeException(message)
 

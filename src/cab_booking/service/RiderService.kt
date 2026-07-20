@@ -6,11 +6,11 @@ import cab_booking.repository.CabRepo
 import cab_booking.repository.DriverRepo
 import cab_booking.repository.RideRepo
 import cab_booking.service.pricing.FareCalculatorService
-import exception.CabNotFoundException
-import exception.DriverNotFoundException
-import exception.DriverUnavailableException
-import exception.InvalidRideStateException
-import exception.UnauthorizedRideActionException
+import cab_booking.exception.CabNotFoundException
+import cab_booking.exception.DriverNotFoundException
+import cab_booking.exception.DriverUnavailableException
+import cab_booking.exception.InvalidRideStateException
+import cab_booking.exception.UnauthorizedRideActionException
 import java.time.LocalDateTime
 import java.time.LocalTime
 

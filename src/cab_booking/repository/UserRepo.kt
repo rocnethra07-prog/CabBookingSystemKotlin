@@ -1,7 +1,7 @@
 package cab_booking.repository
 
 import cab_booking.model.User
-import exception.EmailAlreadyRegisteredException
+import cab_booking.exception.EmailAlreadyRegisteredException
 
 object UserRepo : InMemoryRepo<User>() {
 

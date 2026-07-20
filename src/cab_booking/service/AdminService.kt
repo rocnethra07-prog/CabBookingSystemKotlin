@@ -6,10 +6,10 @@ import cab_booking.model.types.CabType
 import cab_booking.model.types.RideStatus
 import cab_booking.model.types.UserRole
 import cab_booking.repository.*
-import exception.AuthenticationException
-import exception.CabNotFoundException
-import exception.DriverNotFoundException
-import exception.UserNotFoundException
+import cab_booking.exception.AuthenticationException
+import cab_booking.exception.CabNotFoundException
+import cab_booking.exception.DriverNotFoundException
+import cab_booking.exception.UserNotFoundException
 
 class AdminService(private val authService: AuthService) {
     fun isEmailRegistered(email: String): Boolean =

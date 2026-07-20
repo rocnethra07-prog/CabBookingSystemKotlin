@@ -4,10 +4,10 @@ import cab_booking.model.Ride
 import cab_booking.service.AdminService
 import cab_booking.util.InputUtil
 import cab_booking.data.DriverRegistrationData
-import exception.AuthenticationException
-import exception.CabNotFoundException
-import exception.DriverNotFoundException
-import exception.UserNotFoundException
+import cab_booking.exception.AuthenticationException
+import cab_booking.exception.CabNotFoundException
+import cab_booking.exception.DriverNotFoundException
+import cab_booking.exception.UserNotFoundException
 
 class AdminController(
     private val adminService: AdminService

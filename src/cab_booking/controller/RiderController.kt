@@ -5,12 +5,12 @@ import cab_booking.model.types.Location
 import cab_booking.service.AuthService
 import cab_booking.service.RiderService
 import cab_booking.util.InputUtil
-import exception.AuthenticationException
-import exception.DriverNotFoundException
-import exception.DriverUnavailableException
-import exception.InvalidCredentialsException
-import exception.InvalidRideStateException
-import exception.UnauthorizedRideActionException
+import cab_booking.exception.AuthenticationException
+import cab_booking.exception.DriverNotFoundException
+import cab_booking.exception.DriverUnavailableException
+import cab_booking.exception.InvalidCredentialsException
+import cab_booking.exception.InvalidRideStateException
+import cab_booking.exception.UnauthorizedRideActionException
 
 class RiderController(
     private val riderService: RiderService,

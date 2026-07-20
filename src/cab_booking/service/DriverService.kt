@@ -1,14 +1,14 @@
 package cab_booking.service
 
-import exception.DriverNotFoundException
+import cab_booking.exception.DriverNotFoundException
 import cab_booking.model.Driver
 import cab_booking.model.types.Location
 import cab_booking.model.Ride
 import cab_booking.model.types.RideStatus
 import cab_booking.repository.DriverRepo
 import cab_booking.repository.RideRepo
-import exception.InvalidRideStateException
-import exception.UnauthorizedRideActionException
+import cab_booking.exception.InvalidRideStateException
+import cab_booking.exception.UnauthorizedRideActionException
 import java.time.LocalDateTime
 
 class DriverService {
