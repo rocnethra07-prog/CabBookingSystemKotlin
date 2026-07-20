@@ -90,38 +90,48 @@ class RiderController(
             println("Pickup and Drop locations cannot be the same.")
         }
 
-        val cabType = InputUtil.selectCabType()
-        try {
+        while (true) {
 
-            val ride = riderService.bookRide(
-                rider,
-                pickup,
-                drop,
-                cabType
-            )
+            val cabType = InputUtil.selectCabType()
 
-            val driver = riderService.getDriverForRide(ride)
+            try {
 
-            println("\nRide Booked Successfully\n")
-            println(ride)
+                val ride = riderService.bookRide(
+                    rider,
+                    pickup,
+                    drop,
+                    cabType
+                )
 
-            println("\nDriver Details")
-            println("Driver : ${driver.name}")
-            println("Phone  : ${driver.phone}")
+                val driver = riderService.getDriverForRide(ride)
 
-        }
-        catch (e : DriverUnavailableException){
-            println("[!] " + e.message)
-            val retry = InputUtil.getYesOrNo("Would you like to try again? (Y/N) : ")
-            if(retry){
-                bookRide(rider)
+                println("\nRide Booked Successfully.\n")
+                println(ride)
+
+                println("\nDriver Details")
+                println("Driver : ${driver.name}")
+                println("Phone  : ${driver.phone}")
+
+                return
+
+            } catch (e: DriverUnavailableException) {
+
+                println("[!] ${e.message}")
+
+                if (!InputUtil.getYesOrNo("Try another cab type? (Y/N): ")) {
+                    return
+                }
+
+            } catch (e: DriverNotFoundException) {
+
+                println("[!] ${e.message}")
+                return
+
+            } catch (e: IllegalArgumentException) {
+
+                println("[!] ${e.message}")
+                return
             }
-        }
-        catch (e: DriverNotFoundException) {
-            println("[!] " + e.message)
-        }
-        catch (e : IllegalArgumentException){
-            println("[!] " + e.message)
         }
     }
 

@@ -75,7 +75,11 @@ object InputUtil {
             println(prompt)
 
             CabType.entries.forEachIndexed { index, cabType ->
-                println("${index + 1}. $cabType")
+                println(
+                    "${index + 1}. $cabType\n" +
+                            "   Base Fare : ₹${cabType.basePay}\n" +
+                            "   Fare / km : ₹${cabType.perKmRate}\n"
+                )
             }
 
             print("Choose: ")
