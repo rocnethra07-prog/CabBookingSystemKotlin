@@ -116,7 +116,7 @@ class RiderController(
 
             } catch (e: DriverUnavailableException) {
 
-                println("[!] ${e.message}")
+                println("[!] " +e.message)
 
                 if (!InputUtil.getYesOrNo("Try another cab type? (Y/N): ")) {
                     return
@@ -124,12 +124,12 @@ class RiderController(
 
             } catch (e: DriverNotFoundException) {
 
-                println("[!] ${e.message}")
+                println("[!] " +e.message)
                 return
 
             } catch (e: IllegalArgumentException) {
 
-                println("[!] ${e.message}")
+                println("[!] " +e.message)
                 return
             }
         }
