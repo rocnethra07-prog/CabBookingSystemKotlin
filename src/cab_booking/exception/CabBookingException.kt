@@ -1,21 +1,19 @@
 package cab_booking.exception
 
-open class CabBookingException(message: String) : RuntimeException(message)
+class UserNotFoundException(message: String) : RuntimeException(message)
 
-class UserNotFoundException(message: String) : CabBookingException(message)
+class DriverNotFoundException(message: String) : RuntimeException(message)
 
-class DriverNotFoundException(message: String) : CabBookingException(message)
+class CabNotFoundException(message: String) : RuntimeException(message)
 
-class CabNotFoundException(message: String) : CabBookingException(message)
+class AuthenticationException(message: String) : RuntimeException(message)
 
-class AuthenticationException(message: String) : CabBookingException(message)
+class DriverUnavailableException(message: String) : RuntimeException(message)
 
-class DriverUnavailableException(message: String) : CabBookingException(message)
+class InvalidRideStateException(message: String) : RuntimeException(message)
 
-class InvalidRideStateException(message: String) : CabBookingException(message)
+class UnauthorizedRideActionException(message: String) : RuntimeException(message)
 
-class UnauthorizedRideActionException(message: String) : CabBookingException(message)
+class EmailAlreadyRegisteredException(message: String) : RuntimeException(message)
 
-class EmailAlreadyRegisteredException(message: String) : CabBookingException(message)
-
-class InvalidCredentialsException(message: String) : CabBookingException(message)
+class InvalidCredentialsException(message: String) : RuntimeException(message)
