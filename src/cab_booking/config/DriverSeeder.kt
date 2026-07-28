@@ -50,15 +50,11 @@ object DriverSeeder {
         cabType: CabType,
         location: Location
     ) {
-        if (UserRepo.existsByEmail(email)) {
-            return
-        }
-
-        if(CabRepo.existsByRegistrationNumber(registrationNumber)){
-            return
-        }
-
-        if(DriverRepo.existsByLicense(licenseNumber)){
+        if (
+            UserRepo.existsByEmail(email) ||
+            CabRepo.existsByRegistrationNumber(registrationNumber) ||
+            DriverRepo.existsByLicense(licenseNumber)
+        ) {
             return
         }
 

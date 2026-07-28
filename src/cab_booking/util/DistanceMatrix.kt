@@ -1,5 +1,6 @@
 package cab_booking.util
 
+import cab_booking.exception.DistanceNotFoundException
 import cab_booking.model.types.Location
 
 // Distances (in km) are approximate, fixed values for this project - not live geolocation.
@@ -65,7 +66,9 @@ object DistanceMatrix {
     fun getDistanceKm(a: Location, b: Location): Double {
         require(a != b) { "Pickup and drop locations cannot be the same."}
         return distances[setOf(a, b)]
-            ?:  throw NoSuchElementException("No distance data available between $a and $b.")
+            ?:  throw DistanceNotFoundException(
+                "Distance not configured between $a and $b."
+            )
     }
 
 }

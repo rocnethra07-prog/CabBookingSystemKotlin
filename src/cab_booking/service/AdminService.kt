@@ -53,16 +53,14 @@ class AdminService(private val authService: AuthService) {
 
         }
         catch (e: IllegalArgumentException) {
-            try {
+            runCatching {
                 DriverRepo.deleteByKey(driver.userId)
             }
-            catch (_ : NoSuchElementException){ }
 
-            try {
+            runCatching {
                 CabRepo.deleteByKey(cab.cabId)
             }
-            catch (_ : IllegalArgumentException){ }
-            throw IllegalArgumentException(e.message ?: "Unable to register driver.")
+            throw e
         }
     }
 
@@ -144,12 +142,11 @@ class AdminService(private val authService: AuthService) {
         auth.unlockAccount()
     }
 
-    fun getLockedAccounts(): List<UserAuthInfo> {
-        return AuthRepo.getLockedAccounts()
-    }
+    fun getLockedAccounts(): List<UserAuthInfo> =
+        AuthRepo.getLockedAccounts()
 
-    fun findUserById(userId: String): User {
-        return UserRepo.findByUserId(userId)
+
+    fun findUserById(userId: String): User =
+         UserRepo.findByUserId(userId)
             ?: throw UserNotFoundException("User not found for ID: $userId")
-    }
 }

@@ -15,12 +15,14 @@ open class User(
 
     var name: String = name.trim()
         set(value) {
+            if(field == value.trim()) return
             require(Validator.isValidName(value)){"Name must contain minimum 3 characters. Name cannot be blank"}
             field = value.trim()
         }
 
     var phone: String = phone.trim()
         set(value) {
+            if(field == value.trim()) return
             require(Validator.isValidPhone(value)){"Invalid phone number format. Phone cannot be blank"}
             field = value.trim()
         }

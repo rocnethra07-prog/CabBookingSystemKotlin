@@ -6,6 +6,7 @@ import cab_booking.controller.AdminController
 import cab_booking.controller.AuthController
 import cab_booking.controller.DriverController
 import cab_booking.controller.RiderController
+import cab_booking.exception.DriverNotFoundException
 import cab_booking.model.User
 import cab_booking.router.UserRouter
 import cab_booking.service.AdminService
@@ -59,6 +60,12 @@ fun handleSession(action:() -> User?, userRouter: UserRouter){
         val user = action()
         if (user != null) {
             println("Welcome " + user.name + " !")
-            userRouter.route(user)
+            try {
+                userRouter.route(user)
+            }
+            catch (e : DriverNotFoundException){
+                println("[!] ${e.message}. Please try again")
+                return
+            }
         }
 }

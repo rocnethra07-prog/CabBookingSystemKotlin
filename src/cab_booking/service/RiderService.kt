@@ -5,7 +5,7 @@ import cab_booking.model.types.*
 import cab_booking.repository.CabRepo
 import cab_booking.repository.DriverRepo
 import cab_booking.repository.RideRepo
-import cab_booking.service.pricing.FareCalculatorService
+import cab_booking.service.pricing.FareCalculator
 import cab_booking.exception.CabNotFoundException
 import cab_booking.exception.DriverNotFoundException
 import cab_booking.exception.DriverUnavailableException
@@ -13,6 +13,7 @@ import cab_booking.exception.InvalidRideStateException
 import cab_booking.exception.UnauthorizedRideActionException
 import java.time.LocalDateTime
 import java.time.LocalTime
+import kotlin.ranges.contains
 
 class RiderService {
 
@@ -42,7 +43,7 @@ class RiderService {
             driverId = driver.userId,
             pickupLocation = pickupLocation,
             dropLocation = dropLocation,
-            fare = FareCalculatorService.calculateFare(cabType, pickupLocation, dropLocation, LocalTime.now())
+            fare = FareCalculator.calculateFare(cabType, pickupLocation, dropLocation, LocalTime.now())
         )
 
         RideRepo.save(ride)

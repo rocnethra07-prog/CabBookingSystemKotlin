@@ -1,21 +1,20 @@
 package cab_booking.router
 
-import cab_booking.exception.DriverNotFoundException
 import cab_booking.controller.*
-import cab_booking.model.Driver
 import cab_booking.model.User
 import cab_booking.model.types.UserRole
 import cab_booking.service.DriverService
 
-class UserRouter(val adminController: AdminController,val driverController: DriverController, val riderController: RiderController, val driverService: DriverService) {
+class UserRouter(private val adminController: AdminController,
+                 private val driverController: DriverController,
+                 private val riderController: RiderController,
+                 private val driverService: DriverService
+) {
     fun route(user: User){
         when(user.userRole){
             UserRole.ADMIN -> adminController.adminDashboard()
             UserRole.DRIVER -> {
-                val driver: Driver? = driverService.findDriverById(user.userId)
-                if(driver == null){
-                    throw DriverNotFoundException("Driver not found ${user.email}")
-                }
+                val driver = driverService.findDriverById(user.userId)
                 driverController.driverDashboard(driver)
             }
             UserRole.RIDER -> riderController.riderDashboard(user)

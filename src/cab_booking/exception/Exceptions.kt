@@ -17,3 +17,5 @@ class UnauthorizedRideActionException(message: String) : RuntimeException(messag
 class EmailAlreadyRegisteredException(message: String) : RuntimeException(message)
 
 class InvalidCredentialsException(message: String) : RuntimeException(message)
+
+class DistanceNotFoundException(message: String) : RuntimeException(message)

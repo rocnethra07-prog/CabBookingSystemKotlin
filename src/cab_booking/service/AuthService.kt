@@ -10,9 +10,9 @@ import cab_booking.exception.InvalidCredentialsException
 import cab_booking.exception.UserNotFoundException
 
 class AuthService() {
-    fun isEmailRegistered(email: String) : Boolean{
-        return UserRepo.existsByEmail(email)
-    }
+    fun isEmailRegistered(email: String) : Boolean =
+        UserRepo.existsByEmail(email)
+
 
     fun registerUser(
         name: String,
@@ -48,7 +48,7 @@ class AuthService() {
         }
 
         if(!userAuth.verifyPassword(password)){
-            throw AuthenticationException("Invalid credentials.")
+            throw InvalidCredentialsException("Invalid credentials.")
         }
         return user
     }

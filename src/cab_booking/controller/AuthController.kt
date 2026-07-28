@@ -13,8 +13,8 @@ class AuthController(
 
     fun login() : User?{
 
-        val email = InputUtil.getEmail()
-        val password = InputUtil.getPassword()
+        val email = InputUtil.promptEmail()
+        val password = InputUtil.promptPassword()
 
         try {
             val user: User = authService.loginUser(email, password)
@@ -27,17 +27,17 @@ class AuthController(
             return null
         }
         catch (e : AuthenticationException){
-            println("[!] Authentication Exception, " + e.message)
+            println("[!] Authentication failed: ${e.message}")
             return null
         }
     }
 
     fun register() : User?{
-        val name = InputUtil.getName()
-        val phone = InputUtil.getPhone()
+        val name = InputUtil.promptName()
+        val phone = InputUtil.promptPhone()
         var email: String
         while (true) {
-            email = InputUtil.getEmail()
+            email = InputUtil.promptEmail()
 
             //Pre-check for UX
             if(authService.isEmailRegistered(email)){
@@ -47,7 +47,7 @@ class AuthController(
             break
         }
 
-        val password = InputUtil.getPassword()
+        val password = InputUtil.promptPassword()
 
         try {
             val user: User = authService.registerUser(name, phone, email, password, UserRole.RIDER )
@@ -56,7 +56,7 @@ class AuthController(
         }
         catch (e : IllegalArgumentException) {
             println("[!] Invalid Input,")
-            println("[!] Registration failed: " + e.message)
+            println("[!] Registration failed: ${e.message}")
             return null
         }
     }

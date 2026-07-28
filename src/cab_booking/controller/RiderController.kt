@@ -6,6 +6,7 @@ import cab_booking.service.AuthService
 import cab_booking.service.RiderService
 import cab_booking.util.InputUtil
 import cab_booking.exception.AuthenticationException
+import cab_booking.exception.DistanceNotFoundException
 import cab_booking.exception.DriverNotFoundException
 import cab_booking.exception.DriverUnavailableException
 import cab_booking.exception.InvalidCredentialsException
@@ -62,7 +63,7 @@ class RiderController(
 
         println("\nYou haven't rated your last ride yet.")
 
-        if (InputUtil.getYesOrNo("Would you like to rate it now?")) {
+        if (InputUtil.promptConfirmation("Would you like to rate it now?")) {
             showRatingScreen(ride, rider)
         }
     }
@@ -77,13 +78,13 @@ class RiderController(
 
         println("\n========== BOOK RIDE ==========")
 
-        val pickup = InputUtil.selectLocation("Pickup Location")
+        val pickup = InputUtil.chooseLocation("Pickup Location")
 
         var drop: Location
 
         while (true) {
 
-            drop = InputUtil.selectLocation("Drop Location")
+            drop = InputUtil.chooseLocation("Drop Location")
 
             if (pickup != drop) break
 
@@ -92,7 +93,7 @@ class RiderController(
 
         while (true) {
 
-            val cabType = InputUtil.selectCabType()
+            val cabType = InputUtil.chooseCabType()
 
             try {
 
@@ -116,21 +117,23 @@ class RiderController(
 
             } catch (e: DriverUnavailableException) {
 
-                println("[!] " +e.message)
+                println("[!] ${e.message}")
 
-                if (!InputUtil.getYesOrNo("Try another cab type? (Y/N): ")) {
+                if (!InputUtil.promptConfirmation("Try another cab type? (Y/N): ")) {
                     return
                 }
 
-            } catch (e: DriverNotFoundException) {
+            } catch(e : DistanceNotFoundException){
 
-                println("[!] " +e.message)
-                return
+                println("[!] ${e.message}")
 
-            } catch (e: IllegalArgumentException) {
+            }catch (e: DriverNotFoundException) {
 
-                println("[!] " +e.message)
-                return
+                println("[!] ${e.message}")
+            }
+            catch (e: IllegalArgumentException) {
+
+                println("[!] ${e.message}")
             }
         }
     }
@@ -192,13 +195,13 @@ class RiderController(
             println("\nRide cancelled successfully.")
         }
         catch (e: UnauthorizedRideActionException) {
-            println("[!] " + e.message)
+            println("[!] ${e.message}")
         }
         catch (e : InvalidRideStateException){
-            println("[!] "+ e.message)
+            println("[!] ${e.message}")
         }
         catch (e : DriverNotFoundException){
-            println("[!] "+ e.message)
+            println("[!] ${e.message}")
         }
     }
 
@@ -208,9 +211,9 @@ class RiderController(
         println("\n========== UPDATE PROFILE ==========")
         println("(Press Enter to keep the current value)\n")
 
-        val name = InputUtil.getOptionalName(rider.name)
+        val name = InputUtil.promptOptionalName(rider.name)
 
-        val phone = InputUtil.getOptionalPhone(rider.phone)
+        val phone = InputUtil.promptOptionalPhone(rider.phone)
 
         if (name == rider.name && phone == rider.phone) {
             println("\nNo changes made.")
@@ -231,7 +234,7 @@ class RiderController(
 
         }
         catch (e: IllegalArgumentException) {
-            println("[!] Invalid Input, " + e.message)
+            println("[!] Invalid Input, ${e.message}")
         }
     }
 
@@ -329,12 +332,15 @@ class RiderController(
 
         }
         catch (e: UnauthorizedRideActionException) {
-            println("[!] "+ e.message)
+            println("[!] ${e.message}")
 
         }
         catch (e: DriverNotFoundException) {
             println("[!] Unable to submit your rating at the moment")
             println(e.message)
+        }
+        catch (e : IllegalArgumentException){
+            println("[!] ${e.message}")
         }
     }
 
@@ -343,15 +349,15 @@ class RiderController(
 
         println("\n========== CHANGE PASSWORD ==========")
 
-        val currentPassword = InputUtil.getPassword(
+        val currentPassword = InputUtil.promptPassword(
             prompt = "Current Password : "
         )
 
-        val newPassword = InputUtil.getPassword(
+        val newPassword = InputUtil.promptPassword(
             prompt = "New Password     : "
         )
 
-        val confirmPassword = InputUtil.getPassword(
+        val confirmPassword = InputUtil.promptPassword(
             prompt = "Confirm Password : "
         )
 
@@ -371,10 +377,10 @@ class RiderController(
 
         }
         catch (e : AuthenticationException){
-            println("[!] Authentication Exception, "+ e.message)
+            println("[!] Authentication failed: ${e.message}")
         }
         catch (e: InvalidCredentialsException) {
-            println("[!] " +e.message)
+            println("[!] ${e.message}")
         }
     }
 }

@@ -36,7 +36,7 @@ object UserRepo : InMemoryRepo<User>() {
         deleteByKey(trimmedEmail)
     }
 
-    fun findByUserId(userId: String): User? {
-        return storage.values.firstOrNull { it.userId == userId }
-    }
+    fun findByUserId(userId: String): User? =
+        storage.values.firstOrNull { it.userId == userId }
+
 }

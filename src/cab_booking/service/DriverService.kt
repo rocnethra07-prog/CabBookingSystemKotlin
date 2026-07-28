@@ -43,7 +43,7 @@ class DriverService {
        endRide(ride, driver){ ride -> markRideAsCancelled(ride)}
     }
 
-    private fun markAvailable(driver: Driver){
+    private fun markAvailable(driver: Driver) {
         driver.isAvailable = true
     }
 
@@ -56,7 +56,11 @@ class DriverService {
         ride.completedAt = LocalDateTime.now()
     }
 
-    private fun endRide(ride: Ride, driver : Driver, action: (Ride) -> Unit ){
+    private fun endRide(
+        ride: Ride,
+        driver : Driver,
+        action: (Ride) -> Unit
+    ){
         validateRideOwnership(ride, driver)
         action(ride)
         markAvailable(driver)
@@ -88,8 +92,7 @@ class DriverService {
     //method used for routing the User object -> DriverController
     fun findDriverById(
         driverId: String
-    ): Driver {
-        return DriverRepo.findByKey(driverId) ?: throw DriverNotFoundException("Driver not found: $driverId")
-    }
+    ): Driver =
+        DriverRepo.findByKey(driverId) ?: throw DriverNotFoundException("Driver not found: $driverId")
 
 }

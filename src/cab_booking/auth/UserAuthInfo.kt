@@ -49,13 +49,13 @@ class UserAuthInfo(val userId: String, password: String) {
         resetFailedAttempts()
     }
 
-    private fun hash(password: String): String {
-        return BCrypt.hashpw(password, BCrypt.gensalt())
-    }
+    private fun hash(password: String) =
+        BCrypt.hashpw(password, BCrypt.gensalt())
 
-    private fun matches(password: String): Boolean {
-        return BCrypt.checkpw(password, passwordHash)
-    }
+
+    private fun matches(password: String) =
+        BCrypt.checkpw(password, passwordHash)
+
 
     fun updatePassword(newPassword: String) {
         require(Validator.isValidPassword(newPassword)) { "Invalid password format." }

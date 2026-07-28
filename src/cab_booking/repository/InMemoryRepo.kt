@@ -12,17 +12,16 @@ abstract class InMemoryRepo<T> : RepositoryContract<T>{
         storage[validateKey(key)] = entity
     }
 
-    override fun findAll(): List<T> {
-        return storage.values.toList() //returns copy as immutable list
-    }
+    override fun findAll() =
+        storage.values.toList() //returns copy as immutable list
 
-    override fun existsByKey(key: String): Boolean {
-        return storage.containsKey(validateKey(key))
-    }
+    override fun existsByKey(key: String) =
+        storage.containsKey(validateKey(key))
 
-    override fun findByKey(key: String): T?{
-        return storage[validateKey(key)]
-    }
+
+    override fun findByKey(key: String) =
+        storage[validateKey(key)]
+
 
     override fun deleteByKey(key: String) {
         storage.remove(validateKey(key))

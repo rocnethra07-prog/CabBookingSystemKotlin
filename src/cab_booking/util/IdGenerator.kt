@@ -5,15 +5,10 @@ object IdGenerator{
     private var cabId = 1
     private var rideId = 1
 
-    fun generateUserId() : String{
-        return "USR-" + userId++
-    }
+    fun generateUserId() = "USR-${userId++}"
 
-    fun generateCabId() : String{
-        return "CAB" + cabId++
-    }
+    fun generateCabId() = "CAB-${cabId++}"
 
-    fun generateRideId() : String{
-        return "RID" + rideId++
-    }
+    fun generateRideId() = "RID-${rideId++}"
+
 }

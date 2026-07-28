@@ -90,15 +90,15 @@ class AdminController(
 
         println("\n========== ADD DRIVER ==========")
 
-        val name = InputUtil.getName()
+        val name = InputUtil.promptName()
 
-        val phone = InputUtil.getPhone()
+        val phone = InputUtil.promptPhone()
 
         var email: String
 
         while (true) {
 
-            email = InputUtil.getEmail()
+            email = InputUtil.promptEmail()
 
             //Pre-check for UX
             if (!adminService.isEmailRegistered(email))
@@ -107,15 +107,15 @@ class AdminController(
             println("Email already registered.")
         }
 
-        val password = InputUtil.getPassword()
+        val password = InputUtil.promptPassword()
 
-        val currentLocation = InputUtil.selectLocation()
+        val currentLocation = InputUtil.chooseLocation()
 
         var licenseNumber: String
 
         while (true) {
 
-            licenseNumber = InputUtil.getNonEmptyInput(
+            licenseNumber = InputUtil.promptNonEmptyInput(
                 "License Number : ",
                 "License number cannot be empty."
             )
@@ -127,7 +127,7 @@ class AdminController(
             println("License number already exists.")
         }
 
-        val model = InputUtil.getNonEmptyInput(
+        val model = InputUtil.promptNonEmptyInput(
             "Car Model : ",
             "Model cannot be empty."
         )
@@ -136,7 +136,7 @@ class AdminController(
 
         while (true) {
 
-            registrationNumber = InputUtil.getNonEmptyInput(
+            registrationNumber = InputUtil.promptNonEmptyInput(
                 "Registration Number : ",
                 "Registration number cannot be empty."
             )
@@ -148,7 +148,7 @@ class AdminController(
             println("Registration number already exists.")
         }
 
-        val cabType = InputUtil.selectCabType()
+        val cabType = InputUtil.chooseCabType()
 
         val driverData = DriverRegistrationData(
             name = name,
@@ -168,7 +168,7 @@ class AdminController(
             println(driver)
         }
         catch (e: IllegalArgumentException) {
-            println("[!] Invalid Input," + e.message)
+            println("[!] Invalid Input, ${e.message}")
         }
     }
 
@@ -176,7 +176,7 @@ class AdminController(
 
         println("\n========== DELETE DRIVER ==========")
 
-        val driverId = InputUtil.getNonEmptyInput(
+        val driverId = InputUtil.promptNonEmptyInput(
             "Enter Driver ID : ",
             "Driver ID cannot be empty."
         )
@@ -186,7 +186,7 @@ class AdminController(
             println("\nDriver Details")
             println(driver)
 
-            if (!InputUtil.getYesOrNo("Delete this driver?")) {
+            if (!InputUtil.promptConfirmation("Delete this driver?")) {
                 println("Deletion cancelled.")
                 return
             }
@@ -199,10 +199,10 @@ class AdminController(
 
         }
         catch (e : DriverNotFoundException) {
-            println("[!] "+e.message)
+            println("[!] ${e.message}")
         }
         catch (e : IllegalArgumentException){
-            println("[!] Invalid Input, " + e.message)
+            println("[!] Invalid Input, ${e.message}")
         }
     }
 
@@ -259,7 +259,7 @@ class AdminController(
 
     private fun searchDriver() {
 
-        val driverId = InputUtil.getNonEmptyInput(
+        val driverId = InputUtil.promptNonEmptyInput(
             "Enter Driver ID : ",
             "Driver ID cannot be empty."
         )
@@ -275,16 +275,16 @@ class AdminController(
 
         }
         catch (e: DriverNotFoundException) {
-            println("[!] "+e.message)
+            println("[!] ${e.message}")
         }
         catch (e: CabNotFoundException){
-            println("[!] "+e.message)
+            println("[!] ${e.message}")
         }
     }
 
     private fun driverRideHistory() {
 
-        val driverId = InputUtil.getNonEmptyInput(
+        val driverId = InputUtil.promptNonEmptyInput(
             "Enter Driver ID : ",
             "Driver ID cannot be empty."
         )
@@ -345,7 +345,7 @@ class AdminController(
 
     private fun viewRiderRideHistory() {
 
-        val riderId = InputUtil.getNonEmptyInput(
+        val riderId = InputUtil.promptNonEmptyInput(
             "Enter Rider ID : ",
             "Rider ID cannot be empty."
         )
@@ -479,7 +479,7 @@ class AdminController(
 
     private fun viewCabsByType() {
 
-        val cabType = InputUtil.selectCabType()
+        val cabType = InputUtil.chooseCabType()
 
         val cabs = adminService.getCabsByType(cabType)
 
@@ -526,7 +526,7 @@ class AdminController(
 
         println("\n========== UNLOCK USER ACCOUNT ==========")
 
-        val userId = InputUtil.getNonEmptyInput(
+        val userId = InputUtil.promptNonEmptyInput(
             "Enter User ID : ",
             "User ID cannot be empty."
         )
@@ -536,7 +536,7 @@ class AdminController(
             println("User account unlocked successfully.")
         }
         catch (e: AuthenticationException) {
-            println("[!] Unable to unlock account. " + e.message)
+            println("[!] Unable to unlock account. ${e.message}")
         }
     }
 
@@ -561,7 +561,7 @@ class AdminController(
 
         println("\n========== SEARCH USER ==========")
 
-        val userId = InputUtil.getNonEmptyInput(
+        val userId = InputUtil.promptNonEmptyInput(
             "Enter User ID : ",
             "User ID cannot be empty."
         )
@@ -574,9 +574,9 @@ class AdminController(
             println(user)
 
         } catch (e: UserNotFoundException) {
-            println("[!] "+e.message)
+            println("[!] ${e.message}")
         } catch (e: IllegalArgumentException) {
-            println("[!] Invalid Input, "+e.message)
+            println("[!] Invalid Input, ${e.message}")
         }
     }
 }

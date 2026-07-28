@@ -99,16 +99,16 @@ class DriverController(
         println("\n========== UPDATE PROFILE ==========")
         println("(Press Enter to keep the current value)\n")
 
-        val name = InputUtil.getOptionalName(driver.name)
+        val name = InputUtil.promptOptionalName(driver.name)
 
-        val phone = InputUtil.getOptionalPhone(driver.phone)
+        val phone = InputUtil.promptOptionalPhone(driver.phone)
 
         println("Current Location : ${driver.currentLocation}")
 
         var location = driver.currentLocation
 
-        if (InputUtil.getYesOrNo("Update location?")) {
-            location = InputUtil.selectLocation("Select New Location")
+        if (InputUtil.promptConfirmation("Update location?")) {
+            location = InputUtil.chooseLocation("Select New Location")
         }
 
         if (
@@ -190,10 +190,10 @@ class DriverController(
             showEarnings(driver)
         }
         catch (e: UnauthorizedRideActionException) {
-            println("[!] "+ e.message)
+            println("[!] ${e.message}")
         }
         catch (e : IllegalArgumentException){
-            println("[!] " +e.message)
+            println("[!] ${e.message}")
         }
     }
 
@@ -212,10 +212,10 @@ class DriverController(
 
         }
         catch (e: UnauthorizedRideActionException) {
-            println("[!] "+ e.message)
+            println("[!] ${e.message}")
         }
         catch (e : IllegalArgumentException){
-            println("[!] " +e.message)
+            println("[!] ${e.message}")
         }
     }
 
@@ -224,15 +224,15 @@ class DriverController(
 
         println("\n========== CHANGE PASSWORD ==========")
 
-        val currentPassword = InputUtil.getPassword(
+        val currentPassword = InputUtil.promptPassword(
             prompt = "Current Password : "
         )
 
-        val newPassword = InputUtil.getPassword(
+        val newPassword = InputUtil.promptPassword(
             prompt = "New Password     : "
         )
 
-        val confirmPassword = InputUtil.getPassword(
+        val confirmPassword = InputUtil.promptPassword(
             prompt = "Confirm Password : "
         )
 
@@ -252,10 +252,10 @@ class DriverController(
 
         }
         catch (e : AuthenticationException){
-            println("[!] Authentication Exception, "+ e.message)
+            println("[!] Authentication Exception, ${e.message}")
         }
         catch (e: InvalidCredentialsException) {
-            println("[!] " +e.message)
+            println("[!] ${e.message}")
         }
     }
 }

@@ -4,7 +4,7 @@ import cab_booking.model.types.CabType
 import cab_booking.model.types.Location
 
 object InputUtil {
-    private fun getValidatedInput(prompt: String, errorMessage: String, validator: (String) -> Boolean) : String{
+    private fun promptUntilValidInput(prompt: String, errorMessage: String, validator: (String) -> Boolean) : String{
         while (true){
             print(prompt)
             val input = readln().trim()
@@ -15,38 +15,39 @@ object InputUtil {
         }
     }
 
-    fun getNonEmptyInput(prompt: String, errorMessage: String) : String{
-        return getValidatedInput(prompt, errorMessage){ it.isNotBlank()}
-    }
+    fun promptNonEmptyInput(prompt: String, errorMessage: String) =
+        promptUntilValidInput(prompt, errorMessage){ it.isNotBlank()}
 
-    fun getName(
+
+    fun promptName(
         prompt: String = "Enter Name: ",
         errorMessage: String = "Name must contain minimum 3 characters. Please try again"
-    ) : String{
-        return getValidatedInput(prompt, errorMessage ) { Validator.isValidName(it) }
-    }
+    ) =
+        promptUntilValidInput(prompt, errorMessage ) { Validator.isValidName(it) }
 
-    fun getPhone(
+
+    fun promptPhone(
         prompt: String = "Enter Phone: ",
         errorMessage: String = "Invalid Phone Number. Please enter a valid 10 digit number"
-    ): String{
-        return getValidatedInput(prompt, errorMessage) { Validator.isValidPhone(it) }
-    }
+    ) =
+        promptUntilValidInput(prompt, errorMessage) { Validator.isValidPhone(it) }
 
-    fun getEmail(
+
+    fun promptEmail(
         prompt: String = "Enter email: ",
         errorMessage: String = "Invalid email format. Please enter a valid email"
-    ) : String {
-        return getValidatedInput(prompt, errorMessage){ Validator.isValidEmail(it) }
-    }
+    ) =
+        promptUntilValidInput(prompt, errorMessage){ Validator.isValidEmail(it) }
 
-    fun getPassword(
+
+    fun promptPassword(
         prompt: String = "Enter password: ",
-        errorMessage: String = "Password must be at least 8 characters, with an uppercase letter, a lowercase letter, and a special character (@#$%^&+=!-_). Spaces are not allowed.")
-    : String{
-        return getValidatedInput(prompt, errorMessage){ Validator.isValidPassword(it) }
-    }
-    fun selectLocation(prompt: String = "Select Location: "): Location {
+        errorMessage: String = "Password must be at least 8 characters, with an uppercase letter, a lowercase letter, and a special character (@#$%^&+=!-_). Spaces are not allowed."
+    ) =
+        promptUntilValidInput(prompt, errorMessage){ Validator.isValidPassword(it) }
+
+
+    fun chooseLocation(prompt: String = "Select Location: "): Location {
 
         while (true) {
 
@@ -68,7 +69,7 @@ object InputUtil {
         }
     }
 
-    fun selectCabType(prompt: String = "Select Cab Type: "): CabType {
+    fun chooseCabType(prompt: String = "Select Cab Type: "): CabType {
 
         while (true) {
 
@@ -94,7 +95,7 @@ object InputUtil {
         }
     }
 
-    fun getYesOrNo(prompt: String): Boolean {
+    fun promptConfirmation(prompt: String): Boolean {
 
         while (true) {
 
@@ -108,7 +109,7 @@ object InputUtil {
         }
     }
 
-    fun getOptionalName(currentValue: String): String {
+    fun promptOptionalName(currentValue: String): String {
 
         while (true) {
             print("Name [$currentValue] (Press Enter to keep the current value) : ")
@@ -121,7 +122,7 @@ object InputUtil {
         }
     }
 
-    fun getOptionalPhone(currentValue: String): String {
+    fun promptOptionalPhone(currentValue: String): String {
 
         while (true) {
             print("Phone [$currentValue] (Press Enter to keep the current value) : ")
