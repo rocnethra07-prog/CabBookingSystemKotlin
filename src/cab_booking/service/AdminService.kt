@@ -53,13 +53,8 @@ class AdminService(private val authService: AuthService) {
 
         }
         catch (e: IllegalArgumentException) {
-            runCatching {
-                DriverRepo.deleteByKey(driver.userId)
-            }
-
-            runCatching {
-                CabRepo.deleteByKey(cab.cabId)
-            }
+            DriverRepo.deleteByKey(driver.userId)
+            CabRepo.deleteByKey(cab.cabId)
             throw e
         }
     }
