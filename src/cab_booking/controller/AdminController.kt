@@ -503,8 +503,7 @@ class AdminController(
             println("\n========== USER ACCOUNT MANAGEMENT ==========")
             println("1. Unlock User Account")
             println("2. View Locked Accounts")
-            println("3. Reset User Password")
-            println("4. Search User")
+            println("3. Search User")
             println("0. Back")
 
             when (readln().trim()) {
