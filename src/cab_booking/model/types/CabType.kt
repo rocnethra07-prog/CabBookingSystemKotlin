@@ -7,5 +7,5 @@ enum class CabType(val basePay: BigDecimal, val perKmRate: BigDecimal) {
 
     SEDAN(BigDecimal(60), BigDecimal("11.0")),
 
-    SUV(BigDecimal(80), BigDecimal("15.0"));
+    SUV(BigDecimal(80), BigDecimal("15.0"))
 }
