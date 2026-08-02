@@ -13,10 +13,7 @@ import cab_booking.exception.InvalidCredentialsException
 import cab_booking.exception.InvalidRideStateException
 import cab_booking.exception.UnauthorizedRideActionException
 
-class RiderController(
-    private val riderService: RiderService,
-    private val authService: AuthService
-) {
+object RiderController{
 
     fun riderDashboard(rider: User) {
 
@@ -55,7 +52,7 @@ class RiderController(
 
     private fun promptPendingRating(rider: User) {
 
-        val ride = riderService.getLastCompletedRide(rider)
+        val ride = RiderService.getLastCompletedRide(rider)
 
         if (ride == null || ride.rating != null) {
             return
@@ -71,7 +68,7 @@ class RiderController(
     // BOOK RIDE
     private fun bookRide(rider: User) {
 
-        if (riderService.hasActiveRide(rider)) {
+        if (RiderService.hasActiveRide(rider)) {
             println("You already have an active ride.")
             return
         }
@@ -97,14 +94,14 @@ class RiderController(
 
             try {
 
-                val ride = riderService.bookRide(
+                val ride = RiderService.bookRide(
                     rider,
                     pickup,
                     drop,
                     cabType
                 )
 
-                val driver = riderService.getDriverForRide(ride)
+                val driver = RiderService.getDriverForRide(ride)
 
                 println("\nRide Booked Successfully.\n")
                 println(ride)
@@ -141,14 +138,14 @@ class RiderController(
     // CURRENT RIDE
     private fun viewCurrentRide(rider: User) {
 
-        val ride = riderService.getCurrentBookedRide(rider)
+        val ride = RiderService.getCurrentBookedRide(rider)
 
         if (ride == null) {
             println("\nNo active ride.")
             return
         }
 
-        val driver = riderService.getDriverForRide(ride)
+        val driver = RiderService.getDriverForRide(ride)
 
         println("\n========== CURRENT RIDE ==========")
 
@@ -191,7 +188,7 @@ class RiderController(
         rider: User
     ) {
         try {
-            riderService.cancelRide(ride, rider)
+            RiderService.cancelRide(ride, rider)
             println("\nRide cancelled successfully.")
         }
         catch (e: UnauthorizedRideActionException) {
@@ -221,7 +218,7 @@ class RiderController(
         }
 
         try {
-            riderService.updateProfile(
+            RiderService.updateProfile(
                 rider,
                 name,
                 phone
@@ -242,7 +239,7 @@ class RiderController(
 
     private fun viewRideHistory(rider: User) {
 
-        val rides = riderService.getRidesByRider(rider)
+        val rides = RiderService.getRidesByRider(rider)
 
         if (rides.isEmpty()) {
             println("\nNo rides found.")
@@ -260,7 +257,7 @@ class RiderController(
     // RATE LAST RIDE
     private fun rateLastRide(rider: User) {
 
-        val ride = riderService.getLastCompletedRide(rider)
+        val ride = RiderService.getLastCompletedRide(rider)
 
         if (ride == null) {
             println("\nNo completed ride available for rating.")
@@ -280,7 +277,7 @@ class RiderController(
         ride: Ride,
         rider: User
     ) {
-        val driver = riderService.getDriverForRide(ride)
+        val driver = RiderService.getDriverForRide(ride)
 
         println("\n========== RATE RIDE ==========")
         println("Driver : ${driver.name}")
@@ -322,7 +319,7 @@ class RiderController(
 
         try {
 
-            riderService.rateDriver(
+            RiderService.rateDriver(
                 ride,
                 rider,
                 rating
@@ -367,7 +364,7 @@ class RiderController(
         }
 
         try {
-            authService.changePassword(
+            AuthService.changePassword(
                 rider,
                 currentPassword,
                 newPassword

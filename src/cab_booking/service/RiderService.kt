@@ -13,9 +13,8 @@ import cab_booking.exception.InvalidRideStateException
 import cab_booking.exception.UnauthorizedRideActionException
 import java.time.LocalDateTime
 import java.time.LocalTime
-import kotlin.ranges.contains
 
-class RiderService {
+object RiderService {
 
     fun updateProfile(
         user: User,

@@ -9,7 +9,7 @@ import cab_booking.exception.AuthenticationException
 import cab_booking.exception.InvalidCredentialsException
 import cab_booking.exception.UserNotFoundException
 
-class AuthService() {
+object AuthService{
     fun isEmailRegistered(email: String) : Boolean =
         UserRepo.existsByEmail(email)
 

@@ -3,15 +3,13 @@ package cab_booking.controller
 import cab_booking.model.Ride
 import cab_booking.service.AdminService
 import cab_booking.util.InputUtil
-import cab_booking.data.DriverRegistrationData
 import cab_booking.exception.AuthenticationException
 import cab_booking.exception.CabNotFoundException
 import cab_booking.exception.DriverNotFoundException
 import cab_booking.exception.UserNotFoundException
+import cab_booking.model.Cab
 
-class AdminController(
-    private val adminService: AdminService
-) {
+object AdminController{
 
     fun adminDashboard() {
 
@@ -90,6 +88,7 @@ class AdminController(
 
         println("\n========== ADD DRIVER ==========")
 
+        // ask for driver details
         val name = InputUtil.promptName()
 
         val phone = InputUtil.promptPhone()
@@ -101,7 +100,7 @@ class AdminController(
             email = InputUtil.promptEmail()
 
             //Pre-check for UX
-            if (!adminService.isEmailRegistered(email))
+            if (!AdminService.isEmailRegistered(email))
                 break
 
             println("Email already registered.")
@@ -121,12 +120,26 @@ class AdminController(
             )
 
             //Pre-check for UX
-            if (!adminService.isLicenseNumberExists(licenseNumber))
+            if (!AdminService.isLicenseNumberExists(licenseNumber))
                 break
 
             println("License number already exists.")
         }
 
+        // create a cab for the driver
+        val cab = collectCabDetails()
+
+        try {
+            val driver = AdminService.addDriver(name, phone, email, password,currentLocation, licenseNumber, cab)
+            println("\nDriver Registered Successfully.\n")
+            println(driver)
+        }
+        catch (e: IllegalArgumentException) {
+            println("[!] Invalid Input, ${e.message}")
+        }
+    }
+
+    private fun collectCabDetails() : Cab {
         val model = InputUtil.promptNonEmptyInput(
             "Car Model : ",
             "Model cannot be empty."
@@ -142,34 +155,15 @@ class AdminController(
             )
 
             //Pre-check for UX
-            if (!adminService.isRegistrationNumberExists(registrationNumber))
+            if (!AdminService.isRegistrationNumberExists(registrationNumber))
                 break
 
             println("Registration number already exists.")
         }
 
         val cabType = InputUtil.chooseCabType()
-
-        val driverData = DriverRegistrationData(
-            name = name,
-            phone = phone,
-            email = email,
-            password = password,
-            currentLocation = currentLocation,
-            licenseNumber = licenseNumber,
-            model = model,
-            registrationNumber = registrationNumber,
-            cabType = cabType
-        )
-
-        try {
-            val driver = adminService.addDriver(driverData)
-            println("\nDriver Registered Successfully.\n")
-            println(driver)
-        }
-        catch (e: IllegalArgumentException) {
-            println("[!] Invalid Input, ${e.message}")
-        }
+        val newCab = AdminService.createCab(model, registrationNumber, cabType)
+        return newCab
     }
 
     private fun deleteDriver() {
@@ -182,7 +176,7 @@ class AdminController(
         )
 
         try {
-            val driver = adminService.findDriverById(driverId)
+            val driver = AdminService.findDriverById(driverId)
             println("\nDriver Details")
             println(driver)
 
@@ -191,7 +185,7 @@ class AdminController(
                 return
             }
 
-            if (adminService.deleteDriver(driver)) {
+            if (AdminService.deleteDriver(driver)) {
                 println("Driver deleted successfully.")
             } else {
                 println("Driver has an active ride and cannot be deleted.")
@@ -208,7 +202,7 @@ class AdminController(
 
     private fun viewAllDrivers() {
 
-        val drivers = adminService.getAllDrivers()
+        val drivers = AdminService.getAllDrivers()
 
         if (drivers.isEmpty()) {
             println("\nNo drivers found.")
@@ -225,7 +219,7 @@ class AdminController(
 
     private fun viewAvailableDrivers() {
 
-        val drivers = adminService.getAvailableDrivers()
+        val drivers = AdminService.getAvailableDrivers()
 
         if (drivers.isEmpty()) {
             println("\nNo available drivers.")
@@ -242,7 +236,7 @@ class AdminController(
 
     private fun viewUnavailableDrivers() {
 
-        val drivers = adminService.getUnavailableDrivers()
+        val drivers = AdminService.getUnavailableDrivers()
 
         if (drivers.isEmpty()) {
             println("\nNo unavailable drivers.")
@@ -265,13 +259,13 @@ class AdminController(
         )
 
         try {
-            val driver = adminService.findDriverById(driverId)
+            val driver = AdminService.findDriverById(driverId)
 
             println("\nDriver Details")
             println(driver)
 
             println("\nAssigned Cab")
-            println(adminService.getCabForDriver(driver))
+            println(AdminService.getCabForDriver(driver))
 
         }
         catch (e: DriverNotFoundException) {
@@ -289,7 +283,7 @@ class AdminController(
             "Driver ID cannot be empty."
         )
 
-        val rides = adminService.getDriverRideHistory(driverId)
+        val rides = AdminService.getDriverRideHistory(driverId)
         if (rides.isEmpty()) {
             println("\nNo rides found.")
             return
@@ -328,7 +322,7 @@ class AdminController(
 
     private fun viewAllRiders() {
 
-        val riders = adminService.getAllRiders()
+        val riders = AdminService.getAllRiders()
 
         if (riders.isEmpty()) {
             println("\nNo riders found.")
@@ -349,7 +343,7 @@ class AdminController(
             "Enter Rider ID : ",
             "Rider ID cannot be empty."
         )
-        val rides = adminService.getRiderRideHistory(riderId)
+        val rides = AdminService.getRiderRideHistory(riderId)
 
         if (rides.isEmpty()) {
             println("\nNo rides found.")
@@ -397,22 +391,22 @@ class AdminController(
     }
 
     private fun viewAllRides() = displayRides(
-        adminService.getAllRides(),
+        AdminService.getAllRides(),
         "ALL RIDES"
     )
 
     private fun viewActiveRides() = displayRides(
-        adminService.getActiveRides(),
+        AdminService.getActiveRides(),
         "ACTIVE RIDES"
     )
 
     private fun viewCompletedRides() = displayRides(
-        adminService.getCompletedRides(),
+        AdminService.getCompletedRides(),
         "COMPLETED RIDES"
     )
 
     private fun viewCancelledRides() = displayRides(
-        adminService.getCancelledRides(),
+        AdminService.getCancelledRides(),
         "CANCELLED RIDES"
     )
 
@@ -462,7 +456,7 @@ class AdminController(
 
     private fun viewAllCabs() {
 
-        val cabs = adminService.getAllCabs()
+        val cabs = AdminService.getAllCabs()
 
         if (cabs.isEmpty()) {
             println("\nNo cabs available.")
@@ -481,7 +475,7 @@ class AdminController(
 
         val cabType = InputUtil.chooseCabType()
 
-        val cabs = adminService.getCabsByType(cabType)
+        val cabs = AdminService.getCabsByType(cabType)
 
         if (cabs.isEmpty()) {
             println("\nNo $cabType cabs found.")
@@ -531,7 +525,7 @@ class AdminController(
         )
 
         try {
-            adminService.unlockUserAccount(userId)
+            AdminService.unlockUserAccount(userId)
             println("User account unlocked successfully.")
         }
         catch (e: AuthenticationException) {
@@ -541,7 +535,7 @@ class AdminController(
 
     private fun viewLockedAccounts() {
 
-        val lockedAccounts = adminService.getLockedAccounts()
+        val lockedAccounts = AdminService.getLockedAccounts()
 
         if (lockedAccounts.isEmpty()) {
             println("\nNo locked user accounts found.")
@@ -567,7 +561,7 @@ class AdminController(
 
         try {
 
-            val user = adminService.findUserById(userId)
+            val user = AdminService.findUserById(userId)
 
             println("\n========== USER DETAILS ==========")
             println(user)

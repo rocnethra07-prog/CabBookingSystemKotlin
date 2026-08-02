@@ -11,7 +11,7 @@ import cab_booking.exception.InvalidRideStateException
 import cab_booking.exception.UnauthorizedRideActionException
 import java.time.LocalDateTime
 
-class DriverService {
+object DriverService {
 
     fun updateProfile(
         driver: Driver,

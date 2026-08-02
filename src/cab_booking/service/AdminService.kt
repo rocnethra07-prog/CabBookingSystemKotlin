@@ -1,6 +1,5 @@
 package cab_booking.service
 
-import cab_booking.data.DriverRegistrationData
 import cab_booking.model.*
 import cab_booking.model.types.CabType
 import cab_booking.model.types.RideStatus
@@ -10,8 +9,9 @@ import cab_booking.exception.AuthenticationException
 import cab_booking.exception.CabNotFoundException
 import cab_booking.exception.DriverNotFoundException
 import cab_booking.exception.UserNotFoundException
+import cab_booking.model.types.Location
 
-class AdminService(private val authService: AuthService) {
+object AdminService{
     fun isEmailRegistered(email: String): Boolean =
         UserRepo.existsByEmail(email)
 
@@ -22,31 +22,23 @@ class AdminService(private val authService: AuthService) {
         CabRepo.existsByRegistrationNumber(registrationNumber)
 
     // Driver Management
-    fun addDriver(driverData: DriverRegistrationData): Driver {
-        val cab = Cab(
-            registrationNumber = driverData.registrationNumber,
-            model = driverData.model,
-            cabType = driverData.cabType,
-        )
+    fun addDriver(name: String, phone: String, email: String, password: String, location: Location, licenseNumber: String, cab: Cab): Driver {
 
         val driver = Driver(
-            name = driverData.name,
-            phone = driverData.phone,
-            email = driverData.email,
+            name = name,
+            phone = phone,
+            email = email,
             cabId = cab.cabId,
-            licenseNumber = driverData.licenseNumber,
-            currentLocation = driverData.currentLocation
+            licenseNumber = licenseNumber,
+            currentLocation = location
         )
 
         try {
 
             DriverRepo.save(driver)
-
             CabRepo.save(cab)
-
-            authService.saveUserCredentials(
-                driver,
-                driverData.password
+            AuthService.saveUserCredentials(
+                driver, password
             )
 
             return driver
@@ -57,6 +49,14 @@ class AdminService(private val authService: AuthService) {
             CabRepo.deleteByKey(cab.cabId)
             throw e
         }
+    }
+
+    fun createCab(model: String, registrationNumber: String, cabType : CabType) : Cab{
+        return Cab(
+            registrationNumber = registrationNumber,
+            model = model,
+            cabType = cabType
+        )
     }
 
     fun deleteDriver(driver: Driver): Boolean {

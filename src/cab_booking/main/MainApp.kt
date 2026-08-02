@@ -2,33 +2,13 @@ package cab_booking.main
 
 import cab_booking.config.AdminSeeder
 import cab_booking.config.DriverSeeder
-import cab_booking.controller.AdminController
 import cab_booking.controller.AuthController
-import cab_booking.controller.DriverController
-import cab_booking.controller.RiderController
 import cab_booking.exception.DriverNotFoundException
 import cab_booking.model.User
 import cab_booking.router.UserRouter
-import cab_booking.service.AdminService
-import cab_booking.service.AuthService
-import cab_booking.service.DriverService
-import cab_booking.service.RiderService
-
 fun main(){
 
-    val authService = AuthService()
-    val adminService = AdminService(authService)
-    val driverService = DriverService()
-    val riderService = RiderService()
-
-    val authController = AuthController(authService)
-    val adminController = AdminController(adminService)
-    val driverController = DriverController(driverService, authService)
-    val riderController = RiderController(riderService, authService)
-
-    val router = UserRouter(adminController,driverController,riderController,driverService)
-
-    AdminSeeder.seed(authService)
+    AdminSeeder.seed()
     DriverSeeder.seed()
 
     println("\n---------------------------")
@@ -43,8 +23,8 @@ fun main(){
         println("Choose: ")
         val choice = readln().trim()
         when (choice) {
-            "1" -> handleSession({authController.login()}, router)
-            "2" -> handleSession({authController.register()}, router)
+            "1" -> handleSession({AuthController.login()})
+            "2" -> handleSession({AuthController.register()})
             "0" -> {
                 println("Goodbye! See you next ride.")
                 running = false
@@ -56,12 +36,12 @@ fun main(){
 }
 
 
-fun handleSession(action:() -> User?, userRouter: UserRouter){
+fun handleSession(action:() -> User?){
         val user = action()
         if (user != null) {
             println("Welcome " + user.name + " !")
             try {
-                userRouter.route(user)
+                UserRouter.route(user)
             }
             catch (e : DriverNotFoundException){
                 println("[!] ${e.message}. Please try again")

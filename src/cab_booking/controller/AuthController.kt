@@ -7,9 +7,7 @@ import cab_booking.util.InputUtil
 import cab_booking.exception.AuthenticationException
 import cab_booking.exception.UserNotFoundException
 
-class AuthController(
-    private val authService: AuthService
-) {
+object AuthController{
 
     fun login() : User?{
 
@@ -17,7 +15,7 @@ class AuthController(
         val password = InputUtil.promptPassword()
 
         try {
-            val user: User = authService.loginUser(email, password)
+            val user: User = AuthService.loginUser(email, password)
             println("\nWelcome back, " + user.name)
             return user
 
@@ -40,7 +38,7 @@ class AuthController(
             email = InputUtil.promptEmail()
 
             //Pre-check for UX
-            if(authService.isEmailRegistered(email)){
+            if(AuthService.isEmailRegistered(email)){
                 println("! This email is already registered. Please use a different email !")
                 continue
             }
@@ -50,7 +48,7 @@ class AuthController(
         val password = InputUtil.promptPassword()
 
         try {
-            val user: User = authService.registerUser(name, phone, email, password, UserRole.RIDER )
+            val user: User = AuthService.registerUser(name, phone, email, password, UserRole.RIDER )
             println("\n  Account created successfully.\n  Welcome, " + user.name + "!")
             return user
         }

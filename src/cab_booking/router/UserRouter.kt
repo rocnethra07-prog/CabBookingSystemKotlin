@@ -5,19 +5,15 @@ import cab_booking.model.User
 import cab_booking.model.types.UserRole
 import cab_booking.service.DriverService
 
-class UserRouter(private val adminController: AdminController,
-                 private val driverController: DriverController,
-                 private val riderController: RiderController,
-                 private val driverService: DriverService
-) {
+object UserRouter{
     fun route(user: User){
         when(user.userRole){
-            UserRole.ADMIN -> adminController.adminDashboard()
+            UserRole.ADMIN -> AdminController.adminDashboard()
             UserRole.DRIVER -> {
-                val driver = driverService.findDriverById(user.userId)
-                driverController.driverDashboard(driver)
+                val driver = DriverService.findDriverById(user.userId)
+                DriverController.driverDashboard(driver)
             }
-            UserRole.RIDER -> riderController.riderDashboard(user)
+            UserRole.RIDER -> RiderController.riderDashboard(user)
         }
     }
 }

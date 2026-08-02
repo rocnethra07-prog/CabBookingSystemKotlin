@@ -9,10 +9,7 @@ import cab_booking.exception.AuthenticationException
 import cab_booking.exception.InvalidCredentialsException
 import cab_booking.exception.UnauthorizedRideActionException
 
-class DriverController(
-    private val driverService: DriverService ,
-    private val authService: AuthService
-) {
+object DriverController{
 
     fun driverDashboard(driver: Driver) {
 
@@ -47,7 +44,7 @@ class DriverController(
 
     // CURRENT RIDE
     private fun viewCurrentRide(driver: Driver) {
-        val ride = driverService.getCurrentRide(driver)
+        val ride = DriverService.getCurrentRide(driver)
 
         if (ride == null) {
             println("\nNo active ride at the moment.")
@@ -122,7 +119,7 @@ class DriverController(
 
         try {
 
-            driverService.updateProfile(
+            DriverService.updateProfile(
                 driver,
                 name,
                 phone,
@@ -161,7 +158,7 @@ class DriverController(
     // RIDE HISTORY
     private fun viewRideHistory(driver: Driver) {
 
-        val rides = driverService.getRidesByDriver(driver)
+        val rides = DriverService.getRidesByDriver(driver)
 
         if (rides.isEmpty()) {
             println("\nNo rides found.")
@@ -182,7 +179,7 @@ class DriverController(
     ) {
 
         try {
-            driverService.completeRide(
+            DriverService.completeRide(
                 ride,
                 driver
             )
@@ -204,7 +201,7 @@ class DriverController(
     ) {
 
         try {
-            driverService.cancelRide(
+            DriverService.cancelRide(
                 ride,
                 driver
             )
@@ -242,7 +239,7 @@ class DriverController(
         }
 
         try {
-            authService.changePassword(
+            AuthService.changePassword(
                 driver,
                 currentPassword,
                 newPassword
