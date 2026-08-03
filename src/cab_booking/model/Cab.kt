@@ -16,13 +16,4 @@ class Cab(
         require(registrationNumber.isNotBlank()) { "Registration number cannot be blank." }
         require(model.isNotBlank()) { "Car model cannot be blank." }
     }
-
-    override fun toString(): String {
-        return """
-            Cab ID           : $cabId
-            Model            : $model
-            Type             : $cabType
-            Registration No. : $registrationNumber
-        """.trimIndent()
-    }
 }
