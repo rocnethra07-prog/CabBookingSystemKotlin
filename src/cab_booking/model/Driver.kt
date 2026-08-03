@@ -10,7 +10,7 @@ class Driver(
     email: String,
     val cabId: String,
     licenseNumber: String,
-    currentLocation: Location
+    var currentLocation: Location
 ) : User(
     name = name,
     phone = phone,
