@@ -566,7 +566,8 @@ object AdminController{
             println("\n========== USER DETAILS ==========")
             println(user)
 
-        } catch (e: UserNotFoundException) {
+        }
+        catch (e: UserNotFoundException) {
             println("[!] ${e.message}")
         } catch (e: IllegalArgumentException) {
             println("[!] Invalid Input, ${e.message}")
