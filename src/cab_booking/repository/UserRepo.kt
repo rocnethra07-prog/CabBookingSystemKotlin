@@ -17,12 +17,12 @@ object UserRepo : InMemoryRepo<User>() {
     }
 
     fun findByEmail(email: String): User? {
-        val trimmedEmail = email.trim().lowercase()
+        val trimmedEmail = trimEmail(email)
         return findByKey(trimmedEmail)
     }
 
     fun existsByEmail(email: String): Boolean {
-        val trimmedEmail = email.trim().lowercase()
+        val trimmedEmail = trimEmail(email)
 
         if (trimmedEmail.isBlank()) {
             return false
@@ -32,11 +32,13 @@ object UserRepo : InMemoryRepo<User>() {
     }
 
     fun deleteByEmail(email: String) {
-        val trimmedEmail = email.trim().lowercase()
+        val trimmedEmail = trimEmail(email)
         deleteByKey(trimmedEmail)
     }
 
     fun findByUserId(userId: String): User? =
         storage.values.firstOrNull { it.userId == userId }
 
+    private fun trimEmail(email: String) =
+        email.trim().lowercase()
 }

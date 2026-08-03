@@ -2,10 +2,15 @@ package cab_booking.main
 
 import cab_booking.config.AdminSeeder
 import cab_booking.config.DriverSeeder
+import cab_booking.controller.AdminController
 import cab_booking.controller.AuthController
+import cab_booking.controller.DriverController
+import cab_booking.controller.RiderController
 import cab_booking.exception.DriverNotFoundException
 import cab_booking.model.User
-import cab_booking.router.UserRouter
+import cab_booking.model.types.UserRole
+import cab_booking.service.DriverService
+
 fun main(){
 
     AdminSeeder.seed()
@@ -36,16 +41,27 @@ fun main(){
 }
 
 
-fun handleSession(action:() -> User?){
+private fun handleSession(action:() -> User?){
         val user = action()
         if (user != null) {
             println("Welcome " + user.name + " !")
             try {
-                UserRouter.route(user)
+                route(user)
             }
             catch (e : DriverNotFoundException){
                 println("[!] ${e.message}. Please try again")
                 return
             }
         }
+}
+
+private fun route(user: User){
+    when(user.userRole){
+        UserRole.ADMIN -> AdminController.adminDashboard()
+        UserRole.DRIVER -> {
+            val driver = DriverService.findDriverById(user.userId)
+            DriverController.driverDashboard(driver)
+        }
+        UserRole.RIDER -> RiderController.riderDashboard(user)
+    }
 }

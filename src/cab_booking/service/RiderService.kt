@@ -139,6 +139,12 @@ object RiderService {
 
         ride.rating = rating
         val driver = DriverRepo.findByKey(ride.driverId) ?: throw DriverNotFoundException("Driver not found for ID: ${ride.driverId}")
-        driver.addRating(rating)
+        addRating(driver, rating)
+    }
+
+    private fun addRating(driver: Driver, rating: Int) {
+        require(rating in 1..5) { "Rating must be between 1 and 5." }
+        driver.totalRating += rating
+        driver.ratingCount++
     }
 }

@@ -4,7 +4,7 @@ import cab_booking.model.types.CabType
 import cab_booking.util.IdGenerator
 
 //fields are readable globally and unmodifiable
-data class Cab(
+class Cab(
     val registrationNumber: String,
     val model: String,
     val cabType: CabType

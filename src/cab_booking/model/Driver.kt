@@ -22,27 +22,12 @@ class Driver(
     // Private set for public var so that properties cannot be modified directly but can be read easily (driver.earnings)
     val licenseNumber: String = licenseNumber.trim().uppercase()
 
-    var currentLocation: Location = currentLocation
-        set(value){
-            if(value == field) return
-            field = value
-        }
-
     var earnings: BigDecimal = BigDecimal.ZERO
-        private set
 
     var isAvailable: Boolean = true
-        set(value){
-            if(value == field) return
-            field = value
-        }
 
-
-    // Private fields used to calculate the driver's average rating.
-    // They are kept private because they are not needed outside this class.
-    // Only the calculated averageRating is exposed.
-    private var totalRating: Int = 0
-    private var ratingCount: Int = 0
+    var totalRating: Int = 0
+    var ratingCount: Int = 0
 
     val averageRating: Double
         get() {
@@ -59,16 +44,16 @@ class Driver(
         require(licenseNumber.isNotBlank()) { "Invalid license number." }
     }
 
-    fun addEarnings(amount: BigDecimal) {
-        require(amount > BigDecimal.ZERO) { "Amount must be greater than zero." }
-        earnings += amount
-    }
-
-    fun addRating(rating: Int) {
-        require(rating in 1..5) { "Rating must be between 1 and 5." }
-        totalRating += rating
-        ratingCount++
-    }
+//    fun addEarnings(amount: BigDecimal) {
+//        require(amount > BigDecimal.ZERO) { "Amount must be greater than zero." }
+//        earnings += amount
+//    }
+//
+//    fun addRating(rating: Int) {
+//        require(rating in 1..5) { "Rating must be between 1 and 5." }
+//        totalRating += rating
+//        ratingCount++
+//    }
 
     override fun toString(): String {
         return """

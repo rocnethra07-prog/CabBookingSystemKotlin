@@ -9,6 +9,7 @@ import cab_booking.repository.DriverRepo
 import cab_booking.repository.RideRepo
 import cab_booking.exception.InvalidRideStateException
 import cab_booking.exception.UnauthorizedRideActionException
+import java.math.BigDecimal
 import java.time.LocalDateTime
 
 object DriverService {
@@ -33,7 +34,12 @@ object DriverService {
     ) {
         endRide(ride, driver){ ride -> markRideAsCompleted(ride)}
         driver.currentLocation = ride.dropLocation
-        driver.addEarnings(ride.fare)
+        addEarnings(driver,ride.fare)
+    }
+
+    private fun addEarnings(driver: Driver, amount: BigDecimal) {
+        require(amount > BigDecimal.ZERO) { "Amount must be greater than zero." }
+        driver.earnings += amount
     }
 
     fun cancelRide(

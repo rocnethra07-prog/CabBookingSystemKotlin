@@ -7,7 +7,7 @@ import cab_booking.util.IdGenerator
 import java.math.BigDecimal
 import java.time.LocalDateTime
 
-data class Ride(
+class Ride(
     val riderId: String,
     val driverId: String,
     val pickupLocation: Location,
@@ -42,12 +42,12 @@ data class Ride(
 
     var rating: Int? = null  // 1–5, null if not yet rated
         set(value) {
-            if(rideStatus != RideStatus.COMPLETED) {
-                throw InvalidRideStateException("Only completed rides can be rated.")
-            }
-
             if(field != null) {
                 throw InvalidRideStateException("Ride has already been rated.")
+            }
+
+            if(rideStatus != RideStatus.COMPLETED) {
+                throw InvalidRideStateException("Only completed rides can be rated.")
             }
 
             require(value in 1..5) { "Rating must be between 1 and 5." }
