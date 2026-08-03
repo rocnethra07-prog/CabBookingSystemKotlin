@@ -1,7 +1,4 @@
 package cab_booking.service
-
-import cab_booking.model.*
-import cab_booking.model.types.*
 import cab_booking.repository.CabRepo
 import cab_booking.repository.DriverRepo
 import cab_booking.repository.RideRepo
@@ -11,6 +8,12 @@ import cab_booking.exception.DriverNotFoundException
 import cab_booking.exception.DriverUnavailableException
 import cab_booking.exception.InvalidRideStateException
 import cab_booking.exception.UnauthorizedRideActionException
+import cab_booking.model.Driver
+import cab_booking.model.Ride
+import cab_booking.model.User
+import cab_booking.model.types.CabType
+import cab_booking.model.types.Location
+import cab_booking.model.types.RideStatus
 import java.time.LocalDateTime
 import java.time.LocalTime
 

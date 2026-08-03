@@ -1,6 +1,6 @@
 package cab_booking.controller
 
-import cab_booking.model.*
+import cab_booking.model.User
 import cab_booking.model.types.Location
 import cab_booking.service.AuthService
 import cab_booking.service.RiderService
@@ -12,6 +12,8 @@ import cab_booking.exception.DriverUnavailableException
 import cab_booking.exception.InvalidCredentialsException
 import cab_booking.exception.InvalidRideStateException
 import cab_booking.exception.UnauthorizedRideActionException
+import cab_booking.model.Driver
+import cab_booking.model.Ride
 
 object RiderController{
 

@@ -1,16 +1,23 @@
 package cab_booking.service
 
-import cab_booking.model.*
 import cab_booking.auth.UserAuthInfo
 import cab_booking.model.types.CabType
 import cab_booking.model.types.RideStatus
 import cab_booking.model.types.UserRole
-import cab_booking.repository.*
 import cab_booking.exception.AuthenticationException
 import cab_booking.exception.CabNotFoundException
 import cab_booking.exception.DriverNotFoundException
 import cab_booking.exception.UserNotFoundException
+import cab_booking.model.Cab
+import cab_booking.model.Driver
+import cab_booking.model.Ride
+import cab_booking.model.User
 import cab_booking.model.types.Location
+import cab_booking.repository.AuthRepo
+import cab_booking.repository.CabRepo
+import cab_booking.repository.DriverRepo
+import cab_booking.repository.RideRepo
+import cab_booking.repository.UserRepo
 
 object AdminService{
     fun isEmailRegistered(email: String): Boolean =
