@@ -44,17 +44,6 @@ class Driver(
         require(licenseNumber.isNotBlank()) { "Invalid license number." }
     }
 
-//    fun addEarnings(amount: BigDecimal) {
-//        require(amount > BigDecimal.ZERO) { "Amount must be greater than zero." }
-//        earnings += amount
-//    }
-//
-//    fun addRating(rating: Int) {
-//        require(rating in 1..5) { "Rating must be between 1 and 5." }
-//        totalRating += rating
-//        ratingCount++
-//    }
-
     override fun toString(): String {
         return """
             ${super.toString()}
