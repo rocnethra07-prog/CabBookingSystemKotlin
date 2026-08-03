@@ -4,7 +4,7 @@ import cab_booking.util.Validator
 import org.mindrot.jbcrypt.BCrypt
 
 //Credentials related class
-class UserAuthInfo(val userId: String, password: String) {
+class UserCredential(val userId: String, password: String) {
 
     private var passwordHash: String
     private var failedAttempts: Int = 0

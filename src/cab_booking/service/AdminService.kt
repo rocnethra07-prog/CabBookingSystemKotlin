@@ -1,6 +1,6 @@
 package cab_booking.service
 
-import cab_booking.auth.UserAuthInfo
+import cab_booking.auth.UserCredential
 import cab_booking.model.types.CabType
 import cab_booking.model.types.RideStatus
 import cab_booking.model.types.UserRole
@@ -145,7 +145,7 @@ object AdminService{
         auth.unlockAccount()
     }
 
-    fun getLockedAccounts(): List<UserAuthInfo> =
+    fun getLockedAccounts(): List<UserCredential> =
         AuthRepo.getLockedAccounts()
 
 

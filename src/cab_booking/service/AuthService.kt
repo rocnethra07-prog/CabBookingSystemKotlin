@@ -1,7 +1,7 @@
 package cab_booking.service
 
 import cab_booking.model.User
-import cab_booking.auth.UserAuthInfo
+import cab_booking.auth.UserCredential
 import cab_booking.model.types.UserRole
 import cab_booking.repository.AuthRepo
 import cab_booking.repository.UserRepo
@@ -32,7 +32,7 @@ object AuthService{
 
      fun saveUserCredentials(user: User, password: String) {
         UserRepo.save(user)
-        AuthRepo.save(UserAuthInfo(user.userId,password))
+        AuthRepo.save(UserCredential(user.userId,password))
     }
 
     fun loginUser(email: String, password: String): User {
@@ -42,7 +42,7 @@ object AuthService{
             throw UserNotFoundException("Account does not exist. Please register.")
         }
 
-        val userAuth: UserAuthInfo? = AuthRepo.findByUserId(user.userId)
+        val userAuth: UserCredential? = AuthRepo.findByUserId(user.userId)
         if(userAuth == null){
             throw AuthenticationException("Authentication details not found. Please register")
         }
@@ -59,7 +59,7 @@ object AuthService{
         newPassword: String
     ) {
 
-        val userAuth: UserAuthInfo? = AuthRepo.findByUserId(user.userId)
+        val userAuth: UserCredential? = AuthRepo.findByUserId(user.userId)
         if(userAuth == null){
             throw AuthenticationException("Authentication details not found. Please register")
         }

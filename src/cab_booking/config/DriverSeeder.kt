@@ -2,7 +2,7 @@ package cab_booking.config
 
 import cab_booking.model.Cab
 import cab_booking.model.Driver
-import cab_booking.auth.UserAuthInfo
+import cab_booking.auth.UserCredential
 import cab_booking.model.types.CabType
 import cab_booking.model.types.Location
 import cab_booking.repository.AuthRepo
@@ -76,6 +76,6 @@ object DriverSeeder {
         CabRepo.save(cab)
         DriverRepo.save(driver)
         UserRepo.save(driver)
-        AuthRepo.save(UserAuthInfo(driver.userId, SEED_PASSWORD))
+        AuthRepo.save(UserCredential(driver.userId, SEED_PASSWORD))
     }
 }
