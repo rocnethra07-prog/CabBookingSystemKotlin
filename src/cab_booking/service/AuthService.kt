@@ -22,10 +22,10 @@ object AuthService{
         role: UserRole
     ): User {
         val user = User(
-            name,
-            phone,
-            email,
-            role)
+            name = name,
+            phone = phone,
+            email = email,
+            userRole = role)
         saveUserCredentials(user, password)
         return user
     }
