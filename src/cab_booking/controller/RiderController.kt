@@ -115,7 +115,8 @@ object RiderController{
 
                 return
 
-            } catch (e: DriverUnavailableException) {
+            }
+            catch (e: DriverUnavailableException) {
 
                 println("[!] ${e.message}")
 
@@ -123,19 +124,17 @@ object RiderController{
                     return
                 }
 
-            } catch(e: DistanceNotFoundException){
-
+            }
+            catch(e: DistanceNotFoundException){
                 println("[!] ${e.message}")
-
-            }catch (e: DriverNotFoundException) {
-
+            }
+            catch (e: DriverNotFoundException) {
                 println("[!] ${e.message}")
             }
             catch (e: CabNotFoundException){
                 println("[!] ${e.message}")
             }
             catch (e: IllegalArgumentException) {
-
                 println("[!] ${e.message}")
             }
         }
