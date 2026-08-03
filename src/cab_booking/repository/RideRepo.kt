@@ -35,6 +35,6 @@ object RideRepo : InMemoryRepo<Ride>() {
                 it.riderId == riderId && it.rideStatus == RideStatus.COMPLETED
             }
             .maxByOrNull {
-                it.completedAt ?: it.bookedAt
+                it.completedAt!!
             }
 }
