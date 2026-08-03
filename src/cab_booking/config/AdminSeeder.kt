@@ -3,7 +3,6 @@ package cab_booking.config
 import cab_booking.model.types.UserRole
 import cab_booking.service.AuthService
 
-
 //object instead of class so that there is no need of creating a AdminSeeder object
 object AdminSeeder {
 
