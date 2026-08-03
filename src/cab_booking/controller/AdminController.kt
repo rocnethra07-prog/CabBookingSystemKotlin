@@ -569,7 +569,8 @@ object AdminController{
         }
         catch (e: UserNotFoundException) {
             println("[!] ${e.message}")
-        } catch (e: IllegalArgumentException) {
+        }
+        catch (e: IllegalArgumentException) {
             println("[!] Invalid Input, ${e.message}")
         }
     }
