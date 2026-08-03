@@ -6,6 +6,7 @@ import cab_booking.service.AuthService
 import cab_booking.service.RiderService
 import cab_booking.util.InputUtil
 import cab_booking.exception.AuthenticationException
+import cab_booking.exception.CabNotFoundException
 import cab_booking.exception.DistanceNotFoundException
 import cab_booking.exception.DriverNotFoundException
 import cab_booking.exception.DriverUnavailableException
@@ -122,12 +123,15 @@ object RiderController{
                     return
                 }
 
-            } catch(e : DistanceNotFoundException){
+            } catch(e: DistanceNotFoundException){
 
                 println("[!] ${e.message}")
 
             }catch (e: DriverNotFoundException) {
 
+                println("[!] ${e.message}")
+            }
+            catch (e: CabNotFoundException){
                 println("[!] ${e.message}")
             }
             catch (e: IllegalArgumentException) {
