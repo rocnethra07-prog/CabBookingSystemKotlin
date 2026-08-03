@@ -3,7 +3,7 @@ package cab_booking.util
 import cab_booking.exception.DistanceNotFoundException
 import cab_booking.model.types.Location
 
-// Distances (in km) are approximate, fixed values for this project - not live geolocation.
+// Distances (in km) are approximate, fixed values for this project
 // Key is an unordered Set<Location>, so distance(A, B) and distance(B, A) share one entry.
 object DistanceMatrix {
 
