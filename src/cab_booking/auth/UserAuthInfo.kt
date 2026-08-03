@@ -1,4 +1,4 @@
-package cab_booking.model
+package cab_booking.auth
 
 import cab_booking.util.Validator
 import org.mindrot.jbcrypt.BCrypt

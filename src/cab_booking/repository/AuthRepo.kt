@@ -1,6 +1,6 @@
 package cab_booking.repository
 
-import cab_booking.model.UserAuthInfo
+import cab_booking.auth.UserAuthInfo
 
 object AuthRepo : InMemoryRepo<UserAuthInfo>() {
 

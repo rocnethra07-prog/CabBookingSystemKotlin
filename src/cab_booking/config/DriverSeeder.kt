@@ -2,7 +2,7 @@ package cab_booking.config
 
 import cab_booking.model.Cab
 import cab_booking.model.Driver
-import cab_booking.model.UserAuthInfo
+import cab_booking.auth.UserAuthInfo
 import cab_booking.model.types.CabType
 import cab_booking.model.types.Location
 import cab_booking.repository.AuthRepo

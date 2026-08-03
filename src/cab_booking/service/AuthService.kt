@@ -1,7 +1,7 @@
 package cab_booking.service
 
 import cab_booking.model.User
-import cab_booking.model.UserAuthInfo
+import cab_booking.auth.UserAuthInfo
 import cab_booking.model.types.UserRole
 import cab_booking.repository.AuthRepo
 import cab_booking.repository.UserRepo

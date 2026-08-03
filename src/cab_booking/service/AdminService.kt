@@ -1,6 +1,7 @@
 package cab_booking.service
 
 import cab_booking.model.*
+import cab_booking.auth.UserAuthInfo
 import cab_booking.model.types.CabType
 import cab_booking.model.types.RideStatus
 import cab_booking.model.types.UserRole
