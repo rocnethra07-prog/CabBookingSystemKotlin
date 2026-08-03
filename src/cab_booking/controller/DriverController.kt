@@ -7,6 +7,7 @@ import cab_booking.service.DriverService
 import cab_booking.util.InputUtil
 import cab_booking.exception.AuthenticationException
 import cab_booking.exception.InvalidCredentialsException
+import cab_booking.exception.InvalidRideStateException
 import cab_booking.exception.UnauthorizedRideActionException
 
 object DriverController{
@@ -189,6 +190,9 @@ object DriverController{
         catch (e: UnauthorizedRideActionException) {
             println("[!] ${e.message}")
         }
+        catch (e: InvalidRideStateException){
+            println("[!] ${e.message}")
+        }
         catch (e : IllegalArgumentException){
             println("[!] ${e.message}")
         }
@@ -209,6 +213,9 @@ object DriverController{
 
         }
         catch (e: UnauthorizedRideActionException) {
+            println("[!] ${e.message}")
+        }
+        catch (e: InvalidRideStateException){
             println("[!] ${e.message}")
         }
         catch (e : IllegalArgumentException){
