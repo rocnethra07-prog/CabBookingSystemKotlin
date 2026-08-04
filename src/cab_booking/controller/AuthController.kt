@@ -4,7 +4,8 @@ import cab_booking.model.User
 import cab_booking.model.types.UserRole
 import cab_booking.service.AuthService
 import cab_booking.util.InputUtil
-import cab_booking.exception.AuthenticationException
+import cab_booking.exception.CredentialsNotFoundException
+import cab_booking.exception.InvalidCredentialsException
 import cab_booking.exception.UserNotFoundException
 
 object AuthController{
@@ -24,7 +25,11 @@ object AuthController{
             println("[!] Login failed: " + e.message)
             return null
         }
-        catch (e : AuthenticationException){
+        catch (e: InvalidCredentialsException){
+            println("[!] Login failed: " + e.message)
+            return null
+        }
+        catch (e : CredentialsNotFoundException){
             println("[!] Authentication failed: ${e.message}")
             return null
         }

@@ -1,19 +1,31 @@
 package cab_booking.exception
 
-class UserNotFoundException(message: String) : RuntimeException(message)
+import cab_booking.model.types.CabType
+import cab_booking.model.types.Location
 
-class DriverNotFoundException(message: String) : RuntimeException(message)
+class UserNotFoundException(message: String) :
+    Exception(message)
 
-class CabNotFoundException(message: String) : RuntimeException(message)
+class DriverNotFoundException(message: String) :
+    Exception(message)
 
-class AuthenticationException(message: String) : RuntimeException(message)
+class CabNotFoundException(message: String) :
+    Exception(message)
 
-class DriverUnavailableException(message: String) : RuntimeException(message)
+class CredentialsNotFoundException() :
+    Exception("Authentication details not found.")
 
-class InvalidRideStateException(message: String) : RuntimeException(message)
+class DriverUnavailableException(cabType: CabType) :
+    Exception("No $cabType drivers are available right now.")
 
-class UnauthorizedRideActionException(message: String) : RuntimeException(message)
+class InvalidRideStateException(message: String) :
+    Exception(message)
 
-class InvalidCredentialsException(message: String) : RuntimeException(message)
+class UnauthorizedRideActionException(message: String) :
+    Exception(message)
 
-class DistanceNotFoundException(message: String) : RuntimeException(message)
+class InvalidCredentialsException() :
+    Exception("Invalid Credentials")
+
+class DistanceNotFoundException(location1 : Location, location2 : Location) :
+    Exception("Distance not configured between $location1 and $location2")

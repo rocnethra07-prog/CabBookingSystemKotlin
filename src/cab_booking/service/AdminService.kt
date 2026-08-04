@@ -4,7 +4,7 @@ import cab_booking.auth.UserCredential
 import cab_booking.model.types.CabType
 import cab_booking.model.types.RideStatus
 import cab_booking.model.types.UserRole
-import cab_booking.exception.AuthenticationException
+import cab_booking.exception.CredentialsNotFoundException
 import cab_booking.exception.CabNotFoundException
 import cab_booking.exception.DriverNotFoundException
 import cab_booking.exception.UserNotFoundException
@@ -134,13 +134,8 @@ object AdminService{
         CabRepo.findByCabType(cabType)
 
     fun unlockUserAccount(userId: String) {
-
         val auth = AuthRepo.findByUserId(userId)
-            ?: throw AuthenticationException("User authentication details not found.")
-
-        if (!auth.isAccountLocked) {
-            throw AuthenticationException("User account is already unlocked.")
-        }
+            ?: throw CredentialsNotFoundException("User authentication details not found.")
 
         auth.unlockAccount()
     }

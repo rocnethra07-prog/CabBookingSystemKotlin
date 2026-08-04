@@ -36,9 +36,7 @@ object RiderService {
     ): Ride {
 
         val driver = findAvailableDriver(cabType, pickupLocation)
-            ?: throw DriverUnavailableException(
-                "No $cabType drivers are available right now."
-            )
+            ?: throw DriverUnavailableException(cabType)
 
         val ride = Ride(
             riderId = rider.userId,

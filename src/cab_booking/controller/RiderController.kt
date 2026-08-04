@@ -5,7 +5,7 @@ import cab_booking.model.types.Location
 import cab_booking.service.AuthService
 import cab_booking.service.RiderService
 import cab_booking.util.InputUtil
-import cab_booking.exception.AuthenticationException
+import cab_booking.exception.CredentialsNotFoundException
 import cab_booking.exception.CabNotFoundException
 import cab_booking.exception.DistanceNotFoundException
 import cab_booking.exception.DriverNotFoundException
@@ -378,7 +378,7 @@ object RiderController{
             println("\nPassword changed successfully.")
 
         }
-        catch (e : AuthenticationException){
+        catch (e : CredentialsNotFoundException){
             println("[!] Authentication failed: ${e.message}")
         }
         catch (e: InvalidCredentialsException) {

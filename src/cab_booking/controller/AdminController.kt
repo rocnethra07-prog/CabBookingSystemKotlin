@@ -3,7 +3,7 @@ package cab_booking.controller
 import cab_booking.model.Ride
 import cab_booking.service.AdminService
 import cab_booking.util.InputUtil
-import cab_booking.exception.AuthenticationException
+import cab_booking.exception.CredentialsNotFoundException
 import cab_booking.exception.CabNotFoundException
 import cab_booking.exception.DriverNotFoundException
 import cab_booking.exception.UserNotFoundException
@@ -517,18 +517,35 @@ object AdminController{
 
     private fun unlockUserAccount() {
 
+        val lockedAccounts = AdminService.getLockedAccounts()
+
         println("\n========== UNLOCK USER ACCOUNT ==========")
 
+        if (lockedAccounts.isEmpty()) {
+            println("No locked accounts found.")
+            return
+        }
+
+        println("\nLocked Accounts:")
+        lockedAccounts.forEachIndexed { index, account ->
+            println("${index + 1}. ${account.userId}")
+        }
+
         val userId = InputUtil.promptNonEmptyInput(
-            "Enter User ID : ",
+            "\nEnter User ID : ",
             "User ID cannot be empty."
         )
+
+        if (lockedAccounts.none { it.userId == userId }) {
+            println("[!] Please enter a valid locked User ID.")
+            return
+        }
 
         try {
             AdminService.unlockUserAccount(userId)
             println("User account unlocked successfully.")
         }
-        catch (e: AuthenticationException) {
+        catch (e: CredentialsNotFoundException) {
             println("[!] Unable to unlock account. ${e.message}")
         }
     }

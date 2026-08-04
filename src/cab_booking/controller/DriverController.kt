@@ -5,7 +5,7 @@ import cab_booking.model.Ride
 import cab_booking.service.AuthService
 import cab_booking.service.DriverService
 import cab_booking.util.InputUtil
-import cab_booking.exception.AuthenticationException
+import cab_booking.exception.CredentialsNotFoundException
 import cab_booking.exception.InvalidCredentialsException
 import cab_booking.exception.InvalidRideStateException
 import cab_booking.exception.UnauthorizedRideActionException
@@ -257,7 +257,7 @@ object DriverController{
             println("\nPassword changed successfully.")
 
         }
-        catch (e : AuthenticationException){
+        catch (e : CredentialsNotFoundException){
             println("[!] Authentication Exception, ${e.message}")
         }
         catch (e: InvalidCredentialsException) {

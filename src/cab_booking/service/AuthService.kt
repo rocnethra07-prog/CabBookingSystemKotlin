@@ -5,7 +5,7 @@ import cab_booking.auth.UserCredential
 import cab_booking.model.types.UserRole
 import cab_booking.repository.AuthRepo
 import cab_booking.repository.UserRepo
-import cab_booking.exception.AuthenticationException
+import cab_booking.exception.CredentialsNotFoundException
 import cab_booking.exception.InvalidCredentialsException
 import cab_booking.exception.UserNotFoundException
 
@@ -44,11 +44,11 @@ object AuthService{
 
         val userAuth: UserCredential? = AuthRepo.findByUserId(user.userId)
         if(userAuth == null){
-            throw AuthenticationException("Authentication details not found. Please register")
+            throw CredentialsNotFoundException("Authentication details not found. Please register")
         }
 
         if(!userAuth.verifyPassword(password)){
-            throw InvalidCredentialsException("Invalid credentials.")
+            throw InvalidCredentialsException()
         }
         return user
     }
@@ -61,11 +61,11 @@ object AuthService{
 
         val userAuth: UserCredential? = AuthRepo.findByUserId(user.userId)
         if(userAuth == null){
-            throw AuthenticationException("Authentication details not found. Please register")
+            throw CredentialsNotFoundException("Authentication details not found. Please register")
         }
 
         if(!userAuth.verifyPassword(currentPassword)){
-            throw InvalidCredentialsException("Invalid credentials.")
+            throw InvalidCredentialsException()
         }
 
         userAuth.updatePassword(newPassword)

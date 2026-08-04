@@ -63,12 +63,10 @@ object DistanceMatrix {
         setOf(Location.POTHERI, Location.GUDUVANCHERY) to 3.0
     )
 
-    fun getDistanceKm(a: Location, b: Location): Double {
-        require(a != b) { "Pickup and drop locations cannot be the same."}
-        return distances[setOf(a, b)]
-            ?:  throw DistanceNotFoundException(
-                "Distance not configured between $a and $b."
-            )
+    fun getDistanceKm(location1: Location, location2: Location): Double {
+        require(location1 != location2) { "Pickup and drop locations cannot be the same."}
+        return distances[setOf(location1, location2)]
+            ?:  throw DistanceNotFoundException(location1,location2)
     }
 
 }
