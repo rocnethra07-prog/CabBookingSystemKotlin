@@ -2,7 +2,7 @@ package cab_booking.controller
 
 import cab_booking.model.Ride
 import cab_booking.service.AdminService
-import cab_booking.util.InputUtil
+import cab_booking.console.InputUtil
 import cab_booking.exception.CredentialsNotFoundException
 import cab_booking.exception.CabNotFoundException
 import cab_booking.exception.DriverNotFoundException

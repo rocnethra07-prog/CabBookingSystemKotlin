@@ -3,7 +3,7 @@ package cab_booking.controller
 import cab_booking.model.User
 import cab_booking.model.types.UserRole
 import cab_booking.service.AuthService
-import cab_booking.util.InputUtil
+import cab_booking.console.InputUtil
 import cab_booking.exception.CredentialsNotFoundException
 import cab_booking.exception.InvalidCredentialsException
 import cab_booking.exception.UserNotFoundException

@@ -4,7 +4,7 @@ import cab_booking.model.Driver
 import cab_booking.model.Ride
 import cab_booking.service.AuthService
 import cab_booking.service.DriverService
-import cab_booking.util.InputUtil
+import cab_booking.console.InputUtil
 import cab_booking.exception.CredentialsNotFoundException
 import cab_booking.exception.InvalidCredentialsException
 import cab_booking.exception.InvalidRideStateException

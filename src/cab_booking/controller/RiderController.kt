@@ -4,7 +4,7 @@ import cab_booking.model.User
 import cab_booking.model.types.Location
 import cab_booking.service.AuthService
 import cab_booking.service.RiderService
-import cab_booking.util.InputUtil
+import cab_booking.console.InputUtil
 import cab_booking.exception.CredentialsNotFoundException
 import cab_booking.exception.CabNotFoundException
 import cab_booking.exception.DistanceNotFoundException

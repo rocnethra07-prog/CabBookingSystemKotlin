@@ -1,4 +1,4 @@
-package cab_booking.main
+package cab_booking
 
 import cab_booking.config.AdminSeeder
 import cab_booking.config.DriverSeeder
