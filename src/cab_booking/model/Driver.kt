@@ -32,6 +32,12 @@ class Driver(
     var isAvailable: Boolean = true
 
     var totalRating: Int = 0
+        set(value) {
+            if(field == value) return
+            require(value >= 0){ "Total Ratings of driver cannot be negative" }
+            field = value
+        }
+
     var ratingCount: Int = 0
 
     init {
