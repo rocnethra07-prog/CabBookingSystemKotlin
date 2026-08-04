@@ -16,7 +16,7 @@ object InputUtil {
     }
 
     fun promptNonEmptyInput(prompt: String, errorMessage: String) =
-        promptUntilValidInput(prompt, errorMessage){ it.isNotBlank()}
+        promptUntilValidInput(prompt, errorMessage){ it.isNotBlank() }
 
 
     fun promptName(
