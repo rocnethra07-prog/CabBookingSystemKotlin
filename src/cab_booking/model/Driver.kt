@@ -23,6 +23,11 @@ class Driver(
     val licenseNumber: String = licenseNumber.trim().uppercase()
 
     var earnings: BigDecimal = BigDecimal.ZERO
+        set(value){
+            if(field == value) return
+            require(value >= BigDecimal.ZERO){ "Earnings of driver cannot be negative" }
+            field = value
+        }
 
     var isAvailable: Boolean = true
 
