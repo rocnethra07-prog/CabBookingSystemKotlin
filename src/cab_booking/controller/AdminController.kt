@@ -212,7 +212,11 @@ object AdminController{
         println("\n========== ALL DRIVERS ==========")
 
         drivers.forEach {
+            println("\nDriver Details")
             println(it)
+
+            println("\nAssigned Cab")
+            println(AdminService.getCabForDriver(it))
             println("-".repeat(50))
         }
     }
@@ -229,7 +233,11 @@ object AdminController{
         println("\n========== AVAILABLE DRIVERS ==========")
 
         drivers.forEach {
+            println("\nDriver Details")
             println(it)
+
+            println("\nAssigned Cab")
+            println(AdminService.getCabForDriver(it))
             println("-".repeat(50))
         }
     }
@@ -246,7 +254,11 @@ object AdminController{
         println("\n========== UNAVAILABLE DRIVERS ==========")
 
         drivers.forEach {
+            println("\nDriver Details")
             println(it)
+
+            println("\nAssigned Cab")
+            println(AdminService.getCabForDriver(it))
             println("-".repeat(50))
         }
     }
