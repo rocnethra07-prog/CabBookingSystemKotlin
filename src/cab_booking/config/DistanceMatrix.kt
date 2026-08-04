@@ -5,7 +5,6 @@ import cab_booking.model.types.Location
 
 // Distances (in km) are approximate, fixed values for this project
 // Key is an unordered Set<Location>, so distance(A, B) and distance(B, A) share one entry.
-
 private val distances: Map<Set<Location>, Double> = mapOf(
     setOf(Location.ANNANAGAR, Location.TNAGAR) to 5.0,
     setOf(Location.ANNANAGAR, Location.MAMBALAM) to 4.0,
