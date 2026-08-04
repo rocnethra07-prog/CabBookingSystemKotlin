@@ -39,6 +39,11 @@ class Driver(
         }
 
     var ratingCount: Int = 0
+        set(value){
+            if(field == value) return
+            require(value > 0){ "Ratings Count of driver cannot be negative" }
+            field = value
+        }
 
     init {
         require(cabId.isNotBlank()) { "Cab ID cannot be blank." }
