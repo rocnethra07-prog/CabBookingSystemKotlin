@@ -13,10 +13,10 @@ class CabNotFoundException(message: String) :
     Exception(message)
 
 class CredentialsNotFoundException() :
-    Exception("Authentication details not found.")
+    Exception("Authentication details not found")
 
 class DriverUnavailableException(cabType: CabType) :
-    Exception("No $cabType drivers are available right now.")
+    Exception("No $cabType drivers are available right now")
 
 class InvalidRideStateException(message: String) :
     Exception(message)
