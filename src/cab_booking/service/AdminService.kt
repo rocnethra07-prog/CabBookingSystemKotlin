@@ -135,7 +135,7 @@ object AdminService{
 
     fun unlockUserAccount(userId: String) {
         val auth = AuthRepo.findByUserId(userId)
-            ?: throw CredentialsNotFoundException("User authentication details not found.")
+            ?: throw CredentialsNotFoundException()
 
         auth.unlockAccount()
     }

@@ -44,7 +44,7 @@ object AuthService{
 
         val userAuth: UserCredential? = AuthRepo.findByUserId(user.userId)
         if(userAuth == null){
-            throw CredentialsNotFoundException("Authentication details not found. Please register")
+            throw CredentialsNotFoundException()
         }
 
         if(!userAuth.verifyPassword(password)){
@@ -61,7 +61,7 @@ object AuthService{
 
         val userAuth: UserCredential? = AuthRepo.findByUserId(user.userId)
         if(userAuth == null){
-            throw CredentialsNotFoundException("Authentication details not found. Please register")
+            throw CredentialsNotFoundException()
         }
 
         if(!userAuth.verifyPassword(currentPassword)){
