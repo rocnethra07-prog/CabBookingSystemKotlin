@@ -140,6 +140,16 @@ object RiderService {
             throw UnauthorizedRideActionException("Only the rider who booked this ride can rate it.")
         }
 
+        if(ride.rating != null) {
+            throw InvalidRideStateException("Ride has already been rated.")
+        }
+
+        if(ride.rideStatus != RideStatus.COMPLETED) {
+            throw InvalidRideStateException("Only completed rides can be rated.")
+        }
+
+        require(rating in 1..5) { "Rating must be between 1 and 5." }
+
         ride.rating = rating
         val driver = DriverRepo.findByKey(ride.driverId) ?: throw DriverNotFoundException("Driver not found for ID: ${ride.driverId}")
         addRating(driver, rating)

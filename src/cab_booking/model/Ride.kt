@@ -7,7 +7,7 @@ import cab_booking.util.IdGenerator
 import java.math.BigDecimal
 import java.time.LocalDateTime
 
-class Ride(
+data class Ride(
     val riderId: String,
     val driverId: String,
     val pickupLocation: Location,
@@ -67,9 +67,6 @@ class Ride(
 
     override fun toString(): String {
         return """
-            Ride ID          : $rideId
-            Rider ID         : $riderId
-            Driver ID        : $driverId
             Pickup Location  : $pickupLocation
             Drop Location    : $dropLocation
             Fare             : ₹$fare

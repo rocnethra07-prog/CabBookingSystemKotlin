@@ -29,16 +29,6 @@ class Driver(
     var totalRating: Int = 0
     var ratingCount: Int = 0
 
-    val averageRating: Double
-        get() {
-            if (ratingCount == 0){
-                return 0.0
-            }
-            else {
-                return totalRating.toDouble() / ratingCount
-            }
-        }
-
     init {
         require(cabId.isNotBlank()) { "Cab ID cannot be blank." }
         require(licenseNumber.isNotBlank()) { "Invalid license number." }

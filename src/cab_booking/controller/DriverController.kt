@@ -148,11 +148,13 @@ object DriverController{
 
         println("Total Earnings : ₹${driver.earnings}")
 
-        if (driver.averageRating == 0.0) {
+        val averageRating = DriverService.getAverageRatingOfDriver(driver)
+
+        if (averageRating == 0.0) {
             println("Average Rating : No ratings yet")
         }
         else {
-            println("Average Rating : %.2f".format(driver.averageRating))
+            println("Average Rating : %.2f".format(averageRating))
         }
     }
 

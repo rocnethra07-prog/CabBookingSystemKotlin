@@ -90,6 +90,16 @@ object DriverService {
             throw UnauthorizedRideActionException("Only the assigned driver can perform this action.")
         }
     }
+
+    fun getAverageRatingOfDriver(driver: Driver) : Double{
+        if (driver.ratingCount == 0){
+            return 0.0
+        }
+        else {
+            return driver.totalRating.toDouble() / driver.ratingCount
+        }
+    }
+
     fun getRidesByDriver(
         driver: Driver
     ): List<Ride> =
