@@ -2,7 +2,7 @@ package cab_booking.service.pricing
 
 import cab_booking.model.types.CabType
 import cab_booking.model.types.Location
-import cab_booking.util.DistanceMatrix
+import cab_booking.config.getDistanceKm
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.time.LocalTime
@@ -14,7 +14,7 @@ object FareCalculator {
     fun calculateFare(
         cabType: CabType, pickUpLocation: Location, dropLocation: Location, bookedAt: LocalTime = LocalTime.now()
     ): BigDecimal {
-        val distanceKms = DistanceMatrix.getDistanceKm(pickUpLocation, dropLocation)
+        val distanceKms = getDistanceKm(pickUpLocation, dropLocation)
         val fareBeforeSurge = cabType.perKmRate * BigDecimal(distanceKms) + cabType.basePay
         val totalFare = if(isSurgeHour(bookedAt)){
             fareBeforeSurge * surgeMultiplier
