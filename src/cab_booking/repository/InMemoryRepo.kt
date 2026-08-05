@@ -13,7 +13,7 @@ abstract class InMemoryRepo<T> : RepositoryContract<T>{
     }
 
     override fun findAll() =
-        storage.values.toList() //returns copy as an immutable list
+        storage.values.toList()  //returns copy as an immutable list
 
     override fun existsByKey(key: String) =
         storage.containsKey(validateKey(key))
