@@ -48,23 +48,25 @@ object AuthService{
             throw CredentialsNotFoundException()
         }
 
-        checkIsAccountLocked(userAuth)
+        checkIsAccountLocked(userAuth, isAdmin(user))
 
         if(!userAuth.verifyPassword(password)){
-            checkIsAccountLocked(userAuth)
+            checkIsAccountLocked(userAuth, isAdmin(user))
             throw InvalidCredentialsException()
         }
         return user
     }
 
-    private fun checkIsAccountLocked(userAuth: UserCredential){
+    private fun checkIsAccountLocked(userAuth: UserCredential, isAdmin: Boolean){
         if(userAuth.isAccountLocked){
             val minutesLeft = userAuth.remainingLockTime()?.toMinutes()?.plus(1) ?: 0
-            throw AccountLockedException(
-                "Try again in ~$minutesLeft minute(s)"
-            )
+            throw AccountLockedException(minutesLeft, isAdmin)
         }
     }
+
+    private fun isAdmin(user: User) =
+        user.userRole == UserRole.ADMIN
+
 
     fun changePassword(
         user: User,

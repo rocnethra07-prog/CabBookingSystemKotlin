@@ -29,18 +29,23 @@ object AuthController{
         }
         catch (e: AccountLockedException){
             println("""
-                [!] Account Locked
+                
                 Your account has been temporarily locked
                 due to multiple failed login attempts.
             """.trimIndent()
             )
             println("${e.message}")
-            println("""
+
+            if(e.isAdmin) {
+                println(
+                    """
                 Need help?
                 Admin : ${AdminSeeder.ADMIN_NAME}
                 Phone : ${AdminSeeder.ADMIN_PHONE}
                 Email : ${AdminSeeder.ADMIN_EMAIL}
-            """.trimIndent())
+            """.trimIndent()
+                )
+            }
             return null
         }
         catch (e: InvalidCredentialsException){

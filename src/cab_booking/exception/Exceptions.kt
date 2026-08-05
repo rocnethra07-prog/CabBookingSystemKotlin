@@ -18,8 +18,8 @@ class CredentialsNotFoundException() :
 class DriverUnavailableException(cabType: CabType) :
     Exception("No $cabType drivers are available right now")
 
-class AccountLockedException(message: String) :
-        Exception(message)
+class AccountLockedException(minutesLeft: Long, val isAdmin : Boolean) :
+        Exception("Account Locked. Try again in ~$minutesLeft minute(s)")
 
 class InvalidRideStateException(message: String) :
     Exception(message)
