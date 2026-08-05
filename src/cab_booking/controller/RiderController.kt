@@ -4,7 +4,7 @@ import cab_booking.model.User
 import cab_booking.model.types.Location
 import cab_booking.service.AuthService
 import cab_booking.service.RiderService
-import cab_booking.console.InputUtil
+import cab_booking.console.ConsoleInput
 import cab_booking.exception.CredentialsNotFoundException
 import cab_booking.exception.CabNotFoundException
 import cab_booking.exception.DistanceNotFoundException
@@ -23,15 +23,19 @@ object RiderController{
         promptPendingRating(rider)
 
         while (true) {
-            println("\n========== RIDER MENU ==========")
-            println("1. Book Ride")
-            println("2. View Current Ride")
-            println("3. View Ride History")
-            println("4. Update Profile")
-            println("5. Rate Last Ride")
-            println("6. Change Password")
-            println("0. Logout")
-
+            println(
+                """
+                
+                ========== RIDER MENU ==========
+                1. Book Ride
+                2. View Current Ride
+                3. View Ride History
+                4. Update Profile
+                5. Rate Last Ride
+                6. Change Password
+                0. Logout
+                """.trimIndent()
+            )
             when (readln().trim()) {
 
                 "1" -> bookRide(rider)
@@ -63,7 +67,7 @@ object RiderController{
 
         println("\nYou haven't rated your last ride yet.")
 
-        if (InputUtil.promptConfirmation("Would you like to rate it now?")) {
+        if (ConsoleInput.promptConfirmation("Would you like to rate it now?")) {
             showRatingScreen(ride, rider)
         }
     }
@@ -78,13 +82,13 @@ object RiderController{
 
         println("\n========== BOOK RIDE ==========")
 
-        val pickup = InputUtil.chooseLocation("Pickup Location")
+        val pickup = ConsoleInput.chooseLocation("Pickup Location")
 
         var drop: Location
 
         while (true) {
 
-            drop = InputUtil.chooseLocation("Drop Location")
+            drop = ConsoleInput.chooseLocation("Drop Location")
 
             if (pickup != drop) break
 
@@ -93,7 +97,7 @@ object RiderController{
 
         while (true) {
 
-            val cabType = InputUtil.chooseCabType()
+            val cabType = ConsoleInput.chooseCabType()
 
             try {
 
@@ -109,9 +113,14 @@ object RiderController{
                 println("\nRide Booked Successfully.\n")
                 println(ride)
 
-                println("\nDriver Details")
-                println("Driver : ${driver.name}")
-                println("Phone  : ${driver.phone}")
+                println(
+                    """
+    
+                    Driver Details :
+                    Driver : ${driver.name}
+                    Phone  : ${driver.phone}
+                    """.trimIndent()
+                )
 
                 return
 
@@ -120,7 +129,7 @@ object RiderController{
 
                 println("[!] ${e.message}")
 
-                if (!InputUtil.promptConfirmation("Try another cab type? (Y/N): ")) {
+                if (!ConsoleInput.promptConfirmation("Try another cab type? (Y/N): ")) {
                     return
                 }
 
@@ -154,12 +163,18 @@ object RiderController{
 
         println("\n========== CURRENT RIDE ==========")
 
-        println("Pickup Location : ${ride.pickupLocation}")
-        println("Drop Location   : ${ride.dropLocation}")
-        println("Fare            : ₹${ride.fare}")
-        println("Driver          : ${driver.name}")
-        println("Phone           : ${driver.phone}")
-        println("Status          : ${ride.rideStatus}")
+        println(
+            """
+    
+            ========== CURRENT RIDE ==========
+            Pickup Location : ${ride.pickupLocation}
+            Drop Location   : ${ride.dropLocation}
+            Fare            : ₹${ride.fare}
+            Driver          : ${driver.name}
+            Phone           : ${driver.phone}
+            Status          : ${ride.rideStatus}
+            """.trimIndent()
+        )
 
         currentRideMenu(ride, rider)
     }
@@ -213,9 +228,9 @@ object RiderController{
         println("\n========== UPDATE PROFILE ==========")
         println("(Press Enter to keep the current value)\n")
 
-        val name = InputUtil.promptOptionalName(rider.name)
+        val name = ConsoleInput.promptOptionalName(rider.name)
 
-        val phone = InputUtil.promptOptionalPhone(rider.phone)
+        val phone = ConsoleInput.promptOptionalPhone(rider.phone)
 
         if (name == rider.name && phone == rider.phone) {
             println("\nNo changes made.")
@@ -229,10 +244,16 @@ object RiderController{
                 phone
             )
 
-            println("\nProfile Updated Successfully\n")
-            println("Name  : ${rider.name}")
-            println("Phone : ${rider.phone}")
-            println("Email : ${rider.email}")
+            println(
+                """
+    
+                Profile Updated Successfully
+    
+                Name  : ${rider.name}
+                Phone : ${rider.phone}
+                Email : ${rider.email}
+                """.trimIndent()
+            )
 
         }
         catch (e: IllegalArgumentException) {
@@ -284,11 +305,16 @@ object RiderController{
     ) {
         val driver = RiderService.getDriverForRide(ride)
 
-        println("\n========== RATE RIDE ==========")
-        println("Driver : ${driver.name}")
-        println("Pickup : ${ride.pickupLocation}")
-        println("Drop   : ${ride.dropLocation}")
-        println("Fare   : ₹${ride.fare}")
+        println(
+            """
+    
+            ========== RATE RIDE ==========
+            Driver : ${driver.name}
+            Pickup : ${ride.pickupLocation}
+            Drop   : ${ride.dropLocation}
+            Fare   : ₹${ride.fare}
+            """.trimIndent()
+        )
 
         submitRating(ride, rider, driver)
     }
@@ -299,12 +325,17 @@ object RiderController{
         driver: Driver
     ) {
 
-        println()
-        println("1 ★  Poor")
-        println("2 ★★ Fair")
-        println("3 ★★★ Good")
-        println("4 ★★★★ Very Good")
-        println("5 ★★★★★ Excellent")
+        println(
+            """
+                
+            1 ★  Poor
+            2 ★★ Fair
+            3 ★★★ Good
+            4 ★★★★ Very Good
+            5 ★★★★★ Excellent    
+               
+            """.trimIndent()
+        )
 
         var rating: Int
 
@@ -351,15 +382,15 @@ object RiderController{
 
         println("\n========== CHANGE PASSWORD ==========")
 
-        val currentPassword = InputUtil.promptPassword(
+        val currentPassword = ConsoleInput.promptPassword(
             prompt = "Current Password : "
         )
 
-        val newPassword = InputUtil.promptPassword(
+        val newPassword = ConsoleInput.promptPassword(
             prompt = "New Password     : "
         )
 
-        val confirmPassword = InputUtil.promptPassword(
+        val confirmPassword = ConsoleInput.promptPassword(
             prompt = "Confirm Password : "
         )
 

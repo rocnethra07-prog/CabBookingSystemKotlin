@@ -4,7 +4,7 @@ import cab_booking.model.Driver
 import cab_booking.model.Ride
 import cab_booking.service.AuthService
 import cab_booking.service.DriverService
-import cab_booking.console.InputUtil
+import cab_booking.console.ConsoleInput
 import cab_booking.exception.CredentialsNotFoundException
 import cab_booking.exception.InvalidCredentialsException
 import cab_booking.exception.InvalidRideStateException
@@ -16,13 +16,18 @@ object DriverController{
 
         while (true) {
 
-            println("\n========== DRIVER MENU ==========")
-            println("1. View Current Ride")
-            println("2. Update Profile")
-            println("3. Show Earnings")
-            println("4. View Ride History")
-            println("5. Change Password")
-            println("0. Logout")
+            println(
+                """
+    
+                ========== DRIVER MENU ==========
+                1. View Current Ride
+                2. Update Profile
+                3. Show Earnings
+                4. View Ride History
+                5. Change Password
+                0. Logout
+                """.trimIndent()
+            )
 
             when (readln().trim()) {
 
@@ -52,12 +57,16 @@ object DriverController{
             return
         }
 
-        println("\n========== CURRENT RIDE ==========")
-
-        println("Pickup Location : ${ride.pickupLocation}")
-        println("Drop Location   : ${ride.dropLocation}")
-        println("Fare            : ₹${ride.fare}")
-        println("Status          : ${ride.rideStatus}")
+        println(
+            """
+    
+            ========== CURRENT RIDE ==========
+            Pickup Location : ${ride.pickupLocation}
+            Drop Location   : ${ride.dropLocation}
+            Fare            : ₹${ride.fare}
+            Status          : ${ride.rideStatus}
+            """.trimIndent()
+        )
 
         rideActionMenu(ride, driver)
     }
@@ -69,9 +78,14 @@ object DriverController{
 
         while (true) {
 
-            println("\n1. Complete Ride")
-            println("2. Cancel Ride")
-            println("0. Back")
+            println(
+                """
+    
+                1. Complete Ride
+                2. Cancel Ride
+                0. Back
+                """.trimIndent()
+            )
 
             when (readln().trim()) {
 
@@ -97,16 +111,16 @@ object DriverController{
         println("\n========== UPDATE PROFILE ==========")
         println("(Press Enter to keep the current value)\n")
 
-        val name = InputUtil.promptOptionalName(driver.name)
+        val name = ConsoleInput.promptOptionalName(driver.name)
 
-        val phone = InputUtil.promptOptionalPhone(driver.phone)
+        val phone = ConsoleInput.promptOptionalPhone(driver.phone)
 
         println("Current Location : ${driver.currentLocation}")
 
         var location = driver.currentLocation
 
-        if (InputUtil.promptConfirmation("Update location?")) {
-            location = InputUtil.chooseLocation("Select New Location")
+        if (ConsoleInput.promptConfirmation("Update location?")) {
+            location = ConsoleInput.chooseLocation("Select New Location")
         }
 
         if (
@@ -127,13 +141,18 @@ object DriverController{
                 location
             )
 
-            println("\nProfile Updated Successfully\n")
-
-            println("Name             : ${driver.name}")
-            println("Phone            : ${driver.phone}")
-            println("Email            : ${driver.email}")
-            println("Location         : ${driver.currentLocation}")
-            println("License Number   : ${driver.licenseNumber}")
+            println(
+                """
+    
+                Profile Updated Successfully
+    
+                Name             : ${driver.name}
+                Phone            : ${driver.phone}
+                Email            : ${driver.email}
+                Location         : ${driver.currentLocation}
+                License Number   : ${driver.licenseNumber}
+                """.trimIndent()
+            )
 
         }
         catch (e: IllegalArgumentException) {
@@ -230,15 +249,15 @@ object DriverController{
 
         println("\n========== CHANGE PASSWORD ==========")
 
-        val currentPassword = InputUtil.promptPassword(
+        val currentPassword = ConsoleInput.promptPassword(
             prompt = "Current Password : "
         )
 
-        val newPassword = InputUtil.promptPassword(
+        val newPassword = ConsoleInput.promptPassword(
             prompt = "New Password     : "
         )
 
-        val confirmPassword = InputUtil.promptPassword(
+        val confirmPassword = ConsoleInput.promptPassword(
             prompt = "Confirm Password : "
         )
 

@@ -4,7 +4,7 @@ import cab_booking.model.types.CabType
 import cab_booking.model.types.Location
 import cab_booking.util.Validator
 
-object InputUtil {
+object ConsoleInput {
     private fun promptUntilValidInput(prompt: String, errorMessage: String, validator: (String) -> Boolean) : String{
         while (true){
             print(prompt)

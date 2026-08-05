@@ -2,7 +2,7 @@ package cab_booking.controller
 
 import cab_booking.model.Ride
 import cab_booking.service.AdminService
-import cab_booking.console.InputUtil
+import cab_booking.console.ConsoleInput
 import cab_booking.exception.CredentialsNotFoundException
 import cab_booking.exception.CabNotFoundException
 import cab_booking.exception.DriverNotFoundException
@@ -15,14 +15,18 @@ object AdminController{
 
         while (true) {
 
-            println("\n========== ADMIN MENU ==========")
-            println("1. Driver Management")
-            println("2. Rider Management")
-            println("3. Ride Management")
-            println("4. Cab Management")
-            println("5. User Account Management")
-            println("0. Logout")
-
+            println(
+                """
+    
+                ========== ADMIN MENU ==========
+                1. Driver Management
+                2. Rider Management
+                3. Ride Management
+                4. Cab Management
+                5. User Account Management
+                0. Logout
+                """.trimIndent()
+            )
             when (readln().trim()) {
 
                 "1" -> driverManagementMenu()
@@ -51,15 +55,20 @@ object AdminController{
 
         while (true) {
 
-            println("\n========== DRIVER MANAGEMENT ==========")
-            println("1. Add Driver")
-            println("2. Delete Driver")
-            println("3. View All Drivers")
-            println("4. View Available Drivers")
-            println("5. View Unavailable Drivers")
-            println("6. Search Driver")
-            println("7. Driver Ride History")
-            println("0. Back")
+            println(
+                """
+    
+                ========== DRIVER MANAGEMENT ==========
+                1. Add Driver
+                2. Delete Driver
+                3. View All Drivers
+                4. View Available Drivers
+                5. View Unavailable Drivers
+                6. Search Driver
+                7. Driver Ride History
+                0. Back
+                """.trimIndent()
+            )
 
             when (readln().trim()) {
 
@@ -89,15 +98,15 @@ object AdminController{
         println("\n========== ADD DRIVER ==========")
 
         // ask for driver details
-        val name = InputUtil.promptName()
+        val name = ConsoleInput.promptName()
 
-        val phone = InputUtil.promptPhone()
+        val phone = ConsoleInput.promptPhone()
 
         var email: String
 
         while (true) {
 
-            email = InputUtil.promptEmail()
+            email = ConsoleInput.promptEmail()
 
             //Pre-check for UX
             if (!AdminService.isEmailRegistered(email))
@@ -106,15 +115,15 @@ object AdminController{
             println("Email already registered.")
         }
 
-        val password = InputUtil.promptPassword()
+        val password = ConsoleInput.promptPassword()
 
-        val currentLocation = InputUtil.chooseLocation()
+        val currentLocation = ConsoleInput.chooseLocation()
 
         var licenseNumber: String
 
         while (true) {
 
-            licenseNumber = InputUtil.promptNonEmptyInput(
+            licenseNumber = ConsoleInput.promptNonEmptyInput(
                 "License Number : ",
                 "License number cannot be empty."
             )
@@ -140,7 +149,7 @@ object AdminController{
     }
 
     private fun collectCabDetails() : Cab {
-        val model = InputUtil.promptNonEmptyInput(
+        val model = ConsoleInput.promptNonEmptyInput(
             "Car Model : ",
             "Model cannot be empty."
         )
@@ -149,7 +158,7 @@ object AdminController{
 
         while (true) {
 
-            registrationNumber = InputUtil.promptNonEmptyInput(
+            registrationNumber = ConsoleInput.promptNonEmptyInput(
                 "Registration Number : ",
                 "Registration number cannot be empty."
             )
@@ -161,7 +170,7 @@ object AdminController{
             println("Registration number already exists.")
         }
 
-        val cabType = InputUtil.chooseCabType()
+        val cabType = ConsoleInput.chooseCabType()
         val newCab = AdminService.createCab(model, registrationNumber, cabType)
         return newCab
     }
@@ -170,7 +179,7 @@ object AdminController{
 
         println("\n========== DELETE DRIVER ==========")
 
-        val driverId = InputUtil.promptNonEmptyInput(
+        val driverId = ConsoleInput.promptNonEmptyInput(
             "Enter Driver ID : ",
             "Driver ID cannot be empty."
         )
@@ -180,7 +189,7 @@ object AdminController{
             println("\nDriver Details")
             println(driver)
 
-            if (!InputUtil.promptConfirmation("Delete this driver?")) {
+            if (!ConsoleInput.promptConfirmation("Delete this driver?")) {
                 println("Deletion cancelled.")
                 return
             }
@@ -265,7 +274,7 @@ object AdminController{
 
     private fun searchDriver() {
 
-        val driverId = InputUtil.promptNonEmptyInput(
+        val driverId = ConsoleInput.promptNonEmptyInput(
             "Enter Driver ID : ",
             "Driver ID cannot be empty."
         )
@@ -290,7 +299,7 @@ object AdminController{
 
     private fun driverRideHistory() {
 
-        val driverId = InputUtil.promptNonEmptyInput(
+        val driverId = ConsoleInput.promptNonEmptyInput(
             "Enter Driver ID : ",
             "Driver ID cannot be empty."
         )
@@ -314,10 +323,15 @@ object AdminController{
 
         while (true) {
 
-            println("\n========== RIDER MANAGEMENT ==========")
-            println("1. View All Riders")
-            println("2. Rider Ride History")
-            println("0. Back")
+            println(
+                """
+    
+                ========== RIDER MANAGEMENT ==========
+                1. View All Riders
+                2. Rider Ride History
+                0. Back
+                """.trimIndent()
+            )
 
             when (readln().trim()) {
 
@@ -351,7 +365,7 @@ object AdminController{
 
     private fun viewRiderRideHistory() {
 
-        val riderId = InputUtil.promptNonEmptyInput(
+        val riderId = ConsoleInput.promptNonEmptyInput(
             "Enter Rider ID : ",
             "Rider ID cannot be empty."
         )
@@ -378,12 +392,17 @@ object AdminController{
 
         while (true) {
 
-            println("\n========== RIDE MANAGEMENT ==========")
-            println("1. View All Rides")
-            println("2. Active Rides")
-            println("3. Completed Rides")
-            println("4. Cancelled Rides")
-            println("0. Back")
+            println(
+                """
+    
+                ========== RIDE MANAGEMENT ==========
+                1. View All Rides
+                2. Active Rides
+                3. Completed Rides
+                4. Cancelled Rides
+                0. Back
+                """.trimIndent()
+            )
 
             when (readln().trim()) {
 
@@ -448,10 +467,15 @@ object AdminController{
 
         while (true) {
 
-            println("\n========== CAB MANAGEMENT ==========")
-            println("1. View All Cabs")
-            println("2. View Cabs By Type")
-            println("0. Back")
+            println(
+                """
+    
+                ========== CAB MANAGEMENT ==========
+                1. View All Cabs
+                2. View Cabs By Type
+                0. Back
+                """.trimIndent()
+            )
 
             when (readln().trim()) {
 
@@ -485,7 +509,7 @@ object AdminController{
 
     private fun viewCabsByType() {
 
-        val cabType = InputUtil.chooseCabType()
+        val cabType = ConsoleInput.chooseCabType()
 
         val cabs = AdminService.getCabsByType(cabType)
 
@@ -506,11 +530,16 @@ object AdminController{
 
         while (true) {
 
-            println("\n========== USER ACCOUNT MANAGEMENT ==========")
-            println("1. Unlock User Account")
-            println("2. View Locked Accounts")
-            println("3. Search User")
-            println("0. Back")
+            println(
+                """
+    
+                ========== USER ACCOUNT MANAGEMENT ==========
+                1. Unlock User Account
+                2. View Locked Accounts
+                3. Search User
+                0. Back
+                """.trimIndent()
+            )
 
             when (readln().trim()) {
 
@@ -543,7 +572,7 @@ object AdminController{
             println("${index + 1}. ${account.userId}")
         }
 
-        val userId = InputUtil.promptNonEmptyInput(
+        val userId = ConsoleInput.promptNonEmptyInput(
             "\nEnter User ID : ",
             "User ID cannot be empty."
         )
@@ -583,7 +612,7 @@ object AdminController{
 
         println("\n========== SEARCH USER ==========")
 
-        val userId = InputUtil.promptNonEmptyInput(
+        val userId = ConsoleInput.promptNonEmptyInput(
             "Enter User ID : ",
             "User ID cannot be empty."
         )

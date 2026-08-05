@@ -3,7 +3,7 @@ package cab_booking.controller
 import cab_booking.model.User
 import cab_booking.model.types.UserRole
 import cab_booking.service.AuthService
-import cab_booking.console.InputUtil
+import cab_booking.console.ConsoleInput
 import cab_booking.exception.CredentialsNotFoundException
 import cab_booking.exception.InvalidCredentialsException
 import cab_booking.exception.UserNotFoundException
@@ -12,8 +12,8 @@ object AuthController{
 
     fun login() : User?{
 
-        val email = InputUtil.promptEmail()
-        val password = InputUtil.promptPassword()
+        val email = ConsoleInput.promptEmail()
+        val password = ConsoleInput.promptPassword()
 
         try {
             val user: User = AuthService.loginUser(email, password)
@@ -36,11 +36,11 @@ object AuthController{
     }
 
     fun register() : User?{
-        val name = InputUtil.promptName()
-        val phone = InputUtil.promptPhone()
+        val name = ConsoleInput.promptName()
+        val phone = ConsoleInput.promptPhone()
         var email: String
         while (true) {
-            email = InputUtil.promptEmail()
+            email = ConsoleInput.promptEmail()
 
             //Pre-check for UX
             if(AuthService.isEmailRegistered(email)){
@@ -50,7 +50,7 @@ object AuthController{
             break
         }
 
-        val password = InputUtil.promptPassword()
+        val password = ConsoleInput.promptPassword()
 
         try {
             val user: User = AuthService.registerUser(name, phone, email, password, UserRole.RIDER )
