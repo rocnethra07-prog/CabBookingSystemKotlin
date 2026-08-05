@@ -8,6 +8,7 @@ import cab_booking.repository.UserRepo
 import cab_booking.exception.CredentialsNotFoundException
 import cab_booking.exception.InvalidCredentialsException
 import cab_booking.exception.UserNotFoundException
+import cab_booking.exception.AccountLockedException
 
 object AuthService{
     fun isEmailRegistered(email: String) : Boolean =
@@ -47,10 +48,22 @@ object AuthService{
             throw CredentialsNotFoundException()
         }
 
+        checkIsAccountLocked(userAuth)
+
         if(!userAuth.verifyPassword(password)){
+            checkIsAccountLocked(userAuth)
             throw InvalidCredentialsException()
         }
         return user
+    }
+
+    private fun checkIsAccountLocked(userAuth: UserCredential){
+        if(userAuth.isAccountLocked){
+            val minutesLeft = userAuth.remainingLockTime()?.toMinutes()?.plus(1) ?: 0
+            throw AccountLockedException(
+                "Try again in ~$minutesLeft minute(s)"
+            )
+        }
     }
 
     fun changePassword(

@@ -2,14 +2,25 @@ package cab_booking.auth
 
 import cab_booking.util.Validator
 import org.mindrot.jbcrypt.BCrypt
+import java.time.Duration
+import java.time.LocalDateTime
 
 //Credentials related class
 class UserCredential(val userId: String, password: String) {
 
+    companion object{
+        private const val MAX_FAILED_ATTEMPTS = 3
+        private val LOCK_DURATION = Duration.ofMinutes(15)
+    }
+
     private var passwordHash: String
     private var failedAttempts: Int = 0
+
     var isAccountLocked: Boolean = false
+        get() = remainingLockTime() != null
         private set
+
+    private var lockedAt : LocalDateTime? = null
 
     init {
         require(Validator.isValidPassword(password)) { "Invalid password format." }
@@ -28,7 +39,7 @@ class UserCredential(val userId: String, password: String) {
         }
         else{
             failedAttempts++
-            if(failedAttempts >= 3){
+            if(failedAttempts >= MAX_FAILED_ATTEMPTS){
                 lockAccount()
             }
         }
@@ -36,7 +47,14 @@ class UserCredential(val userId: String, password: String) {
         return isValid
     }
 
+    fun remainingLockTime(): Duration?{
+        val since = lockedAt ?: return null
+        val remaining =  LOCK_DURATION - Duration.between(since, LocalDateTime.now())
+        return if(remaining.isNegative) null else remaining
+    }
+
     private fun lockAccount(){
+        lockedAt = LocalDateTime.now()
         isAccountLocked = true
     }
 
@@ -45,6 +63,7 @@ class UserCredential(val userId: String, password: String) {
     }
 
     fun unlockAccount(){
+        lockedAt = null
         isAccountLocked = false
         resetFailedAttempts()
     }

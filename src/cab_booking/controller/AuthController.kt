@@ -1,9 +1,11 @@
 package cab_booking.controller
 
+import cab_booking.config.AdminSeeder
 import cab_booking.model.User
 import cab_booking.model.types.UserRole
 import cab_booking.service.AuthService
 import cab_booking.console.ConsoleInput
+import cab_booking.exception.AccountLockedException
 import cab_booking.exception.CredentialsNotFoundException
 import cab_booking.exception.InvalidCredentialsException
 import cab_booking.exception.UserNotFoundException
@@ -22,11 +24,27 @@ object AuthController{
 
         }
         catch (e: UserNotFoundException) {
-            println("[!] Login failed: " + e.message)
+            println("[!] Login failed: ${e.message}")
+            return null
+        }
+        catch (e: AccountLockedException){
+            println("""
+                [!] Account Locked
+                Your account has been temporarily locked
+                due to multiple failed login attempts.
+            """.trimIndent()
+            )
+            println("${e.message}")
+            println("""
+                Need help?
+                Admin : ${AdminSeeder.ADMIN_NAME}
+                Phone : ${AdminSeeder.ADMIN_PHONE}
+                Email : ${AdminSeeder.ADMIN_EMAIL}
+            """.trimIndent())
             return null
         }
         catch (e: InvalidCredentialsException){
-            println("[!] Login failed: " + e.message)
+            println("[!] Login failed: ${e.message}")
             return null
         }
         catch (e : CredentialsNotFoundException){
@@ -36,6 +54,15 @@ object AuthController{
     }
 
     fun register() : User?{
+        println("""
+            You can register only as a Rider.
+
+            To become a Driver, please contact:
+
+            Admin : ${AdminSeeder.ADMIN_NAME}
+            Phone : ${AdminSeeder.ADMIN_PHONE}
+            Email : ${AdminSeeder.ADMIN_EMAIL}
+        """.trimIndent())
         val name = ConsoleInput.promptName()
         val phone = ConsoleInput.promptPhone()
         var email: String
@@ -54,12 +81,17 @@ object AuthController{
 
         try {
             val user: User = AuthService.registerUser(name, phone, email, password, UserRole.RIDER )
-            println("\n  Account created successfully.\n  Welcome, " + user.name + "!")
+
+            println("""
+                
+                Welcome ${user.name}
+                Your rider account has been created successfully
+                You can now book rides
+            """.trimIndent())
             return user
         }
         catch (e : IllegalArgumentException) {
-            println("[!] Invalid Input,")
-            println("[!] Registration failed: ${e.message}")
+            println("[!] Registration failed (invalid input) : ${e.message}")
             return null
         }
     }

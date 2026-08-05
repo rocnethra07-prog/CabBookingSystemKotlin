@@ -18,6 +18,9 @@ class CredentialsNotFoundException() :
 class DriverUnavailableException(cabType: CabType) :
     Exception("No $cabType drivers are available right now")
 
+class AccountLockedException(message: String) :
+        Exception(message)
+
 class InvalidRideStateException(message: String) :
     Exception(message)
 

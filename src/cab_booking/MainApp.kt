@@ -23,7 +23,7 @@ fun main(){
     var running = true
     while (running) {
         println("1. Login")
-        println("2. Register as a Rider")
+        println("2. Register")
         println("0. Exit ")
         println("Choose: ")
         val choice = readln().trim()
