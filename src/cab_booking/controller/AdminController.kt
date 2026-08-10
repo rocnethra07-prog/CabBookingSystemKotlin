@@ -8,6 +8,7 @@ import cab_booking.exception.CabNotFoundException
 import cab_booking.exception.DriverNotFoundException
 import cab_booking.exception.UserNotFoundException
 import cab_booking.model.Cab
+import cab_booking.model.Driver
 
 object AdminController{
 
@@ -221,12 +222,7 @@ object AdminController{
         println("\n========== ALL DRIVERS ==========")
 
         drivers.forEach {
-            println("\nDriver Details")
-            println(it)
-
-            println("\nAssigned Cab")
-            println(AdminService.getCabForDriver(it))
-            println("-".repeat(50))
+            displayDriverWithCab(it)
         }
     }
 
@@ -242,12 +238,7 @@ object AdminController{
         println("\n========== AVAILABLE DRIVERS ==========")
 
         drivers.forEach {
-            println("\nDriver Details")
-            println(it)
-
-            println("\nAssigned Cab")
-            println(AdminService.getCabForDriver(it))
-            println("-".repeat(50))
+            displayDriverWithCab(it)
         }
     }
 
@@ -263,12 +254,7 @@ object AdminController{
         println("\n========== UNAVAILABLE DRIVERS ==========")
 
         drivers.forEach {
-            println("\nDriver Details")
-            println(it)
-
-            println("\nAssigned Cab")
-            println(AdminService.getCabForDriver(it))
-            println("-".repeat(50))
+            displayDriverWithCab(it)
         }
     }
 
@@ -296,6 +282,22 @@ object AdminController{
             println("[!] ${e.message}")
         }
     }
+
+    private fun displayDriverWithCab(driver: Driver) {
+        println("\nDriver Details")
+        println(driver)
+
+        try {
+            println("\nAssigned Cab")
+            println(AdminService.getCabForDriver(driver))
+        }
+        catch (e: CabNotFoundException) {
+            println("[!] ${e.message}")
+        }
+
+        println("-".repeat(50))
+    }
+
 
     private fun driverRideHistory() {
 
