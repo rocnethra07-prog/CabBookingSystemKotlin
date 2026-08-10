@@ -11,6 +11,6 @@ object AuthRepo : InMemoryRepo<UserCredential>() {
 
 
     fun getLockedAccounts() =
-         storage.values.filter { it.isAccountLocked }
+         storage.values.filter { it.isAccountLocked() }
 
 }
