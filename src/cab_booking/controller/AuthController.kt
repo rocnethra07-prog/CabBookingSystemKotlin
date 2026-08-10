@@ -36,7 +36,7 @@ object AuthController{
             )
             println("${e.message}")
 
-            if(e.isAdmin) {
+            if(!e.isAdmin) {
                 println(
                     """
                 Need help?

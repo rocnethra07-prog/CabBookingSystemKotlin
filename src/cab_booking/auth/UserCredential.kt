@@ -16,9 +16,16 @@ class UserCredential(val userId: String, password: String) {
     private var passwordHash: String
     private var failedAttempts: Int = 0
 
-    var isAccountLocked: Boolean = false
-        get() = remainingLockTime() != null
-        private set
+//    val isAccountLocked: Boolean
+//        get() {
+//            refreshLockStatus()
+//            return lockedAt != null
+//        }
+
+    fun isAccountLocked() : Boolean {
+        refreshLockStatus()
+        return lockedAt != null
+    }
 
     private var lockedAt : LocalDateTime? = null
 
@@ -28,7 +35,7 @@ class UserCredential(val userId: String, password: String) {
     }
 
     fun verifyPassword(password: String): Boolean {
-        if (isAccountLocked){
+        if (isAccountLocked()){
             return false
         }
 
@@ -48,14 +55,23 @@ class UserCredential(val userId: String, password: String) {
     }
 
     fun remainingLockTime(): Duration?{
+        refreshLockStatus()
+
         val since = lockedAt ?: return null
         val remaining =  LOCK_DURATION - Duration.between(since, LocalDateTime.now())
-        return if(remaining.isNegative) null else remaining
+        return if(remaining.isZero ||remaining.isNegative) null else remaining
     }
 
     private fun lockAccount(){
         lockedAt = LocalDateTime.now()
-        isAccountLocked = true
+    }
+
+    private fun refreshLockStatus() {
+        val since = lockedAt ?: return
+
+        if (Duration.between(since, LocalDateTime.now()) >= LOCK_DURATION) {
+            unlockAccount()
+        }
     }
 
     private fun resetFailedAttempts(){
@@ -64,7 +80,6 @@ class UserCredential(val userId: String, password: String) {
 
     fun unlockAccount(){
         lockedAt = null
-        isAccountLocked = false
         resetFailedAttempts()
     }
 

@@ -7,7 +7,7 @@ import cab_booking.util.IdGenerator
 import java.math.BigDecimal
 import java.time.LocalDateTime
 
-data class Ride(
+class Ride(
     val riderId: String,
     val driverId: String,
     val pickupLocation: Location,
