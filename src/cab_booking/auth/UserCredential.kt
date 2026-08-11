@@ -15,7 +15,7 @@ class UserCredential(val userId: String, password: String) {
 
     private var passwordHash: String
     private var failedAttempts: Int = 0
-    
+
     fun isAccountLocked() : Boolean {
         refreshLockStatus()
         return lockedAt != null
