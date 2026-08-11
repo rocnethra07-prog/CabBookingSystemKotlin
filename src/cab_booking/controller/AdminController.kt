@@ -585,7 +585,7 @@ object AdminController{
         println("\n========== LOCKED USER ACCOUNTS ID ==========")
 
         lockedAccounts.forEach {
-            println("User ID: $it.userId | Locked, ~${it.remainingLockTime()} min remaining")
+            println("User ID: ${it.userId} | Locked, ~${it.remainingLockTime()} min remaining")
             println("-".repeat(50))
         }
     }
