@@ -78,9 +78,7 @@ object AdminService{
         CabRepo.deleteByKey(driver.cabId)
         DriverRepo.deleteByKey(driver.userId)
         UserRepo.deleteByEmail(driver.email)
-        AuthRepo.findByUserId(driver.userId)?.let {
-            AuthRepo.deleteByKey(it.userId)
-        }
+        AuthRepo.deleteByKey(driver.userId)
 
         return true
     }
