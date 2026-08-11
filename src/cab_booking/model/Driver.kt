@@ -19,8 +19,6 @@ class Driver(
     userRole = UserRole.DRIVER
 ) {
 
-    // Public properties are used for simple property access (driver.licenseNumber)
-    // Private set for public var so that properties cannot be modified directly but can be read easily (driver.earnings)
     val licenseNumber: String = licenseNumber.trim().uppercase()
 
     var earnings: BigDecimal = BigDecimal.ZERO
