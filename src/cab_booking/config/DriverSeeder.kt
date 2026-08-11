@@ -33,11 +33,11 @@ object DriverSeeder {
         seedDriver("Jayaraman Pillai", "9000000010", "jayaramanpillai@cabbooking.com", "TN012023000010", "Volkswagen Virtus", "TN01CD0005", CabType.SEDAN, Location.PORUR)
 
         // ---- SUV ----
-        seedDriver("Karthik Raja", "9000000011", "karthikraja@cabbooking.com", "TN01SV0001", "Mahindra XUV700", "TN01EF0001", CabType.SUV, Location.GUDUVANCHERY)
-        seedDriver("Lokesh Waran", "9000000012", "lokeshwaran@cabbooking.com", "TN01SV0002", "Toyota Innova Crysta", "TN01EF0002", CabType.SUV, Location.GUINDY)
-        seedDriver("Manikandan Vel", "9000000013", "manikandanvel@cabbooking.com", "TN01SV0003", "Hyundai Alcazar", "TN01EF0003", CabType.SUV, Location.URAPPAKKAM)
-        seedDriver("Naveen Chezhian", "9000000014", "naveenchezhian@cabbooking.com", "TN01SV0004", "Kia Seltos", "TN01EF0004", CabType.SUV, Location.POTHERI)
-        seedDriver("Om Prakash", "9000000015", "omprakash@cabbooking.com", "TN01SV0005", "Tata Safari", "TN01EF0005", CabType.SUV, Location.TAMBARAM)
+        seedDriver("Karthik Raja", "9000000011", "karthikraja@cabbooking.com", "TN012023000011", "Mahindra XUV700", "TN01EF0001", CabType.SUV, Location.GUDUVANCHERY)
+        seedDriver("Lokesh Waran", "9000000012", "lokeshwaran@cabbooking.com", "TN012023000012", "Toyota Innova Crysta", "TN01EF0002", CabType.SUV, Location.GUINDY)
+        seedDriver("Manikandan Vel", "9000000013", "manikandanvel@cabbooking.com", "TN012023000013", "Hyundai Alcazar", "TN01EF0003", CabType.SUV, Location.URAPPAKKAM)
+        seedDriver("Naveen Chezhian", "9000000014", "naveenchezhian@cabbooking.com", "TN012023000014", "Kia Seltos", "TN01EF0004", CabType.SUV, Location.POTHERI)
+        seedDriver("Om Prakash", "9000000015", "omprakash@cabbooking.com", "TN012023000015", "Tata Safari", "TN01EF0005", CabType.SUV, Location.TAMBARAM)
     }
 
     private fun seedDriver(
