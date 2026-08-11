@@ -2,6 +2,7 @@ package cab_booking.model
 
 import cab_booking.model.types.Location
 import cab_booking.model.types.UserRole
+import cab_booking.util.Validator
 import java.math.BigDecimal
 
 class Driver(
@@ -47,7 +48,7 @@ class Driver(
 
     init {
         require(cabId.isNotBlank()) { "Cab ID cannot be blank." }
-        require(licenseNumber.isNotBlank()) { "Invalid license number." }
+        require(Validator.isValidLicenseNumber(licenseNumber)) { "Invalid license number. Format: TN012023001234." }
     }
 
     override fun toString(): String {

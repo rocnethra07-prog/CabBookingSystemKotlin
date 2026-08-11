@@ -74,7 +74,6 @@ object AuthController{
         while (true) {
             email = ConsoleInput.promptEmail()
 
-            //Pre-check for UX
             if(AuthService.isEmailRegistered(email)){
                 println("! This email is already registered. Please use a different email !")
                 continue

@@ -365,15 +365,16 @@ object RiderController{
 
         }
         catch (e: UnauthorizedRideActionException) {
-            println("[!] ${e.message}")
-
+            println("[!] Unable to submit your rating at the moment ${e.message}")
+        }
+        catch (e : InvalidRideStateException){
+            println("[!] Unable to submit your rating at the moment ${e.message}")
         }
         catch (e: DriverNotFoundException) {
-            println("[!] Unable to submit your rating at the moment")
-            println(e.message)
+            println("[!] Unable to submit your rating at the moment ${e.message}")
         }
         catch (e : IllegalArgumentException){
-            println("[!] ${e.message}")
+            println("[!] Unable to submit your rating at the moment ${e.message}")
         }
     }
 

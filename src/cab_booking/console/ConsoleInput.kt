@@ -48,6 +48,19 @@ object ConsoleInput {
         promptUntilValidInput(prompt, errorMessage){ Validator.isValidPassword(it) }
 
 
+    fun promptLicenseNumber(
+        prompt: String = "License Number : ",
+        errorMessage: String = "Invalid license number. Format: TN012023001234."
+    ) =
+        promptUntilValidInput(prompt, errorMessage){ Validator.isValidLicenseNumber(it) }.uppercase()
+
+    fun promptRegistrationNumber(
+        prompt: String = "Registration Number : ",
+        errorMessage: String =  "Invalid registration number. Format: TN01AB0001."
+    ) =
+        promptUntilValidInput(prompt, errorMessage) { Validator.isValidRegistrationNumber(it) }.uppercase()
+
+
     fun chooseLocation(prompt: String = "Select Location: "): Location {
 
         while (true) {

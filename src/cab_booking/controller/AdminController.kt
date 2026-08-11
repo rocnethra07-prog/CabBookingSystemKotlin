@@ -109,7 +109,6 @@ object AdminController{
 
             email = ConsoleInput.promptEmail()
 
-            //Pre-check for UX
             if (!AdminService.isEmailRegistered(email))
                 break
 
@@ -124,12 +123,8 @@ object AdminController{
 
         while (true) {
 
-            licenseNumber = ConsoleInput.promptNonEmptyInput(
-                "License Number : ",
-                "License number cannot be empty."
-            )
+            licenseNumber = ConsoleInput.promptLicenseNumber()
 
-            //Pre-check for UX
             if (!AdminService.isLicenseNumberExists(licenseNumber))
                 break
 
@@ -159,12 +154,8 @@ object AdminController{
 
         while (true) {
 
-            registrationNumber = ConsoleInput.promptNonEmptyInput(
-                "Registration Number : ",
-                "Registration number cannot be empty."
-            )
+            registrationNumber = ConsoleInput.promptRegistrationNumber()
 
-            //Pre-check for UX
             if (!AdminService.isRegistrationNumberExists(registrationNumber))
                 break
 
@@ -373,20 +364,9 @@ object AdminController{
         )
         val rides = AdminService.getRiderRideHistory(riderId)
 
-        if (rides.isEmpty()) {
-            println("\nNo rides found.")
-            return
-        }
+        displayRides(rides, "RIDER RIDE HISTORY")
 
-        println("\n========== RIDER RIDE HISTORY ==========")
-
-        rides.forEach {
-            println(it)
-            println("-".repeat(50))
-        }
     }
-
-
 
     // RIDE MANAGEMENT
 
@@ -571,7 +551,7 @@ object AdminController{
 
         println("\nLocked Accounts:")
         lockedAccounts.forEachIndexed { index, account ->
-            println("${index + 1}. ${account.userId}")
+            println("${index + 1}. ${account.userId} , Locked ~${account.remainingLockTime()} min remaining")
         }
 
         val userId = ConsoleInput.promptNonEmptyInput(
@@ -602,10 +582,10 @@ object AdminController{
             return
         }
 
-        println("\n========== LOCKED USER ACCOUNTS ==========")
+        println("\n========== LOCKED USER ACCOUNTS ID ==========")
 
         lockedAccounts.forEach {
-            println(it)
+            println("User ID: $it.userId | Locked, ~${it.remainingLockTime()} min remaining")
             println("-".repeat(50))
         }
     }

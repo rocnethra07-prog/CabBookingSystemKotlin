@@ -55,6 +55,7 @@ object AdminService{
         catch (e: IllegalArgumentException) {
             DriverRepo.deleteByKey(driver.userId)
             CabRepo.deleteByKey(cab.cabId)
+            UserRepo.deleteByEmail(driver.email)
             throw e
         }
     }
