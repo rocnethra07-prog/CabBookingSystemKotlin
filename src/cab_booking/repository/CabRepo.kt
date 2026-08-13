@@ -8,10 +8,11 @@ object CabRepo : InMemoryRepo<Cab>() {
     override fun getKey(entity: Cab): String = entity.cabId
 
     fun existsByRegistrationNumber(registrationNumber: String): Boolean {
-        require(registrationNumber.isNotBlank()) {"Registration number cannot be blank"}
+        val trimmed = registrationNumber.trim()
+        if (trimmed.isBlank()) return false
 
         return storage.values.any {
-            it.registrationNumber.equals(registrationNumber, ignoreCase = true)
+            it.registrationNumber.equals(trimmed, ignoreCase = true)
         }
     }
 

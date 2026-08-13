@@ -17,10 +17,11 @@ object DriverRepo : InMemoryRepo<Driver>() {
         }
 
     fun existsByLicense(license: String): Boolean {
-        require(license.isNotBlank()) {"License number cannot be blank"}
+        val trimmed = license.trim()
+        if (trimmed.isBlank()) return false
 
         return storage.values.any {
-            it.licenseNumber.equals(license, ignoreCase = true)
+            it.licenseNumber.equals(trimmed, ignoreCase = true)
         }
     }
 }
