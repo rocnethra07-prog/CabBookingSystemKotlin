@@ -90,9 +90,11 @@ object RiderController{
 
             drop = ConsoleInput.chooseLocation("Drop Location")
 
-            if (pickup != drop) break
-
-            println("Pickup and Drop locations cannot be the same.")
+            if (pickup == drop) {
+                println("Pickup and Drop locations cannot be the same.")
+                continue
+            }
+            break
         }
 
         while (true) {
@@ -348,9 +350,11 @@ object RiderController{
                 continue
             }
 
-            if (rating in 1..5) break
-
-            println("Rating must be between 1 and 5.")
+            if (rating !in 1..5) {
+                println("Rating must be between 1 and 5.")
+                continue
+            }
+            break
         }
 
         try {

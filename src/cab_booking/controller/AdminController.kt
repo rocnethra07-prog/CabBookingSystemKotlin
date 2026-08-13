@@ -109,10 +109,11 @@ object AdminController{
 
             email = ConsoleInput.promptEmail()
 
-            if (!AdminService.isEmailRegistered(email))
-                break
-
-            println("Email already registered.")
+            if (AdminService.isEmailRegistered(email)) {
+                println("Email already registered.")
+                continue
+            }
+            break
         }
 
         val password = ConsoleInput.promptPassword()
@@ -125,10 +126,11 @@ object AdminController{
 
             licenseNumber = ConsoleInput.promptLicenseNumber()
 
-            if (!AdminService.isLicenseNumberExists(licenseNumber))
-                break
-
-            println("License number already exists.")
+            if (AdminService.isLicenseNumberExists(licenseNumber)){
+                println("License number already exists.")
+                continue
+            }
+            break
         }
 
         // create a cab for the driver
@@ -156,10 +158,11 @@ object AdminController{
 
             registrationNumber = ConsoleInput.promptRegistrationNumber()
 
-            if (!AdminService.isRegistrationNumberExists(registrationNumber))
-                break
-
-            println("Registration number already exists.")
+            if (AdminService.isRegistrationNumberExists(registrationNumber)) {
+                println("Registration number already exists.")
+                continue
+            }
+            break
         }
 
         val cabType = ConsoleInput.chooseCabType()
