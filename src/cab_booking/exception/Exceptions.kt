@@ -1,6 +1,5 @@
 package cab_booking.exception
 
-import cab_booking.model.types.CabType
 import cab_booking.model.types.Location
 
 class UserNotFoundException(message: String) :
@@ -14,9 +13,6 @@ class CabNotFoundException(message: String) :
 
 class CredentialsNotFoundException() :
     Exception("Authentication details not found")
-
-class DriverUnavailableException(cabType: CabType) :
-    Exception("No $cabType drivers are available right now")
 
 class AccountLockedException(minutesLeft: Long, val isAdmin : Boolean) :
     Exception("Account Locked. Try again in ~$minutesLeft minute(s)")

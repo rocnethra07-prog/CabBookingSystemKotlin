@@ -9,7 +9,6 @@ import cab_booking.exception.CredentialsNotFoundException
 import cab_booking.exception.CabNotFoundException
 import cab_booking.exception.DistanceNotFoundException
 import cab_booking.exception.DriverNotFoundException
-import cab_booking.exception.DriverUnavailableException
 import cab_booking.exception.InvalidCredentialsException
 import cab_booking.exception.InvalidRideStateException
 import cab_booking.exception.UnauthorizedRideActionException
@@ -110,6 +109,14 @@ object RiderController{
                     cabType
                 )
 
+                if(ride == null){
+                    println("[!]No $cabType drivers are available right now")
+                    if(ConsoleInput.promptConfirmation("Try another cab type? (Y/N): ")){
+                        continue
+                    }
+                    return
+                }
+
                 val driver = RiderService.getDriverForRide(ride)
 
                 println("\nRide Booked Successfully.\n")
@@ -125,15 +132,6 @@ object RiderController{
                 )
 
                 return
-
-            }
-            catch (e: DriverUnavailableException) {
-
-                println("[!] ${e.message}")
-
-                if (!ConsoleInput.promptConfirmation("Try another cab type? (Y/N): ")) {
-                    return
-                }
 
             }
             catch(e: DistanceNotFoundException){

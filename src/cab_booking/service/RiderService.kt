@@ -5,7 +5,6 @@ import cab_booking.repository.RideRepo
 import cab_booking.service.pricing.FareCalculator
 import cab_booking.exception.CabNotFoundException
 import cab_booking.exception.DriverNotFoundException
-import cab_booking.exception.DriverUnavailableException
 import cab_booking.exception.InvalidRideStateException
 import cab_booking.exception.UnauthorizedRideActionException
 import cab_booking.model.Driver
@@ -33,10 +32,10 @@ object RiderService {
         pickupLocation: Location,
         dropLocation: Location,
         cabType: CabType
-    ): Ride {
+    ): Ride? {
 
         val driver = findAvailableDriver(cabType, pickupLocation)
-            ?: throw DriverUnavailableException(cabType)
+            ?: return null
 
         val ride = Ride(
             riderId = rider.userId,
