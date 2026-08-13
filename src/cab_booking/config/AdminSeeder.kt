@@ -10,7 +10,6 @@ import cab_booking.service.AuthService
 //object instead of class so that there is no need of creating a AdminSeeder object
 object AdminSeeder {
 
-   //constant values
     const val ADMIN_EMAIL = "admin@cabbooking.com"
     const val ADMIN_NAME = "System Admin"
     const val ADMIN_PHONE = "9999999999"
