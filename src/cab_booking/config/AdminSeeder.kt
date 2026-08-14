@@ -17,9 +17,7 @@ object AdminSeeder {
 
     fun seed() {
         if (!AuthService.isEmailRegistered(ADMIN_EMAIL)) {
-            val admin = User(ADMIN_NAME, ADMIN_PHONE, ADMIN_EMAIL, UserRole.ADMIN)
-            UserRepo.save(admin)
-            AuthRepo.save(UserCredential(admin.userId, ADMIN_PASSWORD))
+            AuthService.registerUser(ADMIN_NAME, ADMIN_NAME, ADMIN_EMAIL, ADMIN_PASSWORD, UserRole.ADMIN)
         }
     }
 }
