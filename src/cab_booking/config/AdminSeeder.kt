@@ -13,7 +13,7 @@ object AdminSeeder {
 
     fun seed() {
         if (!AuthService.isEmailRegistered(ADMIN_EMAIL)) {
-            AuthService.registerUser(ADMIN_NAME, ADMIN_NAME, ADMIN_EMAIL, ADMIN_PASSWORD, UserRole.ADMIN)
+            AuthService.registerUser(ADMIN_NAME, ADMIN_PHONE, ADMIN_EMAIL, ADMIN_PASSWORD, UserRole.ADMIN)
         }
     }
 }
