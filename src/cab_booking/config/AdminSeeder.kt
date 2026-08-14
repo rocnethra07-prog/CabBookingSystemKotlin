@@ -1,10 +1,6 @@
 package cab_booking.config
 
-import cab_booking.auth.UserCredential
-import cab_booking.model.User
 import cab_booking.model.types.UserRole
-import cab_booking.repository.AuthRepo
-import cab_booking.repository.UserRepo
 import cab_booking.service.AuthService
 
 //object instead of class so that there is no need of creating a AdminSeeder object
