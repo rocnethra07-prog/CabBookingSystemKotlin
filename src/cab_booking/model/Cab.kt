@@ -20,10 +20,11 @@ class Cab(
 
     override fun toString(): String {
         return """
-            Model        : $model
-            Cab Type     : $cabType
-            Base Price   : ${cabType.basePay}
-            Per Km Price : ${cabType.perKmRate}
+            Model                : $model
+            Cab Type             : $cabType
+            Base Price           : ${cabType.basePay}
+            Per Km Price         : ${cabType.perKmRate}
+            Registration Number  : $registrationNumber
         """.trimIndent()
     }
 }
