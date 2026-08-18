@@ -49,7 +49,7 @@ object AuthService{
 
     private fun checkIsAccountLocked(userAuth: UserCredential){
         if(userAuth.isAccountLocked()){
-            val minutesLeft = userAuth.remainingLockTime()?.toMinutes()?.plus(1) ?: 0
+            val minutesLeft = userAuth.remainingLockTime().toMinutes().plus(1)
             throw AccountLockedException(minutesLeft)
         }
     }

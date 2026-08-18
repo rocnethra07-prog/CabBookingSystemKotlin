@@ -428,7 +428,7 @@ object AdminUI {
 
     private fun printLockedAccounts(accounts: List<UserCredential>) {
         accounts.forEachIndexed { index, account ->
-            println("${index + 1}. ${account.userId} , Locked ~${account.remainingLockTime()} min remaining")
+            println("${index + 1}. ${account.userId} , Locked ~${account.remainingLockTime().toMinutes().plus(1)} min remaining")
         }
     }
 
@@ -443,7 +443,7 @@ object AdminUI {
         println("\n========== LOCKED USER ACCOUNTS ID ==========")
 
         lockedAccounts.forEach {
-            println("User ID: ${it.userId} | Locked, ~${it.remainingLockTime()} min remaining")
+            println("User ID: ${it.userId} | Locked, ~${it.remainingLockTime().toMinutes().plus(1)} min remaining")
             println("-".repeat(50))
         }
     }

@@ -31,7 +31,7 @@ class UserCredential(val userId: String, password: String) {
 
     fun verifyPassword(password: String): Boolean {
         if (isAccountLocked()){
-            val minutesLeft = remainingLockTime()?.toMinutes()?.plus(1) ?: 0
+            val minutesLeft = remainingLockTime().toMinutes().plus(1)
             throw AccountLockedException(minutesLeft)
         }
 
@@ -50,12 +50,12 @@ class UserCredential(val userId: String, password: String) {
         return isValid
     }
 
-    fun remainingLockTime(): Duration?{
+    fun remainingLockTime(): Duration{
         refreshLockStatus()
 
-        val since = lockedAt ?: return null
+        val since = lockedAt ?: return Duration.ZERO
         val remaining =  LOCK_DURATION - Duration.between(since, LocalDateTime.now())
-        return if(remaining.isZero ||remaining.isNegative) null else remaining
+        return if(remaining.isZero ||remaining.isNegative) Duration.ZERO else remaining
     }
 
     private fun lockAccount(){
