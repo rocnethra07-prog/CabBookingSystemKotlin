@@ -1,5 +1,6 @@
 package cab_booking.auth
 
+import cab_booking.exception.AccountLockedException
 import cab_booking.util.Validator
 import org.mindrot.jbcrypt.BCrypt
 import java.time.Duration
@@ -30,7 +31,8 @@ class UserCredential(val userId: String, password: String) {
 
     fun verifyPassword(password: String): Boolean {
         if (isAccountLocked()){
-            return false
+            val minutesLeft = remainingLockTime()?.toMinutes()?.plus(1) ?: 0
+            throw AccountLockedException(minutesLeft)
         }
 
         val isValid = matches(password)
@@ -87,6 +89,9 @@ class UserCredential(val userId: String, password: String) {
 
     fun updatePassword(newPassword: String) {
         require(Validator.isValidPassword(newPassword)) { "Invalid password format." }
+        require(!BCrypt.checkpw(newPassword, passwordHash)) {
+            "New password must be different from the old password."
+        }
         passwordHash = hash(newPassword)
     }
 }

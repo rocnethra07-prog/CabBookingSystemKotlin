@@ -1,10 +1,10 @@
-package cab_booking.console
+package cab_booking.console.input
 
 import cab_booking.model.types.CabType
 import cab_booking.model.types.Location
 import cab_booking.util.Validator
 
-object ConsoleInput {
+object InputReader {
     private fun promptUntilValidInput(prompt: String, errorMessage: String, validator: (String) -> Boolean) : String{
         while (true){
             print(prompt)
@@ -38,7 +38,7 @@ object ConsoleInput {
         prompt: String = "Enter email: ",
         errorMessage: String = "Invalid email format. Please enter a valid email"
     ) =
-        promptUntilValidInput(prompt, errorMessage){ Validator.isValidEmail(it) }
+        promptUntilValidInput(prompt, errorMessage){ Validator.isValidEmail(it) }.lowercase()
 
 
     fun promptPassword(
@@ -75,11 +75,12 @@ object ConsoleInput {
 
             val choice = readln().toIntOrNull()
 
-            if (choice != null && choice in 1..Location.entries.size) {
-                return Location.entries[choice - 1]
+            if (choice == null || choice !in 1..Location.entries.size) {
+                println("! Invalid choice. Please try again.")
+                continue
             }
 
-            println("! Invalid choice. Please try again.")
+            return Location.entries[choice - 1]
         }
     }
 
@@ -101,11 +102,11 @@ object ConsoleInput {
 
             val choice = readln().toIntOrNull()
 
-            if (choice != null && choice in 1..CabType.entries.size) {
-                return CabType.entries[choice - 1]
+            if (choice == null || choice !in 1..CabType.entries.size) {
+                println("! Invalid choice. Please try again.")
+                continue
             }
-
-            println("! Invalid choice. Please try again.")
+            return CabType.entries[choice - 1]
         }
     }
 
@@ -129,10 +130,11 @@ object ConsoleInput {
             print("Name [$currentValue] (Press Enter to keep the current value) : ")
             val input = readln().trim()
             if (input.isBlank()) return currentValue
-            if (Validator.isValidName(input)) {
-                return input
+            if (!Validator.isValidName(input)) {
+                println("Invalid name.")
+                continue
             }
-            println("Invalid name.")
+            return input
         }
     }
 
@@ -142,10 +144,12 @@ object ConsoleInput {
             print("Phone [$currentValue] (Press Enter to keep the current value) : ")
             val input = readln().trim()
             if (input.isBlank()) return currentValue
-            if (Validator.isValidPhone(input)) {
-                return input
+            if (!Validator.isValidPhone(input)) {
+                println("Invalid phone number.")
+                continue
             }
-            println("Invalid phone number.")
+            return input
+
         }
     }
 }

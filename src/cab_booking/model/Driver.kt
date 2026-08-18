@@ -10,8 +10,8 @@ class Driver(
     phone: String,
     email: String,
     val cabId: String,
-    licenseNumber: String,
-    var currentLocation: Location
+    val licenseNumber: String,
+    currentLocation: Location
 ) : User(
     name = name,
     phone = phone,
@@ -19,30 +19,43 @@ class Driver(
     userRole = UserRole.DRIVER
 ) {
 
-    val licenseNumber: String = licenseNumber.trim().uppercase()
+    var currentLocation: Location = currentLocation
+        private set
 
     var earnings: BigDecimal = BigDecimal.ZERO
-        set(value){
-            if(field == value) return
-            require(value >= BigDecimal.ZERO){ "Earnings of driver cannot be negative" }
-            field = value
-        }
+        private set
 
     var isAvailable: Boolean = true
+        private set
+
+    fun setAvailability(availability: Boolean){
+        this.isAvailable = availability
+    }
 
     var totalRating: Int = 0
-        set(value) {
-            if(field == value) return
-            require(value >= 0){ "Total Ratings of driver cannot be negative" }
-            field = value
-        }
+        private set
 
-    var ratingCount: Int = 0
-        set(value){
-            if(field == value) return
-            require(value >= 0){ "Ratings Count of driver cannot be negative" }
-            field = value
-        }
+    var ratingsCount: Int = 0
+        private set
+
+    fun updateEarnings(earnings: BigDecimal){
+        require(earnings >= BigDecimal.ZERO){ "Earnings of driver cannot be negative" }
+        this.earnings = earnings
+    }
+
+    fun updateCurrentLocation(location: Location) {
+        this.currentLocation = location
+    }
+
+    fun updateTotalRatings(ratings: Int) {
+        require(ratings >= 0){ "Total Ratings of driver cannot be negative" }
+        this.totalRating = ratings
+    }
+
+    fun updateRatingsCount(ratingsCount: Int) {
+        require(ratingsCount >= 0){ "Ratings Count of driver cannot be negative" }
+        this.ratingsCount = ratingsCount
+    }
 
     init {
         require(cabId.isNotBlank()) { "Cab ID cannot be blank." }

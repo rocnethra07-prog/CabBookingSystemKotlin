@@ -14,7 +14,7 @@ class CabNotFoundException(message: String) :
 class CredentialsNotFoundException() :
     Exception("Authentication details not found")
 
-class AccountLockedException(minutesLeft: Long, val isAdmin : Boolean) :
+class AccountLockedException(minutesLeft: Long) :
     Exception("Account Locked. Try again in ~$minutesLeft minute(s)")
 
 class InvalidRideStateException(message: String) :

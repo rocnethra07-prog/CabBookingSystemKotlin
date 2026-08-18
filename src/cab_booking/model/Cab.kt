@@ -6,9 +6,9 @@ import cab_booking.util.Validator
 
 //fields are readable globally and unmodifiable
 class Cab(
-    val registrationNumber: String,
     val model: String,
-    val cabType: CabType
+    val cabType: CabType,
+    val registrationNumber: String
 ) {
 
     val cabId: String = IdGenerator.generateCabId()
@@ -16,5 +16,14 @@ class Cab(
     init {
         require(Validator.isValidRegistrationNumber(registrationNumber)) { "Invalid registration number. Format: TN01AB0001." }
         require(model.isNotBlank()) { "Car model cannot be blank." }
+    }
+
+    override fun toString(): String {
+        return """
+            Model        : $model
+            Cab Type     : $cabType
+            Base Price   : ${cabType.basePay}
+            Per Km Price : ${cabType.perKmRate}
+        """.trimIndent()
     }
 }

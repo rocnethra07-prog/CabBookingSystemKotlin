@@ -14,25 +14,27 @@ open class User(
     val userId: String = IdGenerator.generateUserId()
 
     var name: String = name.trim()
-        set(value) {
-            if(field == value.trim()) return
-            require(Validator.isValidName(value)){"Name must contain minimum 3 characters. Name cannot be blank"}
-            field = value.trim()
-        }
+        private set
 
     var phone: String = phone.trim()
-        set(value) {
-            if(field == value.trim()) return
-            require(Validator.isValidPhone(value)){"Invalid phone number format. Phone cannot be blank"}
-            field = value.trim()
-        }
+        private set
+
+    fun updateName(name: String){
+        require(Validator.isValidName(name)){ "Name must contain minimum 3 characters. Name cannot be blank" }
+        this.name = name.trim()
+    }
+
+    fun updatePhone(phone: String){
+        require(Validator.isValidPhone(phone)){ "Invalid phone number format. Phone cannot be blank" }
+        this.phone = phone.trim()
+    }
 
     val email: String = email.trim().lowercase()
 
     init {
-        require(Validator.isValidName(name)){"Name must contain minimum 3 characters. Name cannot be blank"}
-        require(Validator.isValidPhone(phone)){"Invalid phone number format. Phone cannot be blank"}
-        require(Validator.isValidEmail(email)){"Invalid email format. Email cannot be blank"}
+        require(Validator.isValidName(name)){ "Name must contain minimum 3 characters. Name cannot be blank" }
+        require(Validator.isValidPhone(phone)){ "Invalid phone number format. Phone cannot be blank" }
+        require(Validator.isValidEmail(email)){ "Invalid email format. Email cannot be blank" }
     }
 
     override fun toString(): String {

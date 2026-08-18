@@ -1,9 +1,7 @@
 package cab_booking.service
-import cab_booking.repository.CabRepo
 import cab_booking.repository.DriverRepo
 import cab_booking.repository.RideRepo
 import cab_booking.service.pricing.FareCalculator
-import cab_booking.exception.CabNotFoundException
 import cab_booking.exception.DriverNotFoundException
 import cab_booking.exception.InvalidRideStateException
 import cab_booking.exception.UnauthorizedRideActionException
@@ -13,7 +11,7 @@ import cab_booking.model.User
 import cab_booking.model.types.CabType
 import cab_booking.model.types.Location
 import cab_booking.model.types.RideStatus
-import java.time.LocalDateTime
+import cab_booking.service.result.BookingResult
 import java.time.LocalTime
 
 object RiderService {
@@ -23,8 +21,8 @@ object RiderService {
         name: String,
         phone: String
     ) {
-        user.name = name
-        user.phone = phone
+        user.updateName(name)
+        user.updatePhone(phone)
     }
 
     fun bookRide(
@@ -32,10 +30,10 @@ object RiderService {
         pickupLocation: Location,
         dropLocation: Location,
         cabType: CabType
-    ): Ride? {
+    ): BookingResult {
 
         val driver = findAvailableDriver(cabType, pickupLocation)
-            ?: return null
+            ?: return BookingResult.DriverUnavailable
 
         val ride = Ride(
             riderId = rider.userId,
@@ -49,7 +47,7 @@ object RiderService {
 
         markUnavailable(driver)
 
-        return ride
+        return BookingResult.Success(ride)
     }
 
     private fun findAvailableDriver(
@@ -57,10 +55,9 @@ object RiderService {
         pickupLocation: Location
     ): Driver? {
 
-        val matchingDrivers = DriverRepo
-            .findAvailableDrivers()
+        val matchingDrivers = DriverService.getAvailableDrivers()
             .filter { driver ->
-                val cab = CabRepo.findByKey(driver.cabId) ?: throw CabNotFoundException("Cab not found for ID: ${driver.cabId}")
+                val cab = CabService.getCabForDriver(driver)
                 cab.cabType == cabType
             }
 
@@ -76,56 +73,19 @@ object RiderService {
     fun getDriverForRide(ride: Ride): Driver =
         DriverRepo.findByKey(ride.driverId) ?: throw DriverNotFoundException("Driver not found for ID: ${ride.driverId}")
 
-    fun hasActiveRide(user: User): Boolean =
-        getCurrentBookedRide(user) != null
-
-    fun getCurrentBookedRide(user: User): Ride? =
-        RideRepo.findCurrentRideOfRider(user.userId)
-
     fun cancelRide(
         ride: Ride,
         rider: User
     ) {
-
         if (ride.riderId != rider.userId) {
             throw UnauthorizedRideActionException("Only the rider who booked this ride can cancel it.")
         }
-
-        markRideAsCancelled(ride)
-        markDriverAvailable(ride)
-    }
-
-    private fun markRideAsCancelled(ride: Ride) {
-        if(ride.rideStatus != RideStatus.BOOKED) {
-            throw InvalidRideStateException("Only booked rides can be cancelled.")
-        }
-
-        ride.rideStatus = RideStatus.CANCELLED
-        ride.cancelledAt = LocalDateTime.now()
-    }
-
-    private fun markDriverAvailable(ride: Ride) {
-        val driver = getDriverForRide(ride)
-        markAvailable(driver)
-    }
-
-    private fun markAvailable(driver: Driver){
-        driver.isAvailable = true
+        DriverService.cancelRide(ride,getDriverForRide(ride))
     }
 
     private fun markUnavailable(driver: Driver){
-        driver.isAvailable = false
+        driver.setAvailability(false)
     }
-
-    fun getRidesByRider(
-        rider: User
-    ): List<Ride> =
-        RideRepo.findRidesByRider(rider.userId)
-
-    fun getLastCompletedRide(
-        rider: User
-    ): Ride? =
-        RideRepo.findLastCompletedRide(rider.userId)
 
     fun rateDriver(
         ride: Ride,
@@ -137,7 +97,7 @@ object RiderService {
             throw UnauthorizedRideActionException("Only the rider who booked this ride can rate it.")
         }
 
-        if(ride.rating != null) {
+        if(ride.rating != 0) {
             throw InvalidRideStateException("Ride has already been rated.")
         }
 
@@ -147,14 +107,14 @@ object RiderService {
 
         require(rating in 1..5) { "Rating must be between 1 and 5." }
 
-        ride.rating = rating
-        val driver = DriverRepo.findByKey(ride.driverId) ?: throw DriverNotFoundException("Driver not found for ID: ${ride.driverId}")
+        ride.setRatings(rating)
+        val driver = DriverService.findDriverById(ride.driverId)
         addRating(driver, rating)
     }
 
     private fun addRating(driver: Driver, rating: Int) {
         require(rating in 1..5) { "Rating must be between 1 and 5." }
-        driver.totalRating += rating
-        driver.ratingCount++
+        driver.updateTotalRatings(driver.totalRating + rating)
+        driver.updateRatingsCount(driver.ratingsCount + 1)
     }
 }

@@ -1,0 +1,20 @@
+package cab_booking.service
+
+import cab_booking.exception.UserNotFoundException
+import cab_booking.model.User
+import cab_booking.model.types.UserRole
+import cab_booking.repository.UserRepo
+
+object UserService {
+
+    fun isEmailRegistered(email: String) : Boolean =
+        UserRepo.existsByEmail(email)
+
+    fun findUserById(userId: String): User =
+        UserRepo.findByUserId(userId)
+            ?: throw UserNotFoundException("User not found for ID: $userId")
+
+    fun getAllRiders(): List<User> =
+        UserRepo.findAll()
+            .filter { it.userRole == UserRole.RIDER }
+}

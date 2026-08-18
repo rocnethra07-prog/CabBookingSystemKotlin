@@ -9,10 +9,63 @@ import cab_booking.repository.DriverRepo
 import cab_booking.repository.RideRepo
 import cab_booking.exception.InvalidRideStateException
 import cab_booking.exception.UnauthorizedRideActionException
+import cab_booking.model.Cab
+import cab_booking.repository.AuthRepo
+import cab_booking.repository.UserRepo
 import java.math.BigDecimal
 import java.time.LocalDateTime
 
 object DriverService {
+
+    fun isLicenseNumberExists(licenseNumber: String): Boolean =
+        DriverRepo.existsByLicense(licenseNumber)
+
+    fun createDriver(name: String, phone: String, email: String, password: String, location: Location, licenseNumber: String, cab: Cab): Driver {
+
+        val driver = Driver(
+            name = name,
+            phone = phone,
+            email = email,
+            cabId = cab.cabId,
+            licenseNumber = licenseNumber,
+            currentLocation = location
+        )
+
+        try {
+
+            DriverRepo.save(driver)
+            AuthService.saveUserAndCredentials(
+                driver, password
+            )
+
+            return driver
+
+        }
+        catch (e: IllegalArgumentException) {
+            DriverRepo.deleteByKey(driver.userId)
+            UserRepo.deleteByEmail(driver.email)
+            CabService.deleteCab(cab.cabId)
+            throw e
+        }
+    }
+
+
+    fun deleteDriver(driver: Driver): Boolean {
+
+        val activeRide = RideRepo.findCurrentRideOfDriver(driver.userId)
+
+        if (activeRide != null) {
+            return false
+        }
+
+        CabService.deleteCab(driver.cabId)
+        DriverRepo.deleteByKey(driver.userId)
+        UserRepo.deleteByEmail(driver.email)
+        AuthRepo.deleteByKey(driver.userId)
+
+        return true
+    }
+
 
     fun updateProfile(
         driver: Driver,
@@ -20,26 +73,18 @@ object DriverService {
         phone: String,
         location: Location
     ) {
-        driver.name = name
-        driver.phone = phone
-        driver.currentLocation = location
+        driver.updateName(name)
+        driver.updatePhone(phone)
+        driver.updateCurrentLocation(location)
     }
-
-    fun getCurrentRide(driver: Driver): Ride? =
-        RideRepo.findCurrentRideOfDriver(driver.userId)
 
     fun completeRide(
         ride: Ride,
         driver: Driver
     ) {
         endRide(ride, driver){ ride -> markRideAsCompleted(ride)}
-        driver.currentLocation = ride.dropLocation
+        driver.updateCurrentLocation(ride.dropLocation)
         addEarnings(driver,ride.fare)
-    }
-
-    private fun addEarnings(driver: Driver, amount: BigDecimal) {
-        require(amount > BigDecimal.ZERO) { "Amount must be greater than zero." }
-        driver.earnings += amount
     }
 
     fun cancelRide(
@@ -47,19 +92,6 @@ object DriverService {
         driver: Driver
     ) {
        endRide(ride, driver){ ride -> markRideAsCancelled(ride)}
-    }
-
-    private fun markAvailable(driver: Driver) {
-        driver.isAvailable = true
-    }
-
-    private fun markRideAsCompleted(ride: Ride){
-        if(ride.rideStatus != RideStatus.BOOKED) {
-            throw InvalidRideStateException("Only booked rides can be completed.")
-        }
-
-        ride.rideStatus = RideStatus.COMPLETED
-        ride.completedAt = LocalDateTime.now()
     }
 
     private fun endRide(
@@ -72,13 +104,31 @@ object DriverService {
         markAvailable(driver)
     }
 
+    private fun markAvailable(driver: Driver) {
+        driver.setAvailability(true)
+    }
+
+    private fun markRideAsCompleted(ride: Ride){
+        if(ride.rideStatus != RideStatus.BOOKED) {
+            throw InvalidRideStateException("Only booked rides can be completed.")
+        }
+
+        ride.updateRideStatus(RideStatus.COMPLETED)
+        ride.setCompletedAt(LocalDateTime.now())
+    }
+
     private fun markRideAsCancelled(ride: Ride){
         if(ride.rideStatus != RideStatus.BOOKED) {
             throw InvalidRideStateException("Only booked rides can be cancelled.")
         }
 
-        ride.rideStatus = RideStatus.CANCELLED
-        ride.cancelledAt = LocalDateTime.now()
+        ride.updateRideStatus(RideStatus.CANCELLED)
+        ride.setCancelledAt(LocalDateTime.now())
+    }
+
+    private fun addEarnings(driver: Driver, amount: BigDecimal) {
+        require(amount > BigDecimal.ZERO) { "Amount must be greater than zero." }
+        driver.updateEarnings(driver.earnings + amount)
     }
 
     private fun validateRideOwnership(
@@ -92,23 +142,23 @@ object DriverService {
     }
 
     fun getAverageRatingOfDriver(driver: Driver) : Double{
-        if (driver.ratingCount == 0){
-            return 0.0
-        }
-        else {
-            return driver.totalRating.toDouble() / driver.ratingCount
+        return if (driver.ratingsCount == 0){
+            0.0
+        } else {
+            driver.totalRating.toDouble() / driver.ratingsCount
         }
     }
 
-    fun getRidesByDriver(
-        driver: Driver
-    ): List<Ride> =
-        RideRepo.findRidesByDriver(driver.userId)
+    fun getAllDrivers(): List<Driver> =
+        DriverRepo.findAll()
 
-    //method used for routing the User object -> DriverController
-    fun findDriverById(
-        driverId: String
-    ): Driver =
-        DriverRepo.findByKey(driverId) ?: throw DriverNotFoundException("Driver not found: $driverId")
+    fun getAvailableDrivers(): List<Driver> =
+        DriverRepo.findAvailableDrivers()
+
+    fun getUnavailableDrivers(): List<Driver> =
+        DriverRepo.findUnavailableDrivers()
+
+    fun findDriverById(driverId: String): Driver =
+        DriverRepo.findByKey(driverId) ?: throw DriverNotFoundException("Driver not found for ID: $driverId")
 
 }

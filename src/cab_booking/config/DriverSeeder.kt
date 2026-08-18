@@ -10,7 +10,7 @@ import cab_booking.repository.CabRepo
 import cab_booking.repository.DriverRepo
 import cab_booking.repository.UserRepo
 
-//object instead of class so that there is no need of creating a DriverSeeder object
+//Hardcoded data
 object DriverSeeder {
 
     private const val SEED_PASSWORD = "Driver@123"
@@ -59,9 +59,9 @@ object DriverSeeder {
         }
 
         val cab = Cab(
-            registrationNumber = registrationNumber,
             model = model,
-            cabType = cabType
+            cabType = cabType,
+            registrationNumber = registrationNumber
         )
 
         val driver = Driver(
@@ -73,9 +73,16 @@ object DriverSeeder {
             currentLocation = location
         )
 
-        CabRepo.save(cab)
-        DriverRepo.save(driver)
-        UserRepo.save(driver)
-        AuthRepo.save(UserCredential(driver.userId, SEED_PASSWORD))
+        try {
+            CabRepo.save(cab)
+            DriverRepo.save(driver)
+            UserRepo.save(driver)
+            AuthRepo.save(UserCredential(driver.userId, SEED_PASSWORD))
+        }
+        catch(ignored : IllegalArgumentException){
+            CabRepo.deleteByKey(cab.cabId)
+            DriverRepo.deleteByKey(driver.userId)
+            UserRepo.deleteByEmail(driver.email)
+        }
     }
 }
