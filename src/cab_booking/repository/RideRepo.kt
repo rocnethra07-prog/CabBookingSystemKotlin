@@ -38,8 +38,8 @@ object RideRepo : InMemoryRepo<Ride>() {
         storage.values.any {
             it.driverId == driverId && it.rideStatus == RideStatus.BOOKED
         }
-    //returns a ride or null based on the predicate passed
-    private fun findRide(predicate : (Ride) -> Boolean) : Ride? =
+
+    private fun findRide(predicate : (Ride) -> Boolean) =
         storage.values.find(predicate)
 
     fun findLastCompletedRide(riderId: String): Ride =

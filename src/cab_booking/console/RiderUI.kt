@@ -239,8 +239,6 @@ object RiderUI {
 
             val driver = RiderController.getDriverForRide(ride)
 
-            println("\n========== CURRENT RIDE ==========")
-
             println(
                 """
    
