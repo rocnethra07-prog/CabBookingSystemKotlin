@@ -35,7 +35,7 @@ class Driver(
     var totalRating: Int = 0
         private set
 
-    var ratingsCount: Int = 0
+    var ratingCount: Int = 0
         private set
 
     fun updateEarnings(earnings: BigDecimal){
@@ -47,14 +47,14 @@ class Driver(
         this.currentLocation = location
     }
 
-    fun updateTotalRatings(ratings: Int) {
+    fun updateTotalRating(ratings: Int) {
         require(ratings >= 0){ "Total Ratings of driver cannot be negative" }
         this.totalRating = ratings
     }
 
-    fun updateRatingsCount(ratingsCount: Int) {
+    fun updateRatingCount(ratingsCount: Int) {
         require(ratingsCount >= 0){ "Ratings Count of driver cannot be negative" }
-        this.ratingsCount = ratingsCount
+        this.ratingCount = ratingsCount
     }
 
     init {

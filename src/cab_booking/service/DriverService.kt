@@ -142,10 +142,10 @@ object DriverService {
     }
 
     fun getAverageRatingOfDriver(driver: Driver) : Double{
-        return if (driver.ratingsCount == 0){
+        return if (driver.ratingCount == 0){
             0.0
         } else {
-            driver.totalRating.toDouble() / driver.ratingsCount
+            driver.totalRating.toDouble() / driver.ratingCount
         }
     }
 

@@ -114,7 +114,7 @@ object RiderService {
 
     private fun addRating(driver: Driver, rating: Int) {
         require(rating in 1..5) { "Rating must be between 1 and 5." }
-        driver.updateTotalRatings(driver.totalRating + rating)
-        driver.updateRatingsCount(driver.ratingsCount + 1)
+        driver.updateTotalRating(driver.totalRating + rating)
+        driver.updateRatingCount(driver.ratingCount + 1)
     }
 }
