@@ -38,17 +38,16 @@ object RideService {
         RideRepo.findRidesByRider(rider.userId)
 
     fun hasActiveRide(user: User): Boolean =
-        getCurrentBookedRide(user) != null
+        RideRepo.hasCurrentRideOfRider(user.userId)
 
-
-    fun getCurrentRide(driver: Driver): Ride? =
+    fun getCurrentRide(driver: Driver): Ride =
         RideRepo.findCurrentRideOfDriver(driver.userId)
 
-    fun getCurrentBookedRide(user: User): Ride? =
+    fun getCurrentBookedRide(user: User): Ride =
         RideRepo.findCurrentRideOfRider(user.userId)
 
     fun getLastCompletedRide(
         rider: User
-    ): Ride? =
+    ): Ride =
         RideRepo.findLastCompletedRide(rider.userId)
 }

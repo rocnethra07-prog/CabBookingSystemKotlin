@@ -1,4 +1,5 @@
 package cab_booking.service
+import cab_booking.exception.AvailableDriversNotFoundException
 import cab_booking.repository.DriverRepo
 import cab_booking.repository.RideRepo
 import cab_booking.service.pricing.FareCalculator
@@ -11,7 +12,6 @@ import cab_booking.model.User
 import cab_booking.model.types.CabType
 import cab_booking.model.types.Location
 import cab_booking.model.types.RideStatus
-import cab_booking.service.result.BookingResult
 import java.time.LocalTime
 
 object RiderService {
@@ -30,10 +30,9 @@ object RiderService {
         pickupLocation: Location,
         dropLocation: Location,
         cabType: CabType
-    ): BookingResult {
+    ): Ride {
 
         val driver = findAvailableDriver(cabType, pickupLocation)
-            ?: return BookingResult.DriverUnavailable
 
         val ride = Ride(
             riderId = rider.userId,
@@ -47,13 +46,13 @@ object RiderService {
 
         markUnavailable(driver)
 
-        return BookingResult.Success(ride)
+        return ride
     }
 
     private fun findAvailableDriver(
         cabType: CabType,
         pickupLocation: Location
-    ): Driver? {
+    ): Driver {
 
         val matchingDrivers = DriverService.getAvailableDrivers()
             .filter { driver ->
@@ -62,7 +61,7 @@ object RiderService {
             }
 
         if (matchingDrivers.isEmpty()) {
-            return null
+            throw AvailableDriversNotFoundException("[!]No $cabType drivers are available right now")
         }
 
         return matchingDrivers.firstOrNull {

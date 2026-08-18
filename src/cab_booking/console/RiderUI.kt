@@ -3,7 +3,10 @@ package cab_booking.console
 import cab_booking.console.input.InputReader
 import cab_booking.controller.RiderController
 import cab_booking.exception.AccountLockedException
+import cab_booking.exception.ActiveRideNotFoundException
+import cab_booking.exception.AvailableDriversNotFoundException
 import cab_booking.exception.CabNotFoundException
+import cab_booking.exception.CompletedRideNotFoundException
 import cab_booking.exception.CredentialsNotFoundException
 import cab_booking.exception.DistanceNotFoundException
 import cab_booking.exception.DriverNotFoundException
@@ -14,7 +17,6 @@ import cab_booking.model.Driver
 import cab_booking.model.Ride
 import cab_booking.model.User
 import cab_booking.model.types.Location
-import cab_booking.service.result.BookingResult
 
 object RiderUI {
     fun riderDashboard(rider: User){
@@ -50,16 +52,22 @@ object RiderUI {
 
     private fun promptPendingRating(rider: User) {
 
-        val ride = RiderController.getLastCompletedRideOfRider(rider)
+        try {
+            val ride = RiderController.getLastCompletedRideOfRider(rider)
 
-        if (ride == null || ride.rating != 0) {
-            return
+            if (ride.rating != 0) {
+                return
+            }
+
+            println("\nYou haven't rated your last ride yet.")
+
+            if (InputReader.promptConfirmation("Would you like to rate it now?")) {
+                showRatingScreen(ride, rider)
+            }
+
         }
-
-        println("\nYou haven't rated your last ride yet.")
-
-        if (InputReader.promptConfirmation("Would you like to rate it now?")) {
-            showRatingScreen(ride, rider)
+        catch (e : CompletedRideNotFoundException){
+            println("[!] ${e.message}")
         }
     }
 
@@ -174,71 +182,67 @@ object RiderUI {
 
             try {
 
-                val rideBookingResult = RiderController.bookRide(
+                val ride = RiderController.bookRide(
                     rider,
                     pickup,
                     drop,
                     cabType
                 )
 
-                when(rideBookingResult){
-                    is BookingResult.DriverUnavailable -> {
-                        println("[!]No $cabType drivers are available right now")
-                        if(InputReader.promptConfirmation("Try another cab type? (Y/N): ")){
-                            continue
-                        }
-                        return
-                    }
-                    is BookingResult.Success -> {
-                        val driver = RiderController.getDriverForRide(rideBookingResult.ride)
+                val driver = RiderController.getDriverForRide(ride)
 
-                        println("\nRide Booked Successfully.\n")
-                        println(rideBookingResult.ride)
+                println("\nRide Booked Successfully.\n")
+                println(ride)
 
-                        println(
-                            """
+                println(
+                    """
 
                     Driver Details :
                     Driver : ${driver.name}
                     Phone  : ${driver.phone}
                     """.trimIndent()
-                        )
+                )
 
-                        return
-                    }
+                return
+
+            }
+            catch(e: AvailableDriversNotFoundException){
+                println("[!] ${e.message}")
+                if(InputReader.promptConfirmation("Try another cab type? (Y/N): ")){
+                    continue
                 }
-
+                return
             }
             catch(e: DistanceNotFoundException) {
                 println("[!] ${e.message}")
+                return
             }
             catch (e: DriverNotFoundException) {
                 println("[!] ${e.message}")
+                return
             }
             catch (e: CabNotFoundException) {
                 println("[!] ${e.message}")
+                return
             }
             catch (e: IllegalArgumentException) {
                 println("[!] ${e.message}")
+                return
             }
         }
     }
 
     fun viewCurrentRide(rider: User){
 
-        val ride = RiderController.getCurrentBookedRide(rider)
+        try {
+            val ride = RiderController.getCurrentBookedRide(rider)
 
-        if (ride == null) {
-            println("\nNo active ride.")
-            return
-        }
+            val driver = RiderController.getDriverForRide(ride)
 
-        val driver = RiderController.getDriverForRide(ride)
+            println("\n========== CURRENT RIDE ==========")
 
-        println("\n========== CURRENT RIDE ==========")
-
-        println(
-            """
+            println(
+                """
    
             ========== CURRENT RIDE ==========
             Pickup Location : ${ride.pickupLocation}
@@ -250,7 +254,11 @@ object RiderUI {
             """.trimIndent()
             )
 
-        currentRideMenu(ride, rider)
+            currentRideMenu(ride, rider)
+        }
+        catch (e : ActiveRideNotFoundException){
+            println("[!] ${e.message}")
+        }
     }
 
     private fun currentRideMenu(
@@ -350,20 +358,20 @@ object RiderUI {
 
     private fun rateLastRide(rider: User) {
 
-        val ride = RiderController.getLastCompletedRideOfRider(rider)
+        try {
+            val ride = RiderController.getLastCompletedRideOfRider(rider)
 
-        if (ride == null) {
-            println("\nNo completed ride available for rating.")
-            return
+            if (ride.rating != 0) {
+                println("\nThis ride has already been rated.")
+                println("Rating : ${ride.rating}/5")
+                return
+            }
+
+            showRatingScreen(ride, rider)
         }
-
-        if (ride.rating != 0) {
-            println("\nThis ride has already been rated.")
-            println("Rating : ${ride.rating}/5")
-            return
+        catch (e: CompletedRideNotFoundException){
+            println("[!] ${e.message}")
         }
-
-        showRatingScreen(ride, rider)
     }
 
     private fun changePassword(rider: User) {

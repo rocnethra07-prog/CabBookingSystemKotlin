@@ -1,5 +1,6 @@
 package cab_booking.repository
 
+import cab_booking.exception.UserNotFoundException
 import cab_booking.model.User
 
 object UserRepo : InMemoryRepo<User>() {
@@ -8,9 +9,9 @@ object UserRepo : InMemoryRepo<User>() {
         return entity.email.trim().lowercase()
     }
 
-    fun findByEmail(email: String): User? {
+    fun findByEmail(email: String): User {
         val trimmedEmail = trimEmail(email)
-        return findByKey(trimmedEmail)
+        return findByKey(trimmedEmail) ?: throw UserNotFoundException("Account does not exist. Please register.")
     }
 
     fun existsByEmail(email: String): Boolean {
@@ -28,8 +29,8 @@ object UserRepo : InMemoryRepo<User>() {
         deleteByKey(trimmedEmail)
     }
 
-    fun findByUserId(userId: String): User? =
-        storage.values.firstOrNull { it.userId == userId }
+    fun findByUserId(userId: String): User =
+        storage.values.firstOrNull { it.userId == userId } ?: throw UserNotFoundException("User not found for ID: $userId")
 
     private fun trimEmail(email: String) =
         email.trim().lowercase()

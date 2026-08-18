@@ -5,9 +5,7 @@ import cab_booking.auth.UserCredential
 import cab_booking.model.types.UserRole
 import cab_booking.repository.AuthRepo
 import cab_booking.repository.UserRepo
-import cab_booking.exception.CredentialsNotFoundException
 import cab_booking.exception.InvalidCredentialsException
-import cab_booking.exception.UserNotFoundException
 import cab_booking.exception.AccountLockedException
 
 object AuthService{
@@ -34,11 +32,8 @@ object AuthService{
     }
 
     fun loginUser(email: String, password: String): User {
-        val user: User = UserRepo.findByEmail(email) ?: throw UserNotFoundException("Account does not exist. Please register.")
-
-
-        val userAuth: UserCredential = AuthRepo.findByUserId(user.userId) ?: throw CredentialsNotFoundException()
-
+        val user: User = UserRepo.findByEmail(email)
+        val userAuth: UserCredential = AuthRepo.findByUserId(user.userId)
         checkIsAccountLocked(userAuth)
 
         if(!userAuth.verifyPassword(password)){
@@ -47,7 +42,7 @@ object AuthService{
         return user
     }
 
-    private fun checkIsAccountLocked(userAuth: UserCredential){
+    private fun checkIsAccountLocked(userAuth: UserCredential) {
         if(userAuth.isAccountLocked()){
             val minutesLeft = userAuth.remainingLockTime().toMinutes().plus(1)
             throw AccountLockedException(minutesLeft)
@@ -60,7 +55,7 @@ object AuthService{
         newPassword: String
     ) {
 
-        val userAuth: UserCredential = AuthRepo.findByUserId(user.userId) ?: throw CredentialsNotFoundException()
+        val userAuth: UserCredential = AuthRepo.findByUserId(user.userId)
 
         if(!userAuth.verifyPassword(currentPassword)){
             throw InvalidCredentialsException()
@@ -74,8 +69,6 @@ object AuthService{
 
     fun unlockUserAccount(userId: String) {
         val auth = AuthRepo.findByUserId(userId)
-            ?: throw CredentialsNotFoundException()
-
         auth.unlockAccount()
     }
 }

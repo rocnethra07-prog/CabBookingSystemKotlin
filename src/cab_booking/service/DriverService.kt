@@ -52,9 +52,7 @@ object DriverService {
 
     fun deleteDriver(driver: Driver): Boolean {
 
-        val activeRide = RideRepo.findCurrentRideOfDriver(driver.userId)
-
-        if (activeRide != null) {
+        if (RideRepo.hasCurrentRideOfDriver(driver.userId)) {
             return false
         }
 

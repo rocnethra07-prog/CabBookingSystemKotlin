@@ -3,6 +3,7 @@ package cab_booking.console
 import cab_booking.console.input.InputReader
 import cab_booking.controller.DriverController
 import cab_booking.exception.AccountLockedException
+import cab_booking.exception.ActiveRideNotFoundException
 import cab_booking.exception.CredentialsNotFoundException
 import cab_booking.exception.InvalidCredentialsException
 import cab_booking.exception.InvalidRideStateException
@@ -42,15 +43,11 @@ object DriverUI {
 
     // CURRENT RIDE
     private fun viewCurrentRide(driver: Driver){
-        val ride = DriverController.getCurrentRideOfDriver(driver)
+        try {
+            val ride = DriverController.getCurrentRideOfDriver(driver)
 
-        if (ride == null) {
-            println("\nNo active ride at the moment.")
-            return
-        }
-
-        println(
-            """
+            println(
+                """
     
             ========== CURRENT RIDE ==========
             Pickup Location : ${ride.pickupLocation}
@@ -58,9 +55,14 @@ object DriverUI {
             Fare            : ₹${ride.fare}
             Status          : ${ride.rideStatus}
             """.trimIndent()
-        )
+            )
 
-        rideActionMenu(ride, driver)
+            rideActionMenu(ride, driver)
+
+        }
+        catch (e : ActiveRideNotFoundException){
+            println("[!] ${e.message}")
+        }
     }
 
     private fun rideActionMenu(

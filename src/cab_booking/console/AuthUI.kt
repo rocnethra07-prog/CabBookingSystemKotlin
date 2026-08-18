@@ -3,15 +3,18 @@ package cab_booking.console
 import cab_booking.config.AdminSeeder
 import cab_booking.console.input.InputReader
 import cab_booking.controller.AuthController
+import cab_booking.controller.DriverController
 import cab_booking.exception.AccountLockedException
 import cab_booking.exception.CredentialsNotFoundException
+import cab_booking.exception.DriverNotFoundException
 import cab_booking.exception.InvalidCredentialsException
 import cab_booking.exception.UserNotFoundException
 import cab_booking.model.User
+import cab_booking.model.types.UserRole
 
 object AuthUI {
 
-    fun login(): User? {
+    fun login() {
 
         val email = InputReader.promptEmail()
         val password = InputReader.promptPassword()
@@ -22,17 +25,13 @@ object AuthUI {
 
             println("\nWelcome back, ${user.name}!")
 
-            user
+            route(user)
 
         }
         catch (e: UserNotFoundException) {
-
             println("[!] Login failed: ${e.message}")
-            null
-
         }
         catch (e: AccountLockedException) {
-
             println(
                 """
                 
@@ -40,25 +39,27 @@ object AuthUI {
                 due to multiple failed login attempts.
                 
                 ${e.message}
-                """.trimIndent()
+                
+                Need help? please contact:
+      
+                Admin : ${AdminSeeder.ADMIN_NAME}
+                Phone : ${AdminSeeder.ADMIN_PHONE}
+                Email : ${AdminSeeder.ADMIN_EMAIL}
+            """.trimIndent()
             )
-            null
-
         }
         catch (e: InvalidCredentialsException) {
-
             println("[!] Login failed: ${e.message}")
-            null
-
         }
         catch (e: CredentialsNotFoundException) {
-
             println("[!] Authentication failed: ${e.message}")
-            null
+        }
+        catch (e: DriverNotFoundException) {
+            println("[!] ${e.message}. Please try again.")
         }
     }
 
-    fun register(): User? {
+    fun register() {
 
         println(
             """
@@ -107,14 +108,25 @@ object AuthUI {
                 """.trimIndent()
             )
 
-            user
+            route(user)
 
         }
         catch (e: IllegalArgumentException) {
-
             println("[!] Registration failed (invalid input): ${e.message}")
-
-            null
         }
+        catch (e: DriverNotFoundException) {
+            println("[!] ${e.message}. Please try again.")
+        }
+    }
+}
+
+private fun route(user: User) {
+    when (user.userRole) {
+        UserRole.ADMIN -> AdminUI.adminDashboard()
+        UserRole.DRIVER -> {
+            val driver = DriverController.findDriverById(user.userId)
+            DriverUI.driverDashboard(driver)
+        }
+        UserRole.RIDER -> RiderUI.riderDashboard(user)
     }
 }

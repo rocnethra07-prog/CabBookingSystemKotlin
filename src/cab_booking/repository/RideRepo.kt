@@ -1,5 +1,7 @@
 package cab_booking.repository
 
+import cab_booking.exception.ActiveRideNotFoundException
+import cab_booking.exception.CompletedRideNotFoundException
 import cab_booking.model.Ride
 import cab_booking.model.types.RideStatus
 
@@ -20,21 +22,32 @@ object RideRepo : InMemoryRepo<Ride>() {
     private fun findRides(predicate: (Ride) -> Boolean ) : List<Ride> =
         storage.values.filter(predicate)
 
-    fun findCurrentRideOfDriver(driverId: String): Ride? =
-        findRide{ it.driverId == driverId && it.rideStatus == RideStatus.BOOKED }
 
-    fun findCurrentRideOfRider(riderId: String): Ride? =
-        findRide { it.riderId == riderId && it.rideStatus == RideStatus.BOOKED }
+    fun findCurrentRideOfDriver(driverId: String): Ride =
+        findRide{ it.driverId == driverId && it.rideStatus == RideStatus.BOOKED }  ?: throw ActiveRideNotFoundException()
 
+    fun findCurrentRideOfRider(riderId: String): Ride =
+        findRide { it.riderId == riderId && it.rideStatus == RideStatus.BOOKED } ?: throw ActiveRideNotFoundException()
+
+    fun hasCurrentRideOfRider(riderId: String): Boolean =
+        storage.values.any {
+            it.riderId == riderId && it.rideStatus == RideStatus.BOOKED
+        }
+
+    fun hasCurrentRideOfDriver(driverId: String): Boolean =
+        storage.values.any {
+            it.driverId == driverId && it.rideStatus == RideStatus.BOOKED
+        }
     //returns a ride or null based on the predicate passed
     private fun findRide(predicate : (Ride) -> Boolean) : Ride? =
         storage.values.find(predicate)
 
-    fun findLastCompletedRide(riderId: String): Ride? =
+    fun findLastCompletedRide(riderId: String): Ride =
         findRides{
                 it.riderId == riderId && it.rideStatus == RideStatus.COMPLETED
             }
             .maxByOrNull {
                 it.completedAt!!
             }
+            ?: throw CompletedRideNotFoundException()
 }
