@@ -7,7 +7,7 @@ import cab_booking.util.Validator
 open class User(
     name: String,
     phone: String,
-    email: String,
+    val email: String,
     val userRole: UserRole
 ) {
     // Public properties are used for simple property access (user.name, user.phone)
@@ -28,8 +28,6 @@ open class User(
         require(Validator.isValidPhone(phone)){ "Invalid phone number format. Phone cannot be blank" }
         this.phone = phone.trim()
     }
-
-    val email: String = email.trim().lowercase()
 
     init {
         require(Validator.isValidName(name)){ "Name must contain minimum 3 characters. Name cannot be blank" }
