@@ -14,7 +14,10 @@ object AdminSeeder {
 
     fun seed() {
         if (!UserService.isEmailRegistered(ADMIN_EMAIL)) {
-            AuthService.registerUser(ADMIN_NAME, ADMIN_PHONE, ADMIN_EMAIL, ADMIN_PASSWORD, UserRole.ADMIN)
+            try {
+                AuthService.registerUser(ADMIN_NAME, ADMIN_PHONE, ADMIN_EMAIL, ADMIN_PASSWORD, UserRole.ADMIN)
+            }
+            catch (_ : IllegalArgumentException){}
         }
     }
 }
