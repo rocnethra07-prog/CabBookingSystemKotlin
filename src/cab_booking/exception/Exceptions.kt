@@ -14,8 +14,8 @@ class CabNotFoundException(message: String) :
 class CredentialsNotFoundException() :
     Exception("Authentication details not found")
 
-class AccountLockedException(minutesLeft: Long) :
-    Exception("Account Locked. Try again in ~$minutesLeft minute(s)")
+class AccountLockedException(minutesLeft: Long, secondsLeft: Long) :
+    Exception("Account Locked. Try again in ~$minutesLeft minute(s) $secondsLeft second(s)")
 
 class InvalidRideStateException(message: String) :
     Exception(message)

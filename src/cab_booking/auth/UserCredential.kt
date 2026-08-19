@@ -31,8 +31,9 @@ class UserCredential(val userId: String, password: String) {
 
     fun verifyPassword(password: String): Boolean {
         if (isAccountLocked()){
-            val minutesLeft = remainingLockTime().toMinutes().plus(1)
-            throw AccountLockedException(minutesLeft)
+            val minutesLeft = remainingLockTime().toMinutes()
+            val secondsLeft = remainingLockTime().seconds % 60
+            throw AccountLockedException(minutesLeft, secondsLeft)
         }
 
         val isValid = matches(password)
