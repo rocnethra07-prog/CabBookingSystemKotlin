@@ -44,7 +44,7 @@ object DriverService {
         catch (e: IllegalArgumentException) {
             DriverRepo.deleteByKey(driver.userId)
             UserRepo.deleteByEmail(driver.email)
-            CabService.deleteCab(cab.cabId)
+            CabService.deleteCab(cab.cabId)   // Remove the cab so that no cab is left without a driver
             throw e
         }
     }
