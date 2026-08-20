@@ -4,6 +4,7 @@ import cab_booking.model.Cab
 import cab_booking.model.Driver
 import cab_booking.model.types.CabType
 import cab_booking.model.types.Location
+import cab_booking.model.types.RideStatus
 import cab_booking.service.AuthService
 import cab_booking.service.CabService
 import cab_booking.service.DriverService
@@ -46,13 +47,13 @@ object AdminController{
         RideService.getAllRides()
 
     fun getActiveRides() =
-        RideService.getActiveRides()
+        RideService.getRidesByStatus(RideStatus.BOOKED)
 
     fun getCompletedRides() =
-        RideService.getCompletedRides()
+        RideService.getRidesByStatus(RideStatus.COMPLETED)
 
     fun getCancelledRides() =
-        RideService.getCancelledRides()
+        RideService.getRidesByStatus(RideStatus.CANCELLED)
 
     // CAB MANAGEMENT
     fun getAllCabs() =

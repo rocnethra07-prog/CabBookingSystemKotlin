@@ -16,15 +16,6 @@ object RideService {
     fun getRidesByStatus(status: RideStatus): List<Ride> =
         RideRepo.findRidesByStatus(status)
 
-    fun getActiveRides(): List<Ride> =
-        getRidesByStatus(RideStatus.BOOKED)
-
-    fun getCompletedRides(): List<Ride> =
-        getRidesByStatus(RideStatus.COMPLETED)
-
-    fun getCancelledRides(): List<Ride> =
-        getRidesByStatus(RideStatus.CANCELLED)
-
     fun hasActiveRide(riderId: String): Boolean =
         RideRepo.hasCurrentRideOfRider(riderId)
 
