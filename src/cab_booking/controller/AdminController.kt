@@ -39,15 +39,9 @@ object AdminController{
     fun getCabForDriver(cabId: String) =
         CabService.getCabForDriver(cabId)
 
-    fun getDriverRideHistory(driverId: String) =
-        RideService.getDriverRideHistory(driverId)
-
     // RIDER MANAGEMENT
     fun getAllRiders()  =
         UserService.getAllRiders()
-
-    fun getRiderRideHistory(riderId: String)  =
-        RideService.getRiderRideHistory(riderId)
 
     // RIDE MANAGEMENT
     fun getAllRides() =

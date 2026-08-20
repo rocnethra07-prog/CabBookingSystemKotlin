@@ -5,6 +5,7 @@ import cab_booking.console.input.InputReader
 import cab_booking.controller.AdminController
 import cab_booking.controller.AuthController
 import cab_booking.controller.DriverController
+import cab_booking.controller.RiderController
 import cab_booking.exception.CabNotFoundException
 import cab_booking.exception.CredentialsNotFoundException
 import cab_booking.exception.DriverNotFoundException
@@ -228,7 +229,7 @@ object AdminUI {
             "Driver ID cannot be empty."
         )
 
-        val rides = AdminController.getDriverRideHistory(driverId)
+        val rides = DriverController.getDriverRideHistory(driverId)
         displayRides(rides, "DRIVER RIDE HISTORY")
     }
 
@@ -275,7 +276,7 @@ object AdminUI {
             "Enter Rider ID : ",
             "Rider ID cannot be empty."
         )
-        val rides = AdminController.getRiderRideHistory(riderId)
+        val rides = RiderController.getRiderRideHistory(riderId)
         displayRides(rides, "RIDER RIDE HISTORY")
     }
 

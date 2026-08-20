@@ -302,7 +302,7 @@ object RiderUI {
     }
 
     private fun viewRideHistory(rider: User){
-        val rides = RiderController.getRidesByRider(rider.userId)
+        val rides = RiderController.getRiderRideHistory(rider.userId)
 
         if (rides.isEmpty()) {
             println("\nNo rides found.")

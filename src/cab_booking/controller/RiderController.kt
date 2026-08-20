@@ -35,8 +35,8 @@ object RiderController{
     fun cancelRide(ride: Ride, rider: User) =
         RiderService.cancelRide(ride, rider)
 
-    fun getRidesByRider(riderId: String) =
-        RideService.getRidesByRider(riderId)
+    fun getRiderRideHistory(riderId: String) =
+        RideService.getRiderRideHistory(riderId)
 
     fun updateProfile(rider: User, name: String, phone: String) =
         RiderService.updateProfile(rider,name,phone)

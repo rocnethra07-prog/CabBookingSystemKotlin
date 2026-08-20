@@ -25,16 +25,6 @@ object RideService {
     fun getCancelledRides(): List<Ride> =
         getRidesByStatus(RideStatus.CANCELLED)
 
-    fun getRidesByDriver(
-        driverId: String
-    ): List<Ride> =
-        RideRepo.findRidesByDriver(driverId)
-
-    fun getRidesByRider(
-        riderId: String
-    ): List<Ride> =
-        RideRepo.findRidesByRider(riderId)
-
     fun hasActiveRide(riderId: String): Boolean =
         RideRepo.hasCurrentRideOfRider(riderId)
 

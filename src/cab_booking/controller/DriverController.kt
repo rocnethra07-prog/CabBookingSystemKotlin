@@ -23,8 +23,8 @@ object DriverController{
     fun cancelRide(ride: Ride, driver: Driver) =
         DriverService.cancelRide(ride,driver)
 
-    fun getRidesByDriver(driverId: String) =
-        RideService.getRidesByDriver(driverId)
+    fun getDriverRideHistory(driverId: String) =
+        RideService.getDriverRideHistory(driverId)
 
     fun getAverageRatingOfDriver(driver: Driver) =
         DriverService.getAverageRatingOfDriver(driver)

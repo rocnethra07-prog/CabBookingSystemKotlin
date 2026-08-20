@@ -210,7 +210,7 @@ object DriverUI {
     }
 
     private fun viewRideHistory(driver: Driver) {
-        val rides = DriverController.getRidesByDriver(driver.userId)
+        val rides = DriverController.getDriverRideHistory(driver.userId)
 
         if (rides.isEmpty()) {
             println("\nNo rides found.")
