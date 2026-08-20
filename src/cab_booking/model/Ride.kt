@@ -50,7 +50,7 @@ class Ride(
         this.completedAt = completedAt
     }
 
-    fun setCancelledAt(cancelledAt: LocalDateTime){
+    fun setCancelledAt(cancelledAt: LocalDateTime) {
         this.cancelledAt = cancelledAt
     }
 
