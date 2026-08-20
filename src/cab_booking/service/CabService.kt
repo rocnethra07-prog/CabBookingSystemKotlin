@@ -24,7 +24,7 @@ object CabService {
     fun getCabsByType(cabType: CabType): List<Cab> =
         CabRepo.findByCabType(cabType)
 
-    fun getCabForDriverByCabId(cabId: String): Cab =
+    fun getCabById(cabId: String): Cab =
         CabRepo.findByKey(cabId) ?: throw CabNotFoundException("Cab not found for ID: ${cabId}")
 
 }

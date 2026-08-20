@@ -4,6 +4,7 @@ import cab_booking.model.Driver
 import cab_booking.model.Ride
 import cab_booking.service.DriverService
 import cab_booking.model.types.Location
+import cab_booking.service.CabService
 import cab_booking.service.RideService
 
 object DriverController{
@@ -13,6 +14,9 @@ object DriverController{
 
     fun getCurrentRideOfDriver(driverId: String) =
         RideService.getCurrentRide(driverId)
+
+    fun getCabById(cabId: String) =
+        CabService.getCabById(cabId)
 
     fun updateProfile(driver: Driver, name: String, phone: String, location: Location) =
         DriverService.updateProfile(driver,name,phone,location)

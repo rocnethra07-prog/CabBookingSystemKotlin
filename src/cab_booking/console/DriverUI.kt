@@ -5,6 +5,7 @@ import cab_booking.controller.AuthController
 import cab_booking.controller.DriverController
 import cab_booking.exception.AccountLockedException
 import cab_booking.exception.ActiveRideNotFoundException
+import cab_booking.exception.CabNotFoundException
 import cab_booking.exception.CredentialsNotFoundException
 import cab_booking.exception.InvalidCredentialsException
 import cab_booking.exception.InvalidRideStateException
@@ -25,6 +26,7 @@ object DriverUI {
                 3. Show Earnings
                 4. View Ride History
                 5. Change Password
+                6. View Assigned Cab Details
                 0. Logout
                 """.trimIndent()
             )
@@ -35,6 +37,7 @@ object DriverUI {
                 "3" -> showEarnings(driver)
                 "4" -> viewRideHistory(driver)
                 "5" -> changePassword(driver)
+                "6" -> viewCabDetails(driver)
                 "0" -> return
 
                 else -> println("Invalid choice.")
@@ -268,6 +271,19 @@ object DriverUI {
         catch (e: IllegalArgumentException){
             println("[!] Invalid Input, ${e.message}")
         }
+    }
+
+
+    private fun viewCabDetails(driver: Driver){
+
+        try {
+            println("\nAssigned Cab")
+            println(DriverController.getCabById(driver.cabId))
+        }
+        catch (e: CabNotFoundException) {
+            println("[!] ${e.message}")
+        }
+
     }
 }
 

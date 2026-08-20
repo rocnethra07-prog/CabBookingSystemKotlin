@@ -37,9 +37,6 @@ object AdminController{
     fun getUnavailableDrivers() =
         DriverService.getUnavailableDrivers()
 
-    fun getCabForDriverByCabId(cabId: String) =
-        CabService.getCabForDriverByCabId(cabId)
-
     // RIDER MANAGEMENT
     fun getAllRiders()  =
         UserService.getAllRiders()
