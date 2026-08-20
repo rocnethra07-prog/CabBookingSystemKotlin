@@ -30,7 +30,7 @@ class DistanceNotFoundException(location1 : Location, location2 : Location) :
     Exception("Distance not configured between $location1 and $location2")
 
 class CompletedRideNotFoundException() :
-     Exception("No completed ride available for rating.")
+     Exception("No completed ride found at the moment")
 
 class ActiveRideNotFoundException() :
      Exception("No active ride found at the moment")
