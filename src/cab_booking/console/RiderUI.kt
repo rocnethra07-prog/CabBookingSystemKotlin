@@ -1,6 +1,7 @@
 package cab_booking.console
 
 import cab_booking.console.input.InputReader
+import cab_booking.controller.AuthController
 import cab_booking.controller.RiderController
 import cab_booking.exception.AccountLockedException
 import cab_booking.exception.ActiveRideNotFoundException
@@ -53,7 +54,7 @@ object RiderUI {
     private fun promptPendingRating(rider: User) {
 
         try {
-            val ride = RiderController.getLastCompletedRideOfRider(rider)
+            val ride = RiderController.getLastCompletedRideOfRider(rider.userId)
 
             if (ride.rating != 0) {
                 return
@@ -154,7 +155,7 @@ object RiderUI {
 
     private fun bookRide(rider: User) {
 
-        if (RiderController.hasActiveRide(rider)) {
+        if (RiderController.hasActiveRide(rider.userId)) {
             println("You already have an active ride.")
             return
         }
@@ -235,7 +236,7 @@ object RiderUI {
     fun viewCurrentRide(rider: User){
 
         try {
-            val ride = RiderController.getCurrentBookedRide(rider)
+            val ride = RiderController.getCurrentBookedRide(rider.userId)
 
             val driver = RiderController.getDriverForRide(ride)
 
@@ -301,7 +302,7 @@ object RiderUI {
     }
 
     private fun viewRideHistory(rider: User){
-        val rides = RiderController.getRidesByRider(rider)
+        val rides = RiderController.getRidesByRider(rider.userId)
 
         if (rides.isEmpty()) {
             println("\nNo rides found.")
@@ -357,7 +358,7 @@ object RiderUI {
     private fun rateLastRide(rider: User) {
 
         try {
-            val ride = RiderController.getLastCompletedRideOfRider(rider)
+            val ride = RiderController.getLastCompletedRideOfRider(rider.userId)
 
             if (ride.rating != 0) {
                 println("\nThis ride has already been rated.")
@@ -394,7 +395,7 @@ object RiderUI {
         }
 
         try {
-            RiderController.changePassword(
+            AuthController.changePassword(
                 rider,
                 currentPassword,
                 newPassword

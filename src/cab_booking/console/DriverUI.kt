@@ -1,6 +1,7 @@
 package cab_booking.console
 
 import cab_booking.console.input.InputReader
+import cab_booking.controller.AuthController
 import cab_booking.controller.DriverController
 import cab_booking.exception.AccountLockedException
 import cab_booking.exception.ActiveRideNotFoundException
@@ -44,7 +45,7 @@ object DriverUI {
     // CURRENT RIDE
     private fun viewCurrentRide(driver: Driver){
         try {
-            val ride = DriverController.getCurrentRideOfDriver(driver)
+            val ride = DriverController.getCurrentRideOfDriver(driver.userId)
 
             println(
                 """
@@ -209,7 +210,7 @@ object DriverUI {
     }
 
     private fun viewRideHistory(driver: Driver) {
-        val rides = DriverController.getRidesByDriver(driver)
+        val rides = DriverController.getRidesByDriver(driver.userId)
 
         if (rides.isEmpty()) {
             println("\nNo rides found.")
@@ -246,7 +247,7 @@ object DriverUI {
         }
 
         try {
-            DriverController.changePassword(
+            AuthController.changePassword(
                 driver,
                 currentPassword,
                 newPassword

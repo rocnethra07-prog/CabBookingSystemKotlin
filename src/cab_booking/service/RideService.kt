@@ -1,8 +1,6 @@
 package cab_booking.service
 
-import cab_booking.model.Driver
 import cab_booking.model.Ride
-import cab_booking.model.User
 import cab_booking.model.types.RideStatus
 import cab_booking.repository.RideRepo
 
@@ -28,26 +26,26 @@ object RideService {
         getRidesByStatus(RideStatus.CANCELLED)
 
     fun getRidesByDriver(
-        driver: Driver
+        driverId: String
     ): List<Ride> =
-        RideRepo.findRidesByDriver(driver.userId)
+        RideRepo.findRidesByDriver(driverId)
 
     fun getRidesByRider(
-        rider: User
+        riderId: String
     ): List<Ride> =
-        RideRepo.findRidesByRider(rider.userId)
+        RideRepo.findRidesByRider(riderId)
 
-    fun hasActiveRide(user: User): Boolean =
-        RideRepo.hasCurrentRideOfRider(user.userId)
+    fun hasActiveRide(riderId: String): Boolean =
+        RideRepo.hasCurrentRideOfRider(riderId)
 
-    fun getCurrentRide(driver: Driver): Ride =
-        RideRepo.findCurrentRideOfDriver(driver.userId)
+    fun getCurrentRide(driverId: String): Ride =
+        RideRepo.findCurrentRideOfDriver(driverId)
 
-    fun getCurrentBookedRide(user: User): Ride =
-        RideRepo.findCurrentRideOfRider(user.userId)
+    fun getCurrentBookedRide(riderId: String): Ride =
+        RideRepo.findCurrentRideOfRider(riderId)
 
     fun getLastCompletedRide(
-        rider: User
+        riderId: String
     ): Ride =
-        RideRepo.findLastCompletedRide(rider.userId)
+        RideRepo.findLastCompletedRide(riderId)
 }

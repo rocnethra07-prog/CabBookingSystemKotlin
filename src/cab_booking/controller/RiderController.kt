@@ -2,7 +2,6 @@ package cab_booking.controller
 
 import cab_booking.model.User
 import cab_booking.model.types.Location
-import cab_booking.service.AuthService
 import cab_booking.service.RiderService
 import cab_booking.model.Ride
 import cab_booking.model.types.CabType
@@ -10,8 +9,8 @@ import cab_booking.service.RideService
 
 object RiderController{
 
-    fun getLastCompletedRideOfRider(rider: User) =
-        RideService.getLastCompletedRide(rider)
+    fun getLastCompletedRideOfRider(riderId: String) =
+        RideService.getLastCompletedRide(riderId)
 
     fun getDriverForRide(ride: Ride) =
         RiderService.getDriverForRide(ride)
@@ -19,8 +18,8 @@ object RiderController{
     fun rateDriver(ride: Ride, rider: User, rating: Int) =
         RiderService.rateDriver(ride,rider,rating)
 
-    fun hasActiveRide(rider: User) =
-        RideService.hasActiveRide(rider)
+    fun hasActiveRide(riderId: String) =
+        RideService.hasActiveRide(riderId)
 
     fun bookRide(
         rider: User,
@@ -30,19 +29,16 @@ object RiderController{
     ) =
         RiderService.bookRide(rider,pickup,drop,cabType)
 
-    fun getCurrentBookedRide(rider: User) =
-        RideService.getCurrentBookedRide(rider)
+    fun getCurrentBookedRide(riderId: String) =
+        RideService.getCurrentBookedRide(riderId)
 
     fun cancelRide(ride: Ride, rider: User) =
         RiderService.cancelRide(ride, rider)
 
-    fun getRidesByRider(rider: User) =
-        RideService.getRidesByRider(rider)
+    fun getRidesByRider(riderId: String) =
+        RideService.getRidesByRider(riderId)
 
     fun updateProfile(rider: User, name: String, phone: String) =
         RiderService.updateProfile(rider,name,phone)
 
-    fun changePassword(rider: User, currentPassword: String, newPassword: String){
-        AuthService.changePassword(rider,currentPassword,newPassword)
-    }
 }

@@ -3,6 +3,8 @@ package cab_booking.console
 import cab_booking.auth.UserCredential
 import cab_booking.console.input.InputReader
 import cab_booking.controller.AdminController
+import cab_booking.controller.AuthController
+import cab_booking.controller.DriverController
 import cab_booking.exception.CabNotFoundException
 import cab_booking.exception.CredentialsNotFoundException
 import cab_booking.exception.DriverNotFoundException
@@ -83,7 +85,7 @@ object AdminUI {
         var email: String
         while (true) {
             email = InputReader.promptEmail()
-            if (AdminController.isEmailRegistered(email)) {
+            if (AuthController.isEmailRegistered(email)) {
                 println("Email already registered.")
                 continue
             }
@@ -144,7 +146,7 @@ object AdminUI {
         )
 
         try {
-            val driver = AdminController.findDriverById(driverId)
+            val driver = DriverController.findDriverById(driverId)
             println("\nDriver Details")
             println(driver)
 
@@ -197,7 +199,7 @@ object AdminUI {
         )
 
         try {
-            val driver = AdminController.findDriverById(driverId)
+            val driver = DriverController.findDriverById(driverId)
             displayDriverWithCab(driver)
         }
         catch (e: DriverNotFoundException) {
@@ -211,7 +213,7 @@ object AdminUI {
 
         try {
             println("\nAssigned Cab")
-            println(AdminController.getCabForDriver(driver))
+            println(AdminController.getCabForDriver(driver.cabId))
         }
         catch (e: CabNotFoundException) {
             println("[!] ${e.message}")

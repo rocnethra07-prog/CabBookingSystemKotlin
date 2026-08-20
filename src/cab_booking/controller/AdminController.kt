@@ -12,9 +12,6 @@ import cab_booking.service.UserService
 
 object AdminController{
 
-    fun isEmailRegistered(email: String) =
-        UserService.isEmailRegistered(email)
-
     fun isLicenseNumberTaken(licenseNumber: String) =
         DriverService.isLicenseNumberExists(licenseNumber)
 
@@ -26,9 +23,6 @@ object AdminController{
 
     fun createCab(model: String, cabType: CabType, registrationNumber: String) =
         CabService.createCab(model, cabType, registrationNumber)
-
-    fun findDriverById(driverId: String) =
-        DriverService.findDriverById(driverId)
 
     fun deleteDriver(driver: Driver) =
         DriverService.deleteDriver(driver)
@@ -42,8 +36,8 @@ object AdminController{
     fun getUnavailableDrivers() =
         DriverService.getUnavailableDrivers()
 
-    fun getCabForDriver(driver: Driver) =
-        CabService.getCabForDriver(driver)
+    fun getCabForDriver(cabId: String) =
+        CabService.getCabForDriver(cabId)
 
     fun getDriverRideHistory(driverId: String) =
         RideService.getDriverRideHistory(driverId)
