@@ -1,13 +1,9 @@
 package cab_booking.console
 
 import cab_booking.console.input.InputReader
-import cab_booking.controller.AuthController
 import cab_booking.controller.DriverController
-import cab_booking.exception.AccountLockedException
 import cab_booking.exception.ActiveRideNotFoundException
 import cab_booking.exception.CabNotFoundException
-import cab_booking.exception.CredentialsNotFoundException
-import cab_booking.exception.InvalidCredentialsException
 import cab_booking.exception.InvalidRideStateException
 import cab_booking.exception.UnauthorizedRideActionException
 import cab_booking.model.Driver
@@ -36,7 +32,7 @@ object DriverUI {
                 "2" -> updateProfile(driver)
                 "3" -> showEarnings(driver)
                 "4" -> viewRideHistory(driver)
-                "5" -> changePassword(driver)
+                "5" -> AuthUI.changePassword(driver)
                 "6" -> viewCabDetails(driver)
                 "0" -> return
 
@@ -226,53 +222,6 @@ object DriverUI {
             println("-".repeat(50))
         }
     }
-
-    // CHANGE PASSWORD
-    private fun changePassword(driver: Driver) {
-
-        println("\n========== CHANGE PASSWORD ==========")
-
-        val currentPassword = InputReader.promptPassword(
-            prompt = "Current Password : "
-        )
-
-        val newPassword = InputReader.promptPassword(
-            prompt = "New Password     : "
-        )
-
-        val confirmPassword = InputReader.promptPassword(
-            prompt = "Confirm Password : "
-        )
-
-        if (newPassword != confirmPassword) {
-            println("\nPasswords do not match.")
-            return
-        }
-
-        try {
-            AuthController.changePassword(
-                driver,
-                currentPassword,
-                newPassword
-            )
-
-            println("\nPassword changed successfully.")
-
-        }
-        catch (e: CredentialsNotFoundException){
-            println("[!] Authentication Exception, ${e.message}")
-        }
-        catch (e: AccountLockedException){
-            println("[!] ${e.message}")
-        }
-        catch (e: InvalidCredentialsException) {
-            println("[!] ${e.message}")
-        }
-        catch (e: IllegalArgumentException){
-            println("[!] Invalid Input, ${e.message}")
-        }
-    }
-
 
     private fun viewCabDetails(driver: Driver){
 

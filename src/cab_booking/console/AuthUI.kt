@@ -118,6 +118,51 @@ object AuthUI {
             println("[!] ${e.message}. Please try again.")
         }
     }
+
+    fun changePassword(user: User) {
+
+        println("\n========== CHANGE PASSWORD ==========")
+
+        val currentPassword = InputReader.promptPassword(
+            prompt = "Current Password : "
+        )
+
+        val newPassword = InputReader.promptPassword(
+            prompt = "New Password     : "
+        )
+
+        val confirmPassword = InputReader.promptPassword(
+            prompt = "Confirm Password : "
+        )
+
+        if (newPassword != confirmPassword) {
+            println("\nPasswords do not match.")
+            return
+        }
+
+        try {
+            AuthController.changePassword(
+                user,
+                currentPassword,
+                newPassword
+            )
+
+            println("\nPassword changed successfully.")
+
+        }
+        catch (e : CredentialsNotFoundException){
+            println("[!] Authentication failed: ${e.message}")
+        }
+        catch (e: AccountLockedException){
+            println("[!] ${e.message}")
+        }
+        catch (e: InvalidCredentialsException) {
+            println("[!] ${e.message}")
+        }
+        catch (e: IllegalArgumentException) {
+            println("[!] ${e.message}")
+        }
+    }
 }
 
 private fun route(user: User) {

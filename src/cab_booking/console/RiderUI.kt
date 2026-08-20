@@ -1,17 +1,13 @@
 package cab_booking.console
 
 import cab_booking.console.input.InputReader
-import cab_booking.controller.AuthController
 import cab_booking.controller.RiderController
-import cab_booking.exception.AccountLockedException
 import cab_booking.exception.ActiveRideNotFoundException
 import cab_booking.exception.AvailableDriversNotFoundException
 import cab_booking.exception.CabNotFoundException
 import cab_booking.exception.CompletedRideNotFoundException
-import cab_booking.exception.CredentialsNotFoundException
 import cab_booking.exception.DistanceNotFoundException
 import cab_booking.exception.DriverNotFoundException
-import cab_booking.exception.InvalidCredentialsException
 import cab_booking.exception.InvalidRideStateException
 import cab_booking.exception.UnauthorizedRideActionException
 import cab_booking.model.Driver
@@ -44,7 +40,7 @@ object RiderUI {
                 "3" -> viewRideHistory(rider)
                 "4" -> updateProfile(rider)
                 "5" -> rateLastRide(rider)
-                "6" -> changePassword(rider)
+                "6" -> AuthUI.changePassword(rider)
                 "0" -> return
                 else -> println("Invalid choice.")
             }
@@ -369,51 +365,6 @@ object RiderUI {
             showRatingScreen(ride, rider)
         }
         catch (e: CompletedRideNotFoundException){
-            println("[!] ${e.message}")
-        }
-    }
-
-    private fun changePassword(rider: User) {
-
-        println("\n========== CHANGE PASSWORD ==========")
-
-        val currentPassword = InputReader.promptPassword(
-            prompt = "Current Password : "
-        )
-
-        val newPassword = InputReader.promptPassword(
-            prompt = "New Password     : "
-        )
-
-        val confirmPassword = InputReader.promptPassword(
-            prompt = "Confirm Password : "
-        )
-
-        if (newPassword != confirmPassword) {
-            println("\nPasswords do not match.")
-            return
-        }
-
-        try {
-            AuthController.changePassword(
-                rider,
-                currentPassword,
-                newPassword
-            )
-
-            println("\nPassword changed successfully.")
-
-        }
-        catch (e : CredentialsNotFoundException){
-            println("[!] Authentication failed: ${e.message}")
-        }
-        catch (e: AccountLockedException){
-            println("[!] ${e.message}")
-        }
-        catch (e: InvalidCredentialsException) {
-            println("[!] ${e.message}")
-        }
-        catch (e: IllegalArgumentException) {
             println("[!] ${e.message}")
         }
     }
