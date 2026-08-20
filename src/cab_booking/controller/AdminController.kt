@@ -18,6 +18,7 @@ object AdminController{
     fun isRegistrationNumberTaken(registrationNumber: String) =
         CabService.isRegistrationNumberExists(registrationNumber)
 
+    //DRIVER MANAGEMENT
     fun addDriver(name: String, phone: String, email: String, password: String, currentLocation: Location, licenseNumber: String, cab: Cab) =
         DriverService.createDriver(name, phone, email, password,currentLocation, licenseNumber, cab)
 
@@ -63,6 +64,7 @@ object AdminController{
     fun getCabsByType(cabType: CabType) =
         CabService.getCabsByType(cabType)
 
+    //LOCK AND USER
     fun getLockedAccounts() =
         AuthService.getLockedAccounts()
 
