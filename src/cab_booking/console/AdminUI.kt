@@ -214,7 +214,7 @@ object AdminUI {
 
         try {
             println("\nAssigned Cab")
-            println(AdminController.getCabForDriver(driver.cabId))
+            println(AdminController.getCabForDriverByCabId(driver.cabId))
         }
         catch (e: CabNotFoundException) {
             println("[!] ${e.message}")

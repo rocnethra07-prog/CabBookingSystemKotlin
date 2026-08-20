@@ -56,7 +56,7 @@ object RiderService {
 
         val matchingDrivers = DriverService.getAvailableDrivers()
             .filter { driver ->
-                val cab = CabService.getCabForDriver(driver.cabId)
+                val cab = CabService.getCabForDriverByCabId(driver.cabId)
                 cab.cabType == cabType
             }
 
