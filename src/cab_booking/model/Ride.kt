@@ -46,7 +46,7 @@ class Ride(
         this.rideStatus = rideStatus
     }
 
-    fun setCompletedAt(completedAt: LocalDateTime){
+    fun setCompletedAt(completedAt: LocalDateTime) {
         this.completedAt = completedAt
     }
 
