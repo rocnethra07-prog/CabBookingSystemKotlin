@@ -19,7 +19,7 @@ object AuthUI {
         val email = InputReader.promptEmail()
         val password = InputReader.promptPassword()
 
-        return try {
+        try {
 
             val user = AuthController.login(email, password)
 
@@ -90,7 +90,7 @@ object AuthUI {
 
         val password = InputReader.promptPassword()
 
-        return try {
+        try {
 
             val user = AuthController.register(
                 name = name,
