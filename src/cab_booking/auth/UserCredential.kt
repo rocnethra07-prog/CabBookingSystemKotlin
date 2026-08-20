@@ -51,7 +51,7 @@ class UserCredential(val userId: String, password: String) {
         return isValid
     }
 
-    fun remainingLockTime(): Duration{
+    fun remainingLockTime(): Duration {
         refreshLockStatus()
 
         val since = lockedAt ?: return Duration.ZERO
