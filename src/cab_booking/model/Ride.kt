@@ -32,18 +32,28 @@ class Ride(
     var rating: Int = 0  // 1–5, 0 if not yet rated
         private set
 
-    fun updateRideStatus(rideStatus: RideStatus){
-        if ((rideStatus == RideStatus.CANCELLED || rideStatus == RideStatus.COMPLETED) &&
-            this.rideStatus != RideStatus.BOOKED
+    fun updateRideStatus(newStatus: RideStatus) {
+        //INVALID CONDITIONS CHECK
+        if (
+            // COMPLETED OR CANCELLED - NO FURTHER STATUS CHANGES
+            (rideStatus == RideStatus.COMPLETED ||
+                    rideStatus == RideStatus.CANCELLED) ||
+
+            // BOOKED - CAN ONLY BECOME ONGOING OR CANCELLED
+            (rideStatus == RideStatus.BOOKED &&
+                    newStatus != RideStatus.STARTED &&
+                    newStatus != RideStatus.CANCELLED) ||
+
+            // ONGOING - CAN ONLY BECOME COMPLETED
+            (rideStatus == RideStatus.STARTED &&
+                    newStatus != RideStatus.COMPLETED)
         ) {
-            throw InvalidRideStateException("Only booked rides can be completed or cancelled.")
+            throw InvalidRideStateException(
+                "Ride status cannot be changed from $rideStatus to $newStatus."
+            )
         }
-        if (rideStatus == RideStatus.BOOKED &&
-            (this.rideStatus == RideStatus.CANCELLED || this.rideStatus == RideStatus.COMPLETED)
-        ) {
-            throw InvalidRideStateException("Completed or cancelled rides cannot be booked again.")
-        }
-        this.rideStatus = rideStatus
+
+        rideStatus = newStatus
     }
 
     fun setCompletedAt(completedAt: LocalDateTime) {

@@ -72,70 +72,72 @@ object DriverUI {
         while (true) {
             println(
                 """
-    
-                1. Complete Ride
-                2. Cancel Ride
+                
+                1. Start Ride
+                2. Complete Ride
+                3. Cancel Ride
                 0. Back
                 """.trimIndent()
             )
+            try {
+                when (readln().trim()) {
 
-            when (readln().trim()) {
+                    "1" -> {
+                        startRide(ride, driver)
+                        return
+                    }
 
-                "1" -> {
-                    completeRide(ride, driver)
-                    return
+                    "2" -> {
+                        completeRide(ride, driver)
+                        return
+                    }
+
+                    "3" -> {
+                        cancelRide(ride, driver)
+                        return
+                    }
+
+                    "0" -> return
+
+                    else -> println("Invalid choice.")
                 }
-
-                "2" -> {
-                    cancelRide(ride, driver)
-                    return
-                }
-
-                "0" -> return
-
-                else -> println("Invalid choice.")
+            }
+            catch (e: UnauthorizedRideActionException) {
+                println("[!] ${e.message}")
+            }
+            catch (e: InvalidRideStateException){
+                println("[!] ${e.message}")
+            }
+            catch (e : IllegalArgumentException){
+                println("[!] ${e.message}")
             }
         }
     }
 
+    private fun startRide(ride: Ride, driver: Driver){
+        DriverController.startRide(
+            ride,
+            driver
+        )
+        println("\nRide completed successfully!")
+        showEarnings(driver)
+    }
+
     private fun completeRide(ride: Ride, driver: Driver) {
-        try {
-            DriverController.completeRide(
-                ride,
-                driver
-            )
-            println("\nRide completed successfully!")
-            showEarnings(driver)
-        }
-        catch (e: UnauthorizedRideActionException) {
-            println("[!] ${e.message}")
-        }
-        catch (e: InvalidRideStateException){
-            println("[!] ${e.message}")
-        }
-        catch (e : IllegalArgumentException){
-            println("[!] ${e.message}")
-        }
+        DriverController.completeRide(
+            ride,
+            driver
+        )
+        println("\nRide completed successfully!")
+        showEarnings(driver)
     }
 
     private fun cancelRide(ride: Ride, driver: Driver) {
-        try {
-            DriverController.cancelRide(
-                ride,
-                driver
-            )
-            println("\nRide cancelled successfully.")
-
-        }
-        catch (e: UnauthorizedRideActionException) {
-            println("[!] ${e.message}")
-        }
-        catch (e: InvalidRideStateException){
-            println("[!] ${e.message}")
-        }
-        catch (e : IllegalArgumentException){
-            println("[!] ${e.message}")
-        }
+        DriverController.cancelRide(
+            ride,
+            driver
+        )
+        println("\nRide cancelled successfully.")
     }
 
     fun showEarnings(driver: Driver){

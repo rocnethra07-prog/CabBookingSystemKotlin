@@ -21,6 +21,9 @@ object DriverController{
     fun updateProfile(driver: Driver, name: String, phone: String, location: Location) =
         DriverService.updateProfile(driver,name,phone,location)
 
+    fun startRide(ride: Ride, driver: Driver) =
+        DriverService.startRide(ride, driver)
+
     fun completeRide(ride: Ride, driver: Driver) =
         DriverService.completeRide(ride,driver)
 

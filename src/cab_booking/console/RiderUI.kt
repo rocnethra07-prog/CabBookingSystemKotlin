@@ -63,9 +63,7 @@ object RiderUI {
             }
 
         }
-        catch (e : CompletedRideNotFoundException){
-            println("[!] ${e.message}")
-        }
+        catch (_ : CompletedRideNotFoundException){}
     }
 
 

@@ -76,6 +76,14 @@ object DriverService {
         driver.updateCurrentLocation(location)
     }
 
+    fun startRide(
+        ride: Ride,
+        driver: Driver
+    ){
+        markRideAsOngoing(ride)
+        driver.updateCurrentLocation(ride.pickupLocation)
+    }
+
     fun completeRide(
         ride: Ride,
         driver: Driver
@@ -102,13 +110,21 @@ object DriverService {
         markAvailable(driver)
     }
 
+    private fun markRideAsOngoing(ride: Ride){
+        if(ride.rideStatus != RideStatus.BOOKED) {
+            throw InvalidRideStateException("Only booked rides can be started.")
+        }
+
+        ride.updateRideStatus(RideStatus.STARTED)
+    }
+
     private fun markAvailable(driver: Driver) {
         driver.setAvailability(true)
     }
 
     private fun markRideAsCompleted(ride: Ride){
-        if(ride.rideStatus != RideStatus.BOOKED) {
-            throw InvalidRideStateException("Only booked rides can be completed.")
+        if(ride.rideStatus != RideStatus.STARTED) {
+            throw InvalidRideStateException("Only ongoing rides can be completed.")
         }
 
         ride.updateRideStatus(RideStatus.COMPLETED)
