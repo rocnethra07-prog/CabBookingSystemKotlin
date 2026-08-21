@@ -26,9 +26,8 @@ object AuthController {
         )
     }
 
-    fun isEmailRegistered(email: String): Boolean {
-        return UserService.isEmailRegistered(email)
-    }
+    fun isEmailRegistered(email: String) =
+        UserService.isEmailRegistered(email)
 
     fun changePassword(user: User, currentPassword: String, newPassword: String){
         AuthService.changePassword(user,currentPassword,newPassword)
