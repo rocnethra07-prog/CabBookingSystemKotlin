@@ -24,7 +24,6 @@ object AuthController {
             password = password,
             role = UserRole.RIDER
         )
-    }
 
     fun isEmailRegistered(email: String) =
         UserService.isEmailRegistered(email)
