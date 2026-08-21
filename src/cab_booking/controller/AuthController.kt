@@ -32,5 +32,5 @@ object AuthController {
 
     fun changePassword(user: User, currentPassword: String, newPassword: String) =
         AuthService.changePassword(user,currentPassword,newPassword)
-    }
+
 }
