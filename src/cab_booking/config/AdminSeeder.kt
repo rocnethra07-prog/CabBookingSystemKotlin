@@ -8,8 +8,8 @@ import cab_booking.service.UserService
 object AdminSeeder {
 
     const val ADMIN_EMAIL = "admin@cabbooking.com"
-    const val ADMIN_NAME = "System Admin"
-    const val ADMIN_PHONE = "9999999999"
+    private const val ADMIN_NAME = "System Admin"
+    private const val ADMIN_PHONE = "9999999999"
     private const val ADMIN_PASSWORD = "Admin@123"
 
     fun seed() {
