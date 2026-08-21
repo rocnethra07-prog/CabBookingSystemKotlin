@@ -66,11 +66,8 @@ object AuthUI {
             
             You can register only as a Rider.
             
-            To become a Driver, please contact:
-            
-            Admin : ${AdminSeeder.ADMIN_NAME}
-            Phone : ${AdminSeeder.ADMIN_PHONE}
-            Email : ${AdminSeeder.ADMIN_EMAIL}
+            To become a Driver, please contact: ${AdminSeeder.ADMIN_EMAIL}
+
             """.trimIndent()
         )
 
