@@ -6,7 +6,7 @@ import cab_booking.util.Validator
 
 object InputReader {
     private fun promptUntilValidInput(prompt: String, errorMessage: String, validator: (String) -> Boolean) : String{
-        while (true){
+        while (true) {
             print(prompt)
             val input = readln().trim()
             if(validator(input)){
