@@ -7,9 +7,9 @@ import cab_booking.service.UserService
 
 object AuthController {
 
-    fun login(email: String, password: String): User {
-        return AuthService.loginUser(email, password)
-    }
+    fun login(email: String, password: String) =
+        AuthService.loginUser(email, password)
+
 
     fun register(
         name: String,
