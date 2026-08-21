@@ -16,8 +16,8 @@ object AuthController {
         phone: String,
         email: String,
         password: String
-    ): User {
-        return AuthService.registerUser(
+    ) =
+        AuthService.registerUser(
             name = name,
             phone = phone,
             email = email,
