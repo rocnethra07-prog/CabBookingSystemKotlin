@@ -40,11 +40,6 @@ object AuthUI {
                 
                 ${e.message}
                 
-                Need help? please contact:
-      
-                Admin : ${AdminSeeder.ADMIN_NAME}
-                Phone : ${AdminSeeder.ADMIN_PHONE}
-                Email : ${AdminSeeder.ADMIN_EMAIL}
             """.trimIndent()
             )
         }
