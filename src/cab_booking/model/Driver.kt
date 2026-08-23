@@ -9,7 +9,7 @@ class Driver(
     name: String,
     phone: String,
     email: String,
-    val cabId: String,
+    val vehicleId: String,
     val licenseNumber: String,
     currentLocation: Location
 ) : User(
@@ -25,6 +25,9 @@ class Driver(
     var earnings: BigDecimal = BigDecimal.ZERO
         private set
 
+    // True whenever the driver is free to be matched to a new ride or parcel.
+    // Set to false the moment either is booked, and back to true only when
+    // that ride/parcel reaches a final state (completed/delivered/cancelled).
     var isAvailable: Boolean = true
         private set
 
@@ -58,7 +61,7 @@ class Driver(
     }
 
     init {
-        require(cabId.isNotBlank()) { "Cab ID cannot be blank." }
+        require(vehicleId.isNotBlank()) { "Vehicle ID cannot be blank." }
         require(Validator.isValidLicenseNumber(licenseNumber)) { "Invalid license number. Format: TN012023001234." }
     }
 
@@ -66,7 +69,7 @@ class Driver(
 
         return super.toString() + """
             
-            Cab ID           : $cabId
+            Vehicle ID       : $vehicleId
             License Number   : $licenseNumber
             Current Location : $currentLocation
             Available        : $isAvailable

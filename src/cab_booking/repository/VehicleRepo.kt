@@ -1,11 +1,10 @@
 package cab_booking.repository
 
-import cab_booking.model.Cab
-import cab_booking.model.types.CabType
+import cab_booking.model.Vehicle
+import cab_booking.model.types.VehicleCategory
 
-object CabRepo : InMemoryRepo<Cab>() {
-
-    override fun getKey(entity: Cab): String = entity.cabId
+object VehicleRepo : InMemoryRepo<Vehicle>() {
+    override fun getKey(entity: Vehicle): String = entity.vehicleId
 
     fun existsByRegistrationNumber(registrationNumber: String): Boolean {
         val trimmed = registrationNumber.trim()
@@ -16,8 +15,8 @@ object CabRepo : InMemoryRepo<Cab>() {
         }
     }
 
-    fun findByCabType(cabType: CabType): List<Cab> =
+    fun findByCategory(vehicleCategory: VehicleCategory): List<Vehicle> =
         storage.values.filter {
-            it.cabType == cabType
+            it.vehicleCategory == vehicleCategory
         }
 }

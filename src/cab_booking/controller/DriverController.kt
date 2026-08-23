@@ -1,11 +1,13 @@
 package cab_booking.controller
 
 import cab_booking.model.Driver
+import cab_booking.model.Parcel
 import cab_booking.model.Ride
 import cab_booking.service.DriverService
 import cab_booking.model.types.Location
-import cab_booking.service.CabService
+import cab_booking.service.ParcelService
 import cab_booking.service.RideService
+import cab_booking.service.VehicleService
 
 object DriverController{
 
@@ -15,8 +17,8 @@ object DriverController{
     fun getCurrentRideOfDriver(driverId: String) =
         RideService.getCurrentRide(driverId)
 
-    fun getCabById(cabId: String) =
-        CabService.getCabById(cabId)
+    fun getVehicleById(vehicleId: String) =
+        VehicleService.getVehicleById(vehicleId)
 
     fun updateProfile(driver: Driver, name: String, phone: String, location: Location) =
         DriverService.updateProfile(driver,name,phone,location)
@@ -30,10 +32,19 @@ object DriverController{
     fun cancelRide(ride: Ride, driver: Driver) =
         DriverService.cancelRide(ride,driver)
 
-    fun getDriverRideHistory(driverId: String) =
-        RideService.getDriverRideHistory(driverId)
-
     fun getAverageRatingOfDriver(driver: Driver) =
         DriverService.getAverageRatingOfDriver(driver)
+
+    fun getCurrentParcelOfDriver(driverId: String) =
+        ParcelService.getCurrentParcelOfDriver(driverId)
+
+    fun pickUpParcel(parcel: Parcel, driver: Driver) =
+        DriverService.pickUpParcel(parcel, driver)
+
+    fun deliverParcel(parcel: Parcel, driver: Driver) =
+        DriverService.deliverParcel(parcel, driver)
+
+    fun cancelParcel(parcel: Parcel, driver: Driver) =
+        DriverService.cancelParcel(parcel, driver)
 
 }

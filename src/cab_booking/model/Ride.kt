@@ -3,17 +3,19 @@ package cab_booking.model
 import cab_booking.exception.InvalidRideStateException
 import cab_booking.model.types.Location
 import cab_booking.model.types.RideStatus
+import cab_booking.model.types.VehicleCategory
 import cab_booking.util.IdGenerator
 import java.math.BigDecimal
 import java.time.LocalDateTime
 
 class Ride(
-    val riderId: String,
-    val driverId: String,
-    val pickupLocation: Location,
-    val dropLocation: Location,
-    val fare: BigDecimal
-) {
+    riderId: String,
+    driverId: String,
+    pickupLocation: Location,
+    dropLocation: Location,
+    vehicleCategory: VehicleCategory,
+    fare: BigDecimal
+) : Booking(riderId, driverId, pickupLocation, dropLocation, vehicleCategory, fare) {
 
     // Public properties are used for simple property access
     val rideId: String = IdGenerator.generateRideId()
@@ -21,12 +23,7 @@ class Ride(
     var rideStatus: RideStatus = RideStatus.BOOKED
         private set
 
-    val bookedAt: LocalDateTime = LocalDateTime.now()
-
     var completedAt: LocalDateTime? = null //null by default
-        private set
-
-    var cancelledAt: LocalDateTime? = null //null by default
         private set
 
     var rating: Int = 0  // 1–5, 0 if not yet rated
@@ -60,10 +57,6 @@ class Ride(
         this.completedAt = completedAt
     }
 
-    fun setCancelledAt(cancelledAt: LocalDateTime) {
-        this.cancelledAt = cancelledAt
-    }
-
     fun setRatings(rating: Int){
         if(rideStatus != RideStatus.COMPLETED) {
             throw InvalidRideStateException("Only completed rides can be rated.")
@@ -74,20 +67,11 @@ class Ride(
         this.rating = rating
     }
 
-    init {
-        require(riderId.isNotBlank()) { "Rider ID cannot be blank." }
-
-        require(driverId.isNotBlank()) { "Driver ID cannot be blank." }
-
-        require(pickupLocation != dropLocation) { "Pickup and drop locations cannot be the same." }
-
-        require(fare > BigDecimal.ZERO) { "Fare must be greater than zero." }
-    }
-
     override fun toString(): String {
         return """
             Pickup Location  : $pickupLocation
             Drop Location    : $dropLocation
+            Vehicle          : $vehicleCategory
             Fare             : ₹$fare
             Status           : $rideStatus
             Booked At        : $bookedAt

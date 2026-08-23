@@ -9,34 +9,26 @@ object RideRepo : InMemoryRepo<Ride>() {
 
     override fun getKey(entity: Ride): String = entity.rideId
 
-    fun findRidesByRider(riderId: String): List<Ride> =
-        findRides{ it.riderId == riderId}
-
-    fun findRidesByDriver(driverId: String): List<Ride> =
-        findRides{ it.driverId == driverId}
-
-    fun findRidesByStatus(status: RideStatus): List<Ride> =
-        findRides { it.rideStatus == status }
-
     //returns list of rides based on the predicate passed
     private fun findRides(predicate: (Ride) -> Boolean ) : List<Ride> =
         storage.values.filter(predicate)
 
+    private val activeStatuses = setOf(RideStatus.BOOKED, RideStatus.STARTED)
 
     fun findCurrentRideOfDriver(driverId: String): Ride =
-        findRide{ it.driverId == driverId && it.rideStatus == RideStatus.BOOKED }  ?: throw ActiveRideNotFoundException()
+        findRide{ it.driverId == driverId && it.rideStatus in activeStatuses }  ?: throw ActiveRideNotFoundException()
 
     fun findCurrentRideOfRider(riderId: String): Ride =
-        findRide { it.riderId == riderId && it.rideStatus == RideStatus.BOOKED } ?: throw ActiveRideNotFoundException()
+        findRide { it.customerId == riderId && it.rideStatus in activeStatuses } ?: throw ActiveRideNotFoundException()
 
     fun hasCurrentRideOfRider(riderId: String): Boolean =
         storage.values.any {
-            it.riderId == riderId && it.rideStatus == RideStatus.BOOKED
+            it.customerId == riderId && it.rideStatus in activeStatuses
         }
 
     fun hasCurrentRideOfDriver(driverId: String): Boolean =
         storage.values.any {
-            it.driverId == driverId && it.rideStatus == RideStatus.BOOKED
+            it.driverId == driverId && it.rideStatus in activeStatuses
         }
 
     private fun findRide(predicate : (Ride) -> Boolean) =
@@ -44,7 +36,7 @@ object RideRepo : InMemoryRepo<Ride>() {
 
     fun findLastCompletedRide(riderId: String): Ride =
         findRides{
-                it.riderId == riderId && it.rideStatus == RideStatus.COMPLETED
+                it.customerId == riderId && it.rideStatus == RideStatus.COMPLETED
             }
             .maxByOrNull {
                 it.completedAt!!

@@ -43,7 +43,7 @@ object AuthService{
     }
 
     private fun checkIsAccountLocked(userAuth: UserCredential) {
-        if(userAuth.isAccountLocked()){
+        if(isAccountLocked(userAuth.userId)){
             val minutesLeft = userAuth.remainingLockTime().toMinutes()
             val secondsLeft = userAuth.remainingLockTime().seconds % 60
             throw AccountLockedException(minutesLeft, secondsLeft)
@@ -71,5 +71,15 @@ object AuthService{
     fun unlockUserAccount(userId: String) {
         val auth = AuthRepo.findByUserId(userId)
         auth.unlockAccount()
+    }
+
+    fun lockUserAccount(userId: String) {
+        val auth = AuthRepo.findByUserId(userId)
+        auth.forceLock()
+    }
+
+    fun isAccountLocked(userId: String) : Boolean{
+        val userAuth = AuthRepo.findByUserId(userId)
+        return userAuth.isAccountLocked()
     }
 }

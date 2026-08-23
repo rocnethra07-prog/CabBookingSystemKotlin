@@ -4,45 +4,48 @@ import cab_booking.console.input.InputReader
 import cab_booking.controller.RiderController
 import cab_booking.exception.ActiveRideNotFoundException
 import cab_booking.exception.AvailableDriversNotFoundException
-import cab_booking.exception.CabNotFoundException
 import cab_booking.exception.CompletedRideNotFoundException
 import cab_booking.exception.DistanceNotFoundException
 import cab_booking.exception.DriverNotFoundException
 import cab_booking.exception.InvalidRideStateException
+import cab_booking.exception.VehicleNotFoundException
+import cab_booking.exception.ActiveParcelNotFoundException
+import cab_booking.exception.InvalidParcelStateException
+import cab_booking.exception.UnauthorizedParcelActionException
 import cab_booking.exception.UnauthorizedRideActionException
 import cab_booking.model.Driver
+import cab_booking.model.Parcel
 import cab_booking.model.Ride
 import cab_booking.model.User
 import cab_booking.model.types.Location
+import cab_booking.model.types.ParcelMode
+import cab_booking.console.input.ConsoleFormat
 
 object RiderUI {
-    fun riderDashboard(rider: User){
-        promptPendingRating(rider)
+    fun riderDashboard(customer: User){
+        promptPendingRating(customer)
 
         while (true) {
+            ConsoleFormat.header("RIDER MENU")
             println(
                 """
-                
-                ========== RIDER MENU ==========
-                1. Book Ride
-                2. View Current Ride
-                3. View Ride History
-                4. Update Profile
-                5. Rate Last Ride
-                6. Change Password
+                1. Book a Ride
+                2. Send / Receive Parcel
+                3. My Ride
+                4. My Parcel 
+                5. Account
                 0. Logout
                 """.trimIndent()
             )
             when (readln().trim()) {
 
-                "1" -> bookRide(rider)
-                "2" -> viewCurrentRide(rider)
-                "3" -> viewRideHistory(rider)
-                "4" -> updateProfile(rider)
-                "5" -> rateLastRide(rider)
-                "6" -> AuthUI.changePassword(rider)
+                "1" -> bookRide(customer)
+                "2" -> bookParcel(customer)
+                "3" -> viewCurrentRide(customer)
+                "4" -> viewCurrentParcel(customer)
+                "5" -> accountMenu(customer)
                 "0" -> return
-                else -> println("Invalid choice.")
+                else -> println("[x] Invalid choice.")
             }
         }
     }
@@ -134,16 +137,16 @@ object RiderUI {
 
         }
         catch (e: UnauthorizedRideActionException) {
-            println("[!] Unable to submit your rating at the moment ${e.message}")
+            println("[x] Unable to submit your rating at the moment ${e.message}")
         }
         catch (e : InvalidRideStateException){
-            println("[!] Unable to submit your rating at the moment ${e.message}")
+            println("[x] Unable to submit your rating at the moment ${e.message}")
         }
         catch (e: DriverNotFoundException) {
-            println("[!] Unable to submit your rating at the moment ${e.message}")
+            println("[x] Unable to submit your rating at the moment ${e.message}")
         }
         catch (e : IllegalArgumentException){
-            println("[!] Unable to submit your rating at the moment ${e.message}")
+            println("[x] Invalid Input, Unable to submit rating at the moment${e.message}")
         }
     }
 
@@ -171,9 +174,19 @@ object RiderUI {
             break
         }
 
+        val fareEstimates = try {
+            RiderController.estimateRideFares(pickup, drop)
+        }
+        catch (e: DistanceNotFoundException) {
+            println("[x] ${e.message}")
+            return
+        }
+
         while (true) {
 
-            val cabType = InputReader.chooseCabType()
+            val vehicleCategory = InputReader.chooseVehicleCategoryByFare(fareEstimates)
+
+            println("\nFinding a nearby $vehicleCategory for you...")
 
             try {
 
@@ -181,17 +194,16 @@ object RiderUI {
                     rider,
                     pickup,
                     drop,
-                    cabType
+                    vehicleCategory
                 )
 
                 val driver = RiderController.getDriverForRide(ride)
 
-                println("\nRide Booked Successfully.\n")
+                ConsoleFormat.subHeader("RIDE CONFIRMED")
                 println(ride)
-
                 println(
                     """
-
+                        
                     Driver Details :
                     Driver : ${driver.name}
                     Phone  : ${driver.phone}
@@ -202,26 +214,26 @@ object RiderUI {
 
             }
             catch(e: AvailableDriversNotFoundException){
-                println("[!] ${e.message}")
-                if(InputReader.promptConfirmation("Try another cab type? (Y/N): ")){
+                println("[x] ${e.message}")
+                if(InputReader.promptConfirmation("Try another vehicle type? (Y/N): ")){
                     continue
                 }
                 return
             }
             catch(e: DistanceNotFoundException) {
-                println("[!] ${e.message}")
+                println("[x] ${e.message}")
                 return
             }
             catch (e: DriverNotFoundException) {
-                println("[!] ${e.message}")
+                println("[x] ${e.message}")
                 return
             }
-            catch (e: CabNotFoundException) {
-                println("[!] ${e.message}")
+            catch (e: VehicleNotFoundException) {
+                println("[x] ${e.message}")
                 return
             }
             catch (e: IllegalArgumentException) {
-                println("[!] ${e.message}")
+                println("[x] ${e.message}")
                 return
             }
         }
@@ -285,29 +297,154 @@ object RiderUI {
             println("\nRide cancelled successfully.")
         }
         catch (e: UnauthorizedRideActionException) {
-            println("[!] ${e.message}")
+            println("[x] ${e.message}")
         }
         catch (e : InvalidRideStateException){
-            println("[!] ${e.message}")
+            println("[x] ${e.message}")
         }
         catch (e : DriverNotFoundException){
-            println("[!] ${e.message}")
+            println("[x] ${e.message}")
         }
     }
 
-    private fun viewRideHistory(rider: User){
-        val rides = RiderController.getRiderRideHistory(rider.userId)
+    // ==================== PARCELS ====================
 
-        if (rides.isEmpty()) {
-            println("\nNo rides found.")
+    private fun bookParcel(customer: User) {
+
+        if (RiderController.hasActiveParcel(customer.userId)) {
+            println("\nYou already have an active parcel. Finish or cancel it before booking another.")
             return
         }
 
-        println("\n========== RIDE HISTORY ==========")
+        ConsoleFormat.header("SEND / RECEIVE A PARCEL")
 
-        rides.forEach {
-            println(it)
-            println("-".repeat(50))
+        val parcelMode = InputReader.chooseParcelMode()
+
+        val pickupLabel = if (parcelMode == ParcelMode.SEND) "Pickup Location (where you are)" else "Pickup Location (where the parcel currently is)"
+        val dropLabel = if (parcelMode == ParcelMode.SEND) "Drop Location (where it's going)" else "Drop Location (where you are)"
+
+        val pickup = InputReader.chooseLocation(pickupLabel)
+
+        var drop: Location
+        while (true) {
+            drop = InputReader.chooseLocation(dropLabel)
+            if (pickup == drop) {
+                println("Pickup and Drop locations cannot be the same.")
+                continue
+            }
+            break
+        }
+
+        val contactLabel = if (parcelMode == ParcelMode.SEND) "recipient" else "pickup contact"
+        val contactName = InputReader.promptName(
+            prompt = "Name of the $contactLabel: ",
+            errorMessage = "Name must contain minimum 3 characters. Please try again"
+        )
+        val contactPhone = InputReader.promptPhone(
+            prompt = "Phone of the $contactLabel: "
+        )
+
+        val category = InputReader.chooseParcelCategory()
+        val weight = InputReader.promptWeight()
+
+        val fareEstimates = try {
+            RiderController.estimateParcelFares(pickup, drop, category)
+        }
+        catch (e: DistanceNotFoundException) {
+            println("[x] ${e.message}")
+            return
+        }
+
+        while (true) {
+            val vehicleCategory = InputReader.chooseVehicleCategoryByFare(fareEstimates)
+
+            println("\nFinding a nearby $vehicleCategory for you...")
+            try {
+                val parcel = RiderController.bookParcel(
+                    customer, pickup, drop, vehicleCategory, parcelMode, contactName, contactPhone, weight, category
+                )
+
+                val driver = RiderController.getDriverForParcel(parcel)
+
+                ConsoleFormat.subHeader("PARCEL BOOKED")
+                println(parcel)
+                println()
+                println("Driver  : ${driver.name}")
+                println("Phone   : ${driver.phone}")
+                return
+            }
+            catch (e: AvailableDriversNotFoundException) {
+                println("[x] ${e.message}")
+                if (InputReader.promptConfirmation("Try another vehicle type?")) continue
+                return
+            }
+            catch (e: DistanceNotFoundException) {
+                println("[x] ${e.message}")
+                return
+            }
+            catch (e: DriverNotFoundException) {
+                println("[x] ${e.message}")
+                return
+            }
+            catch (e: VehicleNotFoundException) {
+                println("[x] ${e.message}")
+                return
+            }
+            catch (e: IllegalArgumentException) {
+                println("[x] ${e.message}")
+                return
+            }
+        }
+    }
+
+    private fun viewCurrentParcel(customer: User) {
+        try {
+            val parcel = RiderController.getCurrentParcel(customer.userId)
+            val driver = RiderController.getDriverForParcel(parcel)
+
+            ConsoleFormat.header("CURRENT PARCEL")
+            println(parcel)
+            println()
+            println("Driver  : ${driver.name}")
+            println("Phone   : ${driver.phone}")
+
+            currentParcelMenu(parcel, customer)
+        }
+        catch (e: ActiveParcelNotFoundException) {
+            println("[x] ${e.message}")
+        }
+    }
+
+    private fun currentParcelMenu(parcel: Parcel, customer: User) {
+        while (true) {
+            println("\n  1. Cancel Parcel")
+            println("  0. Back")
+            print("Choose: ")
+
+            when (readln().trim()) {
+                "1" -> {
+                    cancelParcel(parcel, customer)
+                    return
+                }
+                "0" -> return
+                else -> println("Invalid choice.")
+            }
+        }
+    }
+
+    private fun cancelParcel(parcel: Parcel, customer: User) {
+        try {
+            RiderController.cancelParcel(parcel, customer)
+            println("\nParcel cancelled successfully.")
+        }
+        catch (e: UnauthorizedParcelActionException) {
+            println("[x] ${e.message}")
+        }
+        catch (e: InvalidParcelStateException) {
+            println("[x] ${e.message}")
+        }
+        catch (e: DriverNotFoundException) {
+            println("[x] ${e.message}")
         }
     }
 
@@ -345,25 +482,28 @@ object RiderUI {
 
         }
         catch (e: IllegalArgumentException) {
-            println("[!] Invalid Input, ${e.message}")
+            println("[x] Invalid Input, ${e.message}")
         }
     }
 
-    private fun rateLastRide(rider: User) {
+    private fun accountMenu(customer: User){
+        while (true) {
 
-        try {
-            val ride = RiderController.getLastCompletedRideOfRider(rider.userId)
+            ConsoleFormat.header("ACCOUNT MENU")
+            println(
+                """
+                    1. Update Profile
+                    2. Change Password
+                    0. Back
+                """.trimIndent()
+            )
 
-            if (ride.rating != 0) {
-                println("\nThis ride has already been rated.")
-                println("Rating : ${ride.rating}/5")
-                return
+            when (readln().trim()) {
+                "1" -> updateProfile(customer)
+                "2" -> AuthUI.changePassword(customer)
+                "0" -> return
+                else -> println("[x] Invalid choice.")
             }
-
-            showRatingScreen(ride, rider)
-        }
-        catch (e: CompletedRideNotFoundException){
-            println("[!] ${e.message}")
         }
     }
 

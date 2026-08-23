@@ -1,7 +1,6 @@
 package cab_booking.service
 
 import cab_booking.model.User
-import cab_booking.model.types.UserRole
 import cab_booking.repository.UserRepo
 
 object UserService {
@@ -12,7 +11,4 @@ object UserService {
     fun findUserById(userId: String): User =
         UserRepo.findByUserId(userId)
 
-    fun getAllRiders(): List<User> =
-        UserRepo.findAll()
-            .filter { it.userRole == UserRole.RIDER }
 }

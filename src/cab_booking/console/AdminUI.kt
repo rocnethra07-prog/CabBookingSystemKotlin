@@ -5,40 +5,36 @@ import cab_booking.console.input.InputReader
 import cab_booking.controller.AdminController
 import cab_booking.controller.AuthController
 import cab_booking.controller.DriverController
-import cab_booking.controller.RiderController
-import cab_booking.exception.CabNotFoundException
 import cab_booking.exception.CredentialsNotFoundException
 import cab_booking.exception.DriverNotFoundException
 import cab_booking.exception.UserNotFoundException
-import cab_booking.model.Cab
 import cab_booking.model.Driver
-import cab_booking.model.Ride
+import cab_booking.console.input.ConsoleFormat
+import cab_booking.exception.VehicleNotFoundException
+import cab_booking.model.Vehicle
 
 object AdminUI {
-    fun adminDashboard(){
-        while(true){
-            println("""
-                
-                ========== ADMIN MENU ==========
-                1. Driver Management
-                2. Rider Management
-                3. Ride Management
-                4. Cab Management
-                5. User Account Management
+    fun adminDashboard() {
+        while (true) {
+            ConsoleFormat.header("ADMIN MENU")
+            println(
+                """
+                1. Drivers Management
+                2. Vehicles Management   
+                3. Account Security Management
                 0. Logout
             """.trimIndent()
             )
 
             when (readln().trim()) {
-                "1" -> driverManagementMenu()
-                "2" -> riderManagementMenu()
-                "3" -> rideManagementMenu()
-                "4" -> cabManagementMenu()
-                "5" -> userAccountManagement()
+                "1" -> driversMenu()
+                "2" -> vehiclesMenu()
+                "3" -> accountSecurityMenu()
                 "0" -> {
                     println("\nLogged out successfully.")
                     return
                 }
+
                 else -> println("Invalid choice.")
             }
         }
@@ -46,19 +42,17 @@ object AdminUI {
 
 
     // DRIVER MANAGEMENT
-    private fun driverManagementMenu(){
-        while(true) {
+    private fun driversMenu() {
+        while (true) {
             println(
                 """
                 
                 ========== DRIVER MANAGEMENT ==========
                 1. Add Driver
-                2. Delete Driver
-                3. View All Drivers
-                4. View Available Drivers
-                5. View Unavailable Drivers
-                6. Search Driver
-                7. Driver Ride History
+                2. Remove Driver
+                3. All Drivers
+                4. Available Drivers
+                5. Unavailable Drivers
                 0. Back
                 """.trimIndent()
             )
@@ -66,11 +60,9 @@ object AdminUI {
             when (readln().trim()) {
                 "1" -> addDriver()
                 "2" -> deleteDriver()
-                "3" -> viewAllDrivers()
-                "4" -> viewAvailableDrivers()
-                "5" -> viewUnavailableDrivers()
-                "6" -> searchDriver()
-                "7" -> driverRideHistory()
+                "3" -> displayDrivers(AdminController.getAllDrivers(), "ALL DRIVERS")
+                "4" -> displayDrivers(AdminController.getAvailableDrivers(), "AVAILABLE DRIVERS")
+                "5" -> displayDrivers(AdminController.getUnavailableDrivers(), "UNAVAILABLE DRIVERS")
                 "0" -> return
                 else -> println("Invalid choice.")
             }
@@ -78,7 +70,10 @@ object AdminUI {
     }
 
     private fun addDriver() {
-        println("\n========== ADD DRIVER ==========")
+        ConsoleFormat.header("ADD DRIVER")
+
+        println("Driver Details")
+        ConsoleFormat.divider()
 
         val name = InputReader.promptName()
         val phone = InputReader.promptPhone()
@@ -87,7 +82,7 @@ object AdminUI {
         while (true) {
             email = InputReader.promptEmail()
             if (AuthController.isEmailRegistered(email)) {
-                println("Email already registered.")
+                println("[x] This email is already registered. Please use a different email.\n")
                 continue
             }
             break
@@ -100,85 +95,79 @@ object AdminUI {
         while (true) {
             licenseNumber = InputReader.promptLicenseNumber()
             if (AdminController.isLicenseNumberTaken(licenseNumber)) {
-                println("License number already exists.")
+                println("[x] This license number is already registered. Please enter a different one.\n")
                 continue
             }
             break
         }
 
-        val cab = collectCabDetails()
-
         try {
-            val driver = AdminController.addDriver(name, phone, email, password, currentLocation, licenseNumber, cab)
-            println("\nDriver Registered Successfully.\n")
+            val vehicle = collectVehicleDetails()
+            val driver =
+                AdminController.addDriver(name, phone, email, password, currentLocation, licenseNumber, vehicle)
+
+            ConsoleFormat.subHeader("DRIVER ADDED")
             println(driver)
-        }
-        catch (e: IllegalArgumentException) {
-            println("[!] Invalid Input, ${e.message}")
+            println()
+            println(vehicle)
+        } catch (e: IllegalArgumentException) {
+            println("[x] Could not add driver: ${e.message}")
         }
     }
 
-    private fun collectCabDetails(): Cab {
-        val model = InputReader.promptNonEmptyInput(
-            "Car Model : ",
-            "Model cannot be empty."
-        )
+    private fun collectVehicleDetails(): Vehicle {
+        println("\nVehicle Details")
+        ConsoleFormat.divider()
 
-        val cabType = InputReader.chooseCabType()
+        val vehicleModel =
+            InputReader.promptNonEmptyInput("Vehicle Model (e.g. Honda City): ", "Vehicle model cannot be blank.")
 
         var registrationNumber: String
         while (true) {
             registrationNumber = InputReader.promptRegistrationNumber()
             if (AdminController.isRegistrationNumberTaken(registrationNumber)) {
-                println("Registration number already exists.")
+                println("[x] This registration number is already registered.")
                 continue
             }
             break
         }
-        return AdminController.createCab(model, cabType, registrationNumber)
+
+        val vehicleCategory = InputReader.chooseVehicleCategory()
+        val vehicle = AdminController.createVehicle(vehicleModel, registrationNumber, vehicleCategory)
+
+        return vehicle
     }
 
     private fun deleteDriver() {
-        println("\n========== DELETE DRIVER ==========")
 
-        val driverId = InputReader.promptNonEmptyInput(
-            "Enter Driver ID : ",
-            "Driver ID cannot be empty."
+        ConsoleFormat.header("REMOVE DRIVER")
+
+        val userId = InputReader.promptNonEmptyInput(
+            "Enter Driver's User ID: ",
+            "User ID cannot be blank."
         )
 
         try {
-            val driver = DriverController.findDriverById(driverId)
+            val driver = DriverController.findDriverById(userId)
             println("\nDriver Details")
             println(driver)
 
-            if (!InputReader.promptConfirmation("Delete this driver?")) {
-                println("Deletion cancelled.")
+            if (!InputReader.promptConfirmation("Remove this driver?")) {
+                println("\nCancelled.")
                 return
             }
 
             if (AdminController.deleteDriver(driver)) {
-                println("Driver deleted successfully.")
+                println("Driver removed successfully.")
+            } else {
+                println("[x] This driver has an ongoing ride or parcel and cannot be removed right now.")
             }
-            else {
-                println("Driver has an active ride and cannot be deleted.")
-            }
-        }
-        catch (e: DriverNotFoundException) {
-            println("[!] ${e.message}")
-        }
-        catch (e: IllegalArgumentException) {
-            println("[!] Invalid Input, ${e.message}")
+        } catch (e: DriverNotFoundException) {
+            println("[x] ${e.message}")
+        } catch (e: IllegalArgumentException) {
+            println("[x] Invalid Input, ${e.message}")
         }
     }
-
-    private fun viewAllDrivers() =
-        displayDrivers(AdminController.getAllDrivers(), "ALL DRIVERS")
-
-    private fun viewAvailableDrivers() =
-        displayDrivers(AdminController.getAvailableDrivers(), "AVAILABLE DRIVERS")
-
-    private fun viewUnavailableDrivers() =
-        displayDrivers(AdminController.getUnavailableDrivers(), "UNAVAILABLE DRIVERS")
 
     private fun displayDrivers(drivers: List<Driver>, title: String) {
         if (drivers.isEmpty()) {
@@ -186,228 +175,122 @@ object AdminUI {
             return
         }
 
-        println("\n========== $title ==========")
-
+        ConsoleFormat.header(title)
         drivers.forEach {
-            displayDriverWithCab(it)
+            displayDriverWithVehicle(it)
         }
     }
 
-    private fun searchDriver() {
-        val driverId = InputReader.promptNonEmptyInput(
-            "Enter Driver ID : ",
-            "Driver ID cannot be empty."
-        )
-
-        try {
-            val driver = DriverController.findDriverById(driverId)
-            displayDriverWithCab(driver)
-        }
-        catch (e: DriverNotFoundException) {
-            println("[!] ${e.message}")
-        }
-    }
-
-    private fun displayDriverWithCab(driver: Driver) {
-        println("\nDriver Details")
+    private fun displayDriverWithVehicle(driver: Driver) {
+        ConsoleFormat.header("Driver Details")
         println(driver)
+        ConsoleFormat.divider()
 
         try {
-            println("\nAssigned Cab")
-            println(DriverController.getCabById(driver.cabId))
+            ConsoleFormat.header("Assigned Vehicle")
+            println(DriverController.getVehicleById(driver.vehicleId))
+        } catch (e: VehicleNotFoundException) {
+            println("[x] ${e.message}")
         }
-        catch (e: CabNotFoundException) {
-            println("[!] ${e.message}")
-        }
-
-        println("-".repeat(50))
+        ConsoleFormat.divider()
     }
 
-    private fun driverRideHistory() {
-        val driverId = InputReader.promptNonEmptyInput(
-            "Enter Driver ID : ",
-            "Driver ID cannot be empty."
-        )
-
-        val rides = DriverController.getDriverRideHistory(driverId)
-        displayRides(rides, "DRIVER RIDE HISTORY")
-    }
-
-
-    // RIDER MANAGEMENT
-    private fun riderManagementMenu() {
+    private fun vehiclesMenu() {
         while (true) {
-            println(
-                """
-
-                ========== RIDER MANAGEMENT ==========
-                1. View All Riders
-                2. Rider Ride History
-                0. Back
-                """.trimIndent()
+            ConsoleFormat.header("VEHICLES")
+            println("""
+               1. All Vehicles
+               2. By Category
+               0. Back
+            """.trimIndent()
             )
+
             when (readln().trim()) {
-                "1" -> viewAllRiders()
-                "2" -> viewRiderRideHistory()
+                "1" -> listVehicles(AdminController.getAllVehicles(), "ALL VEHICLES")
+                "2" -> {
+                    val category = InputReader.chooseVehicleCategory()
+                    listVehicles(AdminController.getVehiclesByCategory(category), "$category VEHICLES")
+                }
                 "0" -> return
-                else -> println("Invalid choice.")
+                else -> println("[x] Invalid choice.")
             }
         }
     }
 
-    private fun viewAllRiders() {
-        val riders = AdminController.getAllRiders()
-
-        if (riders.isEmpty()) {
-            println("\nNo riders found.")
+    private fun listVehicles(vehicles: List<Vehicle>, title: String) {
+        if (vehicles.isEmpty()) {
+            println("\nNo vehicles found.")
             return
         }
 
-        println("\n========== ALL RIDERS ==========")
-
-        riders.forEach {
+        ConsoleFormat.header(title)
+        vehicles.forEach {
             println(it)
-            println("-".repeat(50))
-        }
-    }
-
-    private fun viewRiderRideHistory() {
-        val riderId = InputReader.promptNonEmptyInput(
-            "Enter Rider ID : ",
-            "Rider ID cannot be empty."
-        )
-        val rides = RiderController.getRiderRideHistory(riderId)
-        displayRides(rides, "RIDER RIDE HISTORY")
-    }
-
-    // RIDE MANAGEMENT
-    private fun rideManagementMenu() {
-        while (true) {
-            println(
-                """
-
-                ========== RIDE MANAGEMENT ==========
-                1. View All Rides
-                2. Active Rides
-                3. Completed Rides
-                4. Cancelled Rides
-                0. Back
-                """.trimIndent()
-            )
-            when (readln().trim()) {
-                "1" -> displayRides(AdminController.getAllRides(), "ALL RIDES")
-                "2" -> displayRides(AdminController.getActiveRides(), "ACTIVE RIDES")
-                "3" -> displayRides(AdminController.getCompletedRides(), "COMPLETED RIDES")
-                "4" -> displayRides(AdminController.getCancelledRides(), "CANCELLED RIDES")
-                "0" -> return
-                else -> println("Invalid choice.")
-            }
-        }
-    }
-
-    private fun displayRides(rides: List<Ride>, title: String) {
-        if (rides.isEmpty()) {
-            println("\nNo rides found.")
-            return
-        }
-
-        println("\n========== $title ==========")
-
-        rides.forEach {
-            println(it)
-            println("-".repeat(50))
-        }
-    }
-
-    // CAB MANAGEMENT
-    private fun cabManagementMenu() {
-        while (true) {
-            println(
-                """
-
-                ========== CAB MANAGEMENT ==========
-                1. View All Cabs
-                2. View Cabs By Type
-                0. Back
-                """.trimIndent()
-            )
-            when (readln().trim()) {
-                "1" -> viewAllCabs()
-                "2" -> viewCabsByType()
-                "0" -> return
-                else -> println("Invalid choice.")
-            }
-        }
-    }
-
-    private fun viewAllCabs() {
-        val cabs = AdminController.getAllCabs()
-
-        if (cabs.isEmpty()) {
-            println("\nNo cabs available.")
-            return
-        }
-
-        println("\n========== ALL CABS ==========")
-
-        cabs.forEach {
-            println(it)
-            println("-".repeat(50))
-        }
-    }
-
-    private fun viewCabsByType() {
-        val cabType = InputReader.chooseCabType()
-        val cabs = AdminController.getCabsByType(cabType)
-
-        if (cabs.isEmpty()) {
-            println("\nNo $cabType cabs found.")
-            return
-        }
-
-        println("\n========== $cabType CABS ==========")
-
-        cabs.forEach {
-            println(it)
-            println("-".repeat(50))
+            ConsoleFormat.divider()
         }
     }
 
     // USER ACCOUNT MANAGEMENT
 
-    private fun userAccountManagement() {
+    private fun accountSecurityMenu() {
         while (true) {
+            ConsoleFormat.header("ACCOUNT SECURITY")
             println(
                 """
-
-                ========== USER ACCOUNT MANAGEMENT ==========
-                1. Unlock User Account
-                2. View Locked Accounts
-                3. Search User
+                1. Locked Accounts
+                2. Lock an Account
+                3. Unlock an Account
                 0. Back
                 """.trimIndent()
             )
             when (readln().trim()) {
-                "1" -> unlockUserAccount()
-                "2" -> viewLockedAccounts()
-                "3" -> searchUser()
+                "1" -> displayLockedAccounts()
+                "2" -> lockAccount()
+                "3" -> unlockAccount()
                 "0" -> return
                 else -> println("Invalid choice.")
             }
         }
     }
 
-    private fun unlockUserAccount() {
+    private fun lockAccount() {
+        ConsoleFormat.header("LOCK AN ACCOUNT")
+
+        val userId = InputReader.promptNonEmptyInput("Enter User ID: ", "User ID cannot be blank.")
+
+        try {
+            val user = AdminController.findUserById(userId)
+
+            if (AdminController.isAccountLocked(userId)) {
+                println("\n${user.name}'s account is already locked.")
+                return
+            }
+
+            if (!InputReader.promptConfirmation("Lock ${user.name}'s account?")) {
+                println("\nCancelled.")
+                return
+            }
+
+            AdminController.lockUserAccount(userId)
+            println("\n${user.name}'s account has been locked.")
+        } catch (e: UserNotFoundException) {
+            println("[x] ${e.message}")
+        } catch (e: CredentialsNotFoundException) {
+            println("[x] ${e.message}")
+        }
+    }
+
+    private fun unlockAccount() {
         val lockedAccounts = AdminController.getLockedAccounts()
 
-        println("\n========== UNLOCK USER ACCOUNT ==========")
+        ConsoleFormat.header("UNLOCK AN ACCOUNT")
 
         if (lockedAccounts.isEmpty()) {
             println("No locked accounts found.")
             return
         }
 
-        println("\nLocked Accounts:")
+        ConsoleFormat.subHeader("\nLocked Accounts:")
         printLockedAccounts(lockedAccounts)
 
         val userId = InputReader.promptNonEmptyInput(
@@ -416,60 +299,59 @@ object AdminUI {
         )
 
         if (lockedAccounts.none { it.userId == userId }) {
-            println("[!] Please enter a valid locked User ID.")
+            println("[x] Please enter a valid locked User ID.")
             return
         }
-
-        try {
-            AdminController.unlockUserAccount(userId)
-            println("User account unlocked successfully.")
-        }
-        catch (e: CredentialsNotFoundException) {
-            println("[!] Unable to unlock account. ${e.message}")
-        }
-    }
-
-    private fun printLockedAccounts(accounts: List<UserCredential>) {
-        accounts.forEachIndexed { index, account ->
-            println("${index + 1}. ${account.userId} , Locked ~${account.remainingLockTime().toMinutes().plus(1)} min remaining")
-        }
-    }
-
-    private fun viewLockedAccounts() {
-        val lockedAccounts = AdminController.getLockedAccounts()
-
-        if (lockedAccounts.isEmpty()) {
-            println("\nNo locked user accounts found.")
-            return
-        }
-
-        println("\n========== LOCKED USER ACCOUNTS ID ==========")
-
-        lockedAccounts.forEach {
-            println("User ID: ${it.userId} | Locked, ~${it.remainingLockTime().toMinutes().plus(1)} min remaining")
-            println("-".repeat(50))
-        }
-    }
-
-    private fun searchUser() {
-        println("\n========== SEARCH USER ==========")
-
-        val userId = InputReader.promptNonEmptyInput(
-            "Enter User ID : ",
-            "User ID cannot be empty."
-        )
 
         try {
             val user = AdminController.findUserById(userId)
 
-            println("\n========== USER DETAILS ==========")
-            println(user)
+            if (!AdminController.isAccountLocked(userId)) {
+                println("\n${user.name}'s account is not locked.")
+                return
+            }
+
+            AdminController.unlockUserAccount(userId)
+            println("User account has been unlocked successfully.")
+        } catch (e: UserNotFoundException) {
+            println("[x] ${e.message}")
+        } catch (e: CredentialsNotFoundException) {
+            println("[x] Unable to unlock account. ${e.message}")
         }
-        catch (e: UserNotFoundException) {
-            println("[!] ${e.message}")
+    }
+
+    private fun printLockedAccounts(accounts: List<UserCredential>) {
+        accounts.forEach { account ->
+            println(
+                "User Id : ${account.userId} , Locked ~${
+                    account.remainingLockTime()
+                } min ${account.remainingLockTime().seconds % 60} sec remaining"
+            )
         }
-        catch (e: IllegalArgumentException) {
-            println("[!] Invalid Input, ${e.message}")
+    }
+
+    private fun displayLockedAccounts() {
+        val lockedAccounts = AdminController.getLockedAccounts()
+
+        if (lockedAccounts.isEmpty()) {
+            println("\nNo locked user accounts right now.")
+            return
+        }
+
+        ConsoleFormat.header("LOCKED ACCOUNTS")
+
+        lockedAccounts.forEach {
+            try {
+                val user = AdminController.findUserById(it.userId)
+                println(
+                    "User ID: ${it.userId} | User Name : ${user.name} | Locked, ~${
+                        it.remainingLockTime().toMinutes() 
+                    } min ${it.remainingLockTime().seconds % 60} sec remaining"
+                )
+                println("-".repeat(50))
+            } catch (_: UserNotFoundException) {
+                println("Unknown user  ID: ${it.userId}")
+            }
         }
     }
 }

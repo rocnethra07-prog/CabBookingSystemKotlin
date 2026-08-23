@@ -80,6 +80,11 @@ class UserCredential(val userId: String, password: String) {
         resetFailedAttempts()
     }
 
+    // Lets an admin lock an account directly, independent of failed login attempts.
+    fun forceLock() {
+        lockAccount()
+    }
+
     private fun hash(password: String) =
         BCrypt.hashpw(password, BCrypt.gensalt())
 

@@ -1,15 +1,13 @@
 package cab_booking.controller
 
-import cab_booking.model.Cab
 import cab_booking.model.Driver
-import cab_booking.model.types.CabType
+import cab_booking.model.Vehicle
 import cab_booking.model.types.Location
-import cab_booking.model.types.RideStatus
+import cab_booking.model.types.VehicleCategory
 import cab_booking.service.AuthService
-import cab_booking.service.CabService
 import cab_booking.service.DriverService
-import cab_booking.service.RideService
 import cab_booking.service.UserService
+import cab_booking.service.VehicleService
 
 object AdminController{
 
@@ -17,14 +15,20 @@ object AdminController{
         DriverService.isLicenseNumberExists(licenseNumber)
 
     fun isRegistrationNumberTaken(registrationNumber: String) =
-        CabService.isRegistrationNumberExists(registrationNumber)
+        VehicleService.isRegistrationNumberExists(registrationNumber)
+
+    fun isAccountLocked(userId: String) =
+        AuthService.isAccountLocked(userId)
+
+    fun lockUserAccount(userId: String) =
+        AuthService.lockUserAccount(userId)
 
     //DRIVER MANAGEMENT
-    fun addDriver(name: String, phone: String, email: String, password: String, currentLocation: Location, licenseNumber: String, cab: Cab) =
-        DriverService.createDriver(name, phone, email, password,currentLocation, licenseNumber, cab)
+    fun addDriver(name: String, phone: String, email: String, password: String, currentLocation: Location, licenseNumber: String, vehicle: Vehicle) =
+        DriverService.createDriver(name, phone, email, password,currentLocation, licenseNumber, vehicle)
 
-    fun createCab(model: String, cabType: CabType, registrationNumber: String) =
-        CabService.createCab(model, cabType, registrationNumber)
+    fun createVehicle(model: String, registrationNumber: String, vehicleCategory: VehicleCategory) =
+        VehicleService.createVehicle(model, registrationNumber, vehicleCategory)
 
     fun deleteDriver(driver: Driver) =
         DriverService.deleteDriver(driver)
@@ -38,29 +42,13 @@ object AdminController{
     fun getUnavailableDrivers() =
         DriverService.getUnavailableDrivers()
 
-    // RIDER MANAGEMENT
-    fun getAllRiders()  =
-        UserService.getAllRiders()
+    // ---- VEHICLE MANAGEMENT ----
 
-    // RIDE MANAGEMENT
-    fun getAllRides() =
-        RideService.getAllRides()
+    fun getAllVehicles() =
+        VehicleService.getAllVehicles()
 
-    fun getActiveRides() =
-        RideService.getRidesByStatus(RideStatus.BOOKED)
-
-    fun getCompletedRides() =
-        RideService.getRidesByStatus(RideStatus.COMPLETED)
-
-    fun getCancelledRides() =
-        RideService.getRidesByStatus(RideStatus.CANCELLED)
-
-    // CAB MANAGEMENT
-    fun getAllCabs() =
-        CabService.getAllCabs()
-
-    fun getCabsByType(cabType: CabType) =
-        CabService.getCabsByType(cabType)
+    fun getVehiclesByCategory(vehicleCategory: VehicleCategory) =
+        VehicleService.getVehiclesByCategory(vehicleCategory)
 
     //LOCK AND USER
     fun getLockedAccounts() =

@@ -22,7 +22,7 @@ object AuthController {
             phone = phone,
             email = email,
             password = password,
-            role = UserRole.RIDER
+            role = UserRole.CUSTOMER
         )
 
     fun isEmailRegistered(email: String) =

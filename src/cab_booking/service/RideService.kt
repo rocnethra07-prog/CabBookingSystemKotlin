@@ -1,20 +1,9 @@
 package cab_booking.service
 
 import cab_booking.model.Ride
-import cab_booking.model.types.RideStatus
 import cab_booking.repository.RideRepo
 
 object RideService {
-    fun getDriverRideHistory(driverId: String): List<Ride> =
-        RideRepo.findRidesByDriver(driverId)
-
-    fun getRiderRideHistory(riderId: String): List<Ride> =
-        RideRepo.findRidesByRider(riderId)
-
-    fun getAllRides(): List<Ride> = RideRepo.findAll()
-
-    fun getRidesByStatus(status: RideStatus): List<Ride> =
-        RideRepo.findRidesByStatus(status)
 
     fun hasActiveRide(riderId: String): Boolean =
         RideRepo.hasCurrentRideOfRider(riderId)

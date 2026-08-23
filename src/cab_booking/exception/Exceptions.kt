@@ -8,7 +8,7 @@ class UserNotFoundException(message: String) :
 class DriverNotFoundException(message: String) :
     Exception(message)
 
-class CabNotFoundException(message: String) :
+class VehicleNotFoundException(message: String) :
     Exception(message)
 
 class CredentialsNotFoundException() :
@@ -37,3 +37,13 @@ class ActiveRideNotFoundException() :
 
 class AvailableDriversNotFoundException(message: String) :
      Exception(message)
+
+class InvalidParcelStateException(message: String) :
+      Exception(message)
+
+class ActiveParcelNotFoundException() :
+    Exception("No active parcel found at the moment")
+
+class UnauthorizedParcelActionException(message: String) :
+    Exception(message)
+

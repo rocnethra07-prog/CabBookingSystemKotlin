@@ -1,6 +1,7 @@
 package cab_booking.console
 
 import cab_booking.config.AdminSeeder
+import cab_booking.console.input.ConsoleFormat
 import cab_booking.console.input.InputReader
 import cab_booking.controller.AuthController
 import cab_booking.controller.DriverController
@@ -16,6 +17,8 @@ object AuthUI {
 
     fun login() {
 
+        ConsoleFormat.header("LOGIN")
+
         val email = InputReader.promptEmail()
         val password = InputReader.promptPassword()
 
@@ -29,38 +32,39 @@ object AuthUI {
 
         }
         catch (e: UserNotFoundException) {
-            println("[!] Login failed: ${e.message}")
+            println("[x] Login failed: ${e.message}")
         }
         catch (e: AccountLockedException) {
             println(
                 """
                 
-                Your account has been temporarily locked
-                due to multiple failed login attempts.
-                
+                Your account has been temporarily locked due to multiple failed login attempts.
+                Need Help? Contact : ${AdminSeeder.ADMIN_EMAIL}
+         
                 ${e.message}
                 
             """.trimIndent()
             )
         }
         catch (e: InvalidCredentialsException) {
-            println("[!] Login failed: ${e.message}")
+            println("[x] Login failed: ${e.message}")
         }
         catch (e: CredentialsNotFoundException) {
-            println("[!] Authentication failed: ${e.message}")
+            println("[x] Authentication failed: ${e.message}")
         }
         catch (e: DriverNotFoundException) {
-            println("[!] ${e.message}. Please try again.")
+            println("[x] ${e.message}. Please try again.")
         }
     }
 
     fun register() {
 
+        ConsoleFormat.header("REGISTER")
+
         println(
             """
             
             You can register only as a Rider.
-            
             To become a Driver, please contact: ${AdminSeeder.ADMIN_EMAIL}
 
             """.trimIndent()
@@ -96,7 +100,7 @@ object AuthUI {
                 
                 Welcome ${user.name}
                 Your rider account has been created successfully.
-                You can now book rides.
+                You can now book rides and send or receive parcels.
                 """.trimIndent()
             )
 
@@ -104,28 +108,20 @@ object AuthUI {
 
         }
         catch (e: IllegalArgumentException) {
-            println("[!] Registration failed (invalid input): ${e.message}")
+            println("[x] Registration failed (invalid input): ${e.message}")
         }
         catch (e: DriverNotFoundException) {
-            println("[!] ${e.message}. Please try again.")
+            println("[x] ${e.message}. Please try again.")
         }
     }
 
     fun changePassword(user: User) {
 
-        println("\n========== CHANGE PASSWORD ==========")
+        ConsoleFormat.header("CHANGE PASSWORD")
 
-        val currentPassword = InputReader.promptPassword(
-            prompt = "Current Password : "
-        )
-
-        val newPassword = InputReader.promptPassword(
-            prompt = "New Password     : "
-        )
-
-        val confirmPassword = InputReader.promptPassword(
-            prompt = "Confirm Password : "
-        )
+        val currentPassword = InputReader.promptPassword(prompt = "Current Password : ")
+        val newPassword = InputReader.promptPassword(prompt = "New Password     : ")
+        val confirmPassword = InputReader.promptPassword(prompt = "Confirm Password : ")
 
         if (newPassword != confirmPassword) {
             println("\nPasswords do not match.")
@@ -143,16 +139,16 @@ object AuthUI {
 
         }
         catch (e : CredentialsNotFoundException){
-            println("[!] Authentication failed: ${e.message}")
+            println("[x] Authentication failed: ${e.message}")
         }
         catch (e: AccountLockedException){
-            println("[!] ${e.message}")
+            println("[x] ${e.message}")
         }
         catch (e: InvalidCredentialsException) {
-            println("[!] ${e.message}")
+            println("[x] ${e.message}")
         }
         catch (e: IllegalArgumentException) {
-            println("[!] ${e.message}")
+            println("[x] ${e.message}")
         }
     }
 }
@@ -164,6 +160,6 @@ private fun route(user: User) {
             val driver = DriverController.findDriverById(user.userId)
             DriverUI.driverDashboard(driver)
         }
-        UserRole.RIDER -> RiderUI.riderDashboard(user)
+        UserRole.CUSTOMER -> RiderUI.riderDashboard(user)
     }
 }
