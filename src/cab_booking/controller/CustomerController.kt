@@ -3,7 +3,7 @@ package cab_booking.controller
 import cab_booking.model.Parcel
 import cab_booking.model.User
 import cab_booking.model.types.Location
-import cab_booking.service.RiderService
+import cab_booking.service.CustomerService
 import cab_booking.model.Ride
 import cab_booking.model.types.ParcelCategory
 import cab_booking.model.types.ParcelMode
@@ -12,16 +12,16 @@ import cab_booking.service.ParcelService
 import cab_booking.service.RideService
 import java.math.BigDecimal
 
-object RiderController{
+object CustomerController{
 
     fun getLastCompletedRideOfRider(riderId: String) =
         RideService.getLastCompletedRide(riderId)
 
     fun getDriverForRide(ride: Ride) =
-        RiderService.getDriverForRide(ride)
+        CustomerService.getDriverForRide(ride)
 
     fun rateDriver(ride: Ride, rider: User, rating: Int) =
-        RiderService.rateDriver(ride,rider,rating)
+        CustomerService.rateDriver(ride,rider,rating)
 
     fun hasActiveRide(riderId: String) =
         RideService.hasActiveRideForRider(riderId)
@@ -32,19 +32,19 @@ object RiderController{
         drop: Location,
         vehicleCategory: VehicleCategory
     ) =
-        RiderService.bookRide(rider,pickup,drop,vehicleCategory)
+        CustomerService.bookRide(rider,pickup,drop,vehicleCategory)
 
     fun estimateRideFares(pickup: Location, drop: Location) =
-        RiderService.estimateRideFares(pickup, drop)
+        CustomerService.estimateRideFares(pickup, drop)
 
     fun getCurrentBookedRide(riderId: String) =
         RideService.getCurrentBookedRide(riderId)
 
     fun cancelRide(ride: Ride, rider: User) =
-        RiderService.cancelRide(ride, rider)
+        CustomerService.cancelRide(ride, rider)
 
     fun updateProfile(rider: User, name: String, phone: String) =
-        RiderService.updateProfile(rider,name,phone)
+        CustomerService.updateProfile(rider,name,phone)
 
 
     fun bookParcel(

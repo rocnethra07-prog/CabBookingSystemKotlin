@@ -14,7 +14,7 @@ import cab_booking.service.pricing.RideFareCalculator
 import java.math.BigDecimal
 import java.time.LocalDateTime
 
-object RiderService {
+object CustomerService {
 
     fun updateProfile(
         user: User,

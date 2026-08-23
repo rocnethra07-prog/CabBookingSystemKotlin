@@ -1,7 +1,7 @@
 package cab_booking.console
 
 import cab_booking.console.input.InputReader
-import cab_booking.controller.RiderController
+import cab_booking.controller.CustomerController
 import cab_booking.exception.ActiveRideNotFoundException
 import cab_booking.exception.AvailableDriversNotFoundException
 import cab_booking.exception.CompletedRideNotFoundException
@@ -58,7 +58,7 @@ object CustomerUI {
     private fun promptPendingRating(rider: User) {
 
         try {
-            val ride = RiderController.getLastCompletedRideOfRider(rider.userId)
+            val ride = CustomerController.getLastCompletedRideOfRider(rider.userId)
 
             if (ride.rating != 0) {
                 return
@@ -79,7 +79,7 @@ object CustomerUI {
     private fun showRatingScreen(
         ride: Ride, rider: User
     ) {
-        val driver = RiderController.getDriverForRide(ride)
+        val driver = CustomerController.getDriverForRide(ride)
 
         println(
             """
@@ -116,7 +116,7 @@ object CustomerUI {
         try {
 
             val rating = InputReader.promptRating()
-            RiderController.rateDriver(
+            CustomerController.rateDriver(
                 ride,
                 rider,
                 rating
@@ -144,7 +144,7 @@ object CustomerUI {
 
     private fun bookRide(rider: User) {
 
-        if (RiderController.hasActiveRide(rider.userId)) {
+        if (CustomerController.hasActiveRide(rider.userId)) {
             println("\nYou already have an active ride.")
             return
         }
@@ -168,7 +168,7 @@ object CustomerUI {
             }
 
             val fareEstimates = try {
-                RiderController.estimateRideFares(pickup, drop)
+                CustomerController.estimateRideFares(pickup, drop)
             } catch (e: DistanceNotFoundException) {
                 println("[x] ${e.message}")
                 return
@@ -182,14 +182,14 @@ object CustomerUI {
 
                 try {
 
-                    val ride = RiderController.bookRide(
+                    val ride = CustomerController.bookRide(
                         rider,
                         pickup,
                         drop,
                         vehicleCategory
                     )
 
-                    val driver = RiderController.getDriverForRide(ride)
+                    val driver = CustomerController.getDriverForRide(ride)
 
                     ConsoleFormat.subHeader("RIDE CONFIRMED")
                     println(ride)
@@ -234,8 +234,8 @@ object CustomerUI {
     // either way it first shows just a heads-up, then details, then actions.
     fun viewCurrentRide(rider: User){
         try {
-            val ride = RiderController.getCurrentBookedRide(rider.userId)
-            val driver = RiderController.getDriverForRide(ride)
+            val ride = CustomerController.getCurrentBookedRide(rider.userId)
+            val driver = CustomerController.getDriverForRide(ride)
             ConsoleFormat.header("YOUR RIDE")
             println(ride)
             println()
@@ -249,7 +249,7 @@ object CustomerUI {
     }
 
     private fun autoShowActiveRide(rider: User) {
-        if(RiderController.hasActiveRide(rider.userId)) {
+        if(CustomerController.hasActiveRide(rider.userId)) {
             viewCurrentRide(rider)
         }
     }
@@ -300,7 +300,7 @@ object CustomerUI {
         ride: Ride, rider: User
     ) {
         try {
-            RiderController.cancelRide(ride, rider)
+            CustomerController.cancelRide(ride, rider)
             println("\nRide cancelled successfully.")
         }
         catch (e: UnauthorizedRideActionException) {
@@ -318,7 +318,7 @@ object CustomerUI {
 
     private fun bookParcel(customer: User) {
 
-        if (RiderController.hasActiveParcel(customer.userId)) {
+        if (CustomerController.hasActiveParcel(customer.userId)) {
             println("\nYou already have an active parcel. Finish or cancel it before booking another.")
             return
         }
@@ -357,7 +357,7 @@ object CustomerUI {
             val weight = InputReader.promptWeight()
 
             val fareEstimates = try {
-                RiderController.estimateParcelFares(pickup, drop, category)
+                CustomerController.estimateParcelFares(pickup, drop, category)
             } catch (e: DistanceNotFoundException) {
                 println("[x] ${e.message}")
                 return
@@ -368,11 +368,11 @@ object CustomerUI {
 
                 println("\nFinding a nearby $vehicleCategory for you...")
                 try {
-                    val parcel = RiderController.bookParcel(
+                    val parcel = CustomerController.bookParcel(
                         customer, pickup, drop, vehicleCategory, parcelMode, contactName, contactPhone, weight, category
                     )
 
-                    val driver = RiderController.getDriverForParcel(parcel)
+                    val driver = CustomerController.getDriverForParcel(parcel)
 
                     ConsoleFormat.subHeader("PARCEL BOOKED")
                     println(parcel)
@@ -406,8 +406,8 @@ object CustomerUI {
 
     private fun viewCurrentParcel(customer: User) {
         try {
-            val parcel = RiderController.getCurrentParcel(customer.userId)
-            val driver = RiderController.getDriverForParcel(parcel)
+            val parcel = CustomerController.getCurrentParcel(customer.userId)
+            val driver = CustomerController.getDriverForParcel(parcel)
 
             ConsoleFormat.header("YOUR PARCEL")
             println(parcel)
@@ -422,7 +422,7 @@ object CustomerUI {
     }
 
     private fun autoShowActiveParcel(customer: User) {
-        if(RiderController.hasActiveParcel(customer.userId)){
+        if(CustomerController.hasActiveParcel(customer.userId)){
             viewCurrentParcel(customer)
         }
     }
@@ -463,7 +463,7 @@ object CustomerUI {
 
     private fun cancelParcel(parcel: Parcel, customer: User) {
         try {
-            RiderController.cancelParcel(parcel, customer)
+            CustomerController.cancelParcel(parcel, customer)
             println("\nParcel cancelled successfully.")
         }
         catch (e: UnauthorizedParcelActionException) {
@@ -491,7 +491,7 @@ object CustomerUI {
                 println("\nNo changes made.")
                 return
             }
-            RiderController.updateProfile(
+            CustomerController.updateProfile(
                 rider,
                 name,
                 phone
