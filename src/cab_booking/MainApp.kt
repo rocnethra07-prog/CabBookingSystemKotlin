@@ -3,8 +3,11 @@ package cab_booking
 import cab_booking.config.AdminSeeder
 import cab_booking.config.DriverSeeder
 import cab_booking.console.AuthUI
+import cab_booking.storage.DataStore
 
 fun main() {
+
+    DataStore.loadAll()
 
     AdminSeeder.seed()
     DriverSeeder.seed()
@@ -27,6 +30,7 @@ fun main() {
             "2" -> AuthUI.register()
 
             "0" -> {
+                DataStore.saveAll()
                 println("Goodbye! See you next ride.")
                 return
             }

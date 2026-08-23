@@ -6,27 +6,50 @@ import org.mindrot.jbcrypt.BCrypt
 import java.time.Duration
 import java.time.LocalDateTime
 
-//Credentials related class
-class UserCredential(val userId: String, password: String) {
+// Credentials related class
+// The constructor is private because it takes an already-hashed password.
+// Use one of the two factory methods instead:
+//   withPassword(...)   - a new account, the password is validated and hashed here
+//   fromStoredHash(...) - an account read back from credentials.csv
+
+class UserCredential private constructor(val userId: String, password: String) {
 
     companion object{
         private const val MAX_FAILED_ATTEMPTS = 3
         private val LOCK_DURATION = Duration.ofMinutes(15)
+
+        fun withPassword(userId: String, password: String): UserCredential {
+            require(Validator.isValidPassword(password)) { "Invalid password format." }
+            return UserCredential(userId, hash(password))
+        }
+
+        fun fromStoredHash(userId: String, passwordHash: String): UserCredential {
+            require(passwordHash.isNotBlank()) { "Stored password hash cannot be blank." }
+            return UserCredential(userId, passwordHash)
+        }
+        private fun hash(password: String) =
+            BCrypt.hashpw(password, BCrypt.gensalt())
+
     }
 
     private var passwordHash: String
+
+    fun getHashedPassword() = passwordHash
+
     private var failedAttempts: Int = 0
 
-    fun isAccountLocked() : Boolean {
-        refreshLockStatus()
-        return lockedAt != null
-    }
-
     private var lockedAt : LocalDateTime? = null
+
+    fun getLockedAtTime() = lockedAt
 
     init {
         require(Validator.isValidPassword(password)) { "Invalid password format." }
         passwordHash = hash(password)
+    }
+
+    fun isAccountLocked() : Boolean {
+        refreshLockStatus()
+        return lockedAt != null
     }
 
     fun verifyPassword(password: String): Boolean {
@@ -85,9 +108,11 @@ class UserCredential(val userId: String, password: String) {
         lockAccount()
     }
 
-    private fun hash(password: String) =
-        BCrypt.hashpw(password, BCrypt.gensalt())
-
+    // Puts back a lock that was still running when the app was closed, so the
+    // 15 minutes continue from when the account was really locked.
+    fun restoreLock(lockedAt: LocalDateTime) {
+        this.lockedAt = lockedAt
+    }
 
     private fun matches(password: String) =
         BCrypt.checkpw(password, passwordHash)

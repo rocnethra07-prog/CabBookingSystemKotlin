@@ -12,10 +12,10 @@ import cab_booking.util.Validator
 class Vehicle(
     val model: String,
     val registrationNumber: String,
-    val vehicleCategory: VehicleCategory
-) {
+    val vehicleCategory: VehicleCategory,
+    // Left out when a vehicle is registered; passed by the file storage at startup.
     val vehicleId: String = IdGenerator.generateVehicleId()
-
+) {
     init {
         require(Validator.isValidRegistrationNumber(registrationNumber)) { "Invalid registration number. Format: TN01AB0001." }
         require(model.isNotBlank()) { "Vehicle model cannot be blank." }

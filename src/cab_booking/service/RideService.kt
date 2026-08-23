@@ -5,8 +5,11 @@ import cab_booking.repository.RideRepo
 
 object RideService {
 
-    fun hasActiveRide(riderId: String): Boolean =
-        RideRepo.hasCurrentRideOfRider(riderId)
+    fun hasActiveRideForRider(riderId: String): Boolean =
+        RideRepo.hasActiveRideOfRider(riderId)
+
+    fun hasActiveRideForDriver(driverId: String): Boolean =
+        RideRepo.hasActiveRideOfDriver(driverId)
 
     fun getCurrentRide(driverId: String): Ride =
         RideRepo.findCurrentRideOfDriver(driverId)

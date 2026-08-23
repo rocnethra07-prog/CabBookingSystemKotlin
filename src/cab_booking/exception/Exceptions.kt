@@ -27,7 +27,7 @@ class InvalidCredentialsException() :
     Exception("Invalid Credentials")
 
 class DistanceNotFoundException(location1 : Location, location2 : Location) :
-    Exception("Distance not configured between $location1 and $location2")
+    Exception("The selected location is outside our service area ($location1 to $location2)")
 
 class CompletedRideNotFoundException() :
      Exception("No completed ride found at the moment")
@@ -47,3 +47,5 @@ class ActiveParcelNotFoundException() :
 class UnauthorizedParcelActionException(message: String) :
     Exception(message)
 
+class OperationCancelledException() :
+    Exception("Cancelled.")

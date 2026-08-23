@@ -8,7 +8,6 @@ import cab_booking.model.types.Location
 import cab_booking.model.Ride
 import cab_booking.model.types.RideStatus
 import cab_booking.repository.DriverRepo
-import cab_booking.repository.RideRepo
 import cab_booking.exception.InvalidRideStateException
 import cab_booking.exception.UnauthorizedParcelActionException
 import cab_booking.exception.UnauthorizedRideActionException
@@ -55,10 +54,15 @@ object DriverService {
         }
     }
 
+    fun hasActiveRideForDriver(driverId: String) =
+        RideService.hasActiveRideForDriver(driverId)
+
+    fun hasActiveParcelForDriver(driverId: String) =
+        ParcelService.hasActiveParcelForDriver(driverId)
 
     fun deleteDriver(driver: Driver): Boolean {
 
-        if (RideRepo.hasCurrentRideOfDriver(driver.userId) || ParcelService.hasActiveParcelForDriver(driver.userId)) {
+        if (hasActiveRideForDriver(driver.userId) || hasActiveParcelForDriver(driver.userId)) {
             return false
         }
 

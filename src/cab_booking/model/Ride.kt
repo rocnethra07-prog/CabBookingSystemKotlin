@@ -5,6 +5,7 @@ import cab_booking.model.types.Location
 import cab_booking.model.types.RideStatus
 import cab_booking.model.types.VehicleCategory
 import cab_booking.util.IdGenerator
+import cab_booking.util.toDisplayString
 import java.math.BigDecimal
 import java.time.LocalDateTime
 
@@ -14,11 +15,12 @@ class Ride(
     pickupLocation: Location,
     dropLocation: Location,
     vehicleCategory: VehicleCategory,
-    fare: BigDecimal
-) : Booking(riderId, driverId, pickupLocation, dropLocation, vehicleCategory, fare) {
-
+    fare: BigDecimal,
+    // Both are left out when a ride is booked; passed by the file storage at startup.
     // Public properties are used for simple property access
-    val rideId: String = IdGenerator.generateRideId()
+    val rideId: String = IdGenerator.generateRideId(),
+    bookedAt: LocalDateTime = LocalDateTime.now()
+) : Booking(riderId, driverId, pickupLocation, dropLocation, vehicleCategory, fare, bookedAt) {
 
     var rideStatus: RideStatus = RideStatus.BOOKED
         private set
@@ -74,9 +76,9 @@ class Ride(
             Vehicle          : $vehicleCategory
             Fare             : ₹$fare
             Status           : $rideStatus
-            Booked At        : $bookedAt
-            Completed At     : ${completedAt ?: "-"}
-            Cancelled At     : ${cancelledAt ?: "-"}
+            Booked At        : ${bookedAt.toDisplayString()}
+            Completed At     : ${completedAt?.toDisplayString() ?: "-"}
+            Cancelled At     : ${cancelledAt?.toDisplayString() ?: "-"}
             Rating           : ${if(rating == 0) "-" else rating}
         """.trimIndent()
     }

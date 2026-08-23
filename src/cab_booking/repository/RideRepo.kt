@@ -21,12 +21,12 @@ object RideRepo : InMemoryRepo<Ride>() {
     fun findCurrentRideOfRider(riderId: String): Ride =
         findRide { it.customerId == riderId && it.rideStatus in activeStatuses } ?: throw ActiveRideNotFoundException()
 
-    fun hasCurrentRideOfRider(riderId: String): Boolean =
+    fun hasActiveRideOfRider(riderId: String): Boolean =
         storage.values.any {
             it.customerId == riderId && it.rideStatus in activeStatuses
         }
 
-    fun hasCurrentRideOfDriver(driverId: String): Boolean =
+    fun hasActiveRideOfDriver(driverId: String): Boolean =
         storage.values.any {
             it.driverId == driverId && it.rideStatus in activeStatuses
         }

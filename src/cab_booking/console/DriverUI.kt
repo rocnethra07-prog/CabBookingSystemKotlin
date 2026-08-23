@@ -13,9 +13,15 @@ import cab_booking.model.Driver
 import cab_booking.model.Parcel
 import cab_booking.model.Ride
 import cab_booking.console.input.ConsoleFormat
+import cab_booking.exception.OperationCancelledException
+import cab_booking.service.DriverService
 
 object DriverUI {
     fun driverDashboard(driver: Driver){
+
+        autoShowActiveRide(driver)
+        autoShowActiveParcel(driver)
+
         while (true) {
 
             ConsoleFormat.header("DRIVER MENU")
@@ -47,11 +53,6 @@ object DriverUI {
     // CURRENT RIDE
     private fun activeRideMenu(driver: Driver){
 
-        if(!driver.isAvailable){
-            println("No active ride found at the moment")
-            return
-        }
-
         try {
             val ride = DriverController.getCurrentRideOfDriver(driver.userId)
 
@@ -59,11 +60,34 @@ object DriverUI {
             println(ride)
             ConsoleFormat.divider()
 
-            rideActionMenu(ride, driver)
+            rideDetailsFlow(ride, driver)
 
         }
         catch (e : ActiveRideNotFoundException){
             println("[x] ${e.message}")
+        }
+    }
+
+    private fun autoShowActiveRide(driver: Driver) {
+        if(DriverService.hasActiveRideForDriver(driver.userId)){
+            activeRideMenu(driver)
+        }
+    }
+
+    private fun rideDetailsFlow(ride: Ride, driver: Driver) {
+        while (true) {
+            println("1. Show Options")
+            println("0. Close")
+            println()
+
+            when (readln().trim()) {
+                "1" -> {
+                    rideActionMenu(ride, driver)
+                    return
+                }
+                "0" -> return
+                else -> println("[x] Invalid choice.")
+            }
         }
     }
 
@@ -141,13 +165,35 @@ object DriverUI {
             println(parcel)
             ConsoleFormat.divider()
 
-            parcelActionMenu(parcel, driver)
+            parcelDetailsFlow(parcel, driver)
         }
         catch (e: ActiveParcelNotFoundException) {
             println("[!] ${e.message}")
         }
     }
 
+    private fun autoShowActiveParcel(driver: Driver){
+        if(DriverService.hasActiveParcelForDriver(driver.userId)){
+            activeParcelMenu(driver)
+        }
+    }
+
+    private fun parcelDetailsFlow(parcel: Parcel, driver: Driver) {
+        while (true) {
+            println("1. Show Details")
+            println("0. Close")
+            println()
+
+            when (readln().trim()) {
+                "1" -> {
+                    parcelActionMenu(parcel, driver)
+                    return
+                }
+                "0" -> return
+                else -> println("[x] Invalid choice.")
+            }
+        }
+    }
     private fun parcelActionMenu(parcel: Parcel, driver: Driver) {
         while (true) {
             println(
@@ -225,32 +271,31 @@ object DriverUI {
 
 
     fun updateProfile(driver: Driver) {
-
-        ConsoleFormat.header("UPDATE PROFILE")
-
-        println("(Press Enter to keep the current value)\n")
-
-        val name = InputReader.promptOptionalName(driver.name)
-        val phone = InputReader.promptOptionalPhone(driver.phone)
-
-        println("Current Location : ${driver.currentLocation}")
-
-        var location = driver.currentLocation
-
-        if (InputReader.promptConfirmation("Update location?")) {
-            location = InputReader.chooseLocation("Select New Location")
-        }
-
-        if (
-            name == driver.name &&
-            phone == driver.phone &&
-            location == driver.currentLocation
-        ) {
-            println("\nNo changes made.")
-            return
-        }
-
         try {
+
+            ConsoleFormat.header("UPDATE PROFILE")
+
+            println("(Press Enter to keep the current value)\n")
+
+            val name = InputReader.promptOptionalName(driver.name)
+            val phone = InputReader.promptOptionalPhone(driver.phone)
+
+            println("Current Location : ${driver.currentLocation}")
+
+            var location = driver.currentLocation
+
+            if (InputReader.promptConfirmation("Update location?")) {
+                location = InputReader.chooseLocation("Select New Location")
+            }
+
+            if (
+                name == driver.name &&
+                phone == driver.phone &&
+                location == driver.currentLocation
+            ) {
+                println("\nNo changes made.")
+                return
+            }
 
             DriverController.updateProfile(
                 driver,
@@ -275,7 +320,9 @@ object DriverUI {
         } catch (e: IllegalArgumentException) {
             println("[x] Invalid Input, " + e.message)
         }
-
+        catch (_: OperationCancelledException) {
+            println("\nCancelled. No changes made.")
+        }
     }
 
     private fun viewVehicleDetails(driver: Driver){
@@ -291,20 +338,45 @@ object DriverUI {
     private fun accountMenu(driver: Driver) {
         while (true) {
 
-            ConsoleFormat.header("ACCOUNT")
-            println(
-                """
-                    1. Update Profile
-                    2. Change Password
-                    3. Show Earnings
-                    0. Back
-                """.trimIndent()
-            )
+            while (true) {
+
+                ConsoleFormat.header("MY PROFILE")
+                println(driver)
+                println()
+                println("1. Show Options")
+                println("0. Close")
+                println()
+
+                when (readln().trim()) {
+                    "1" -> profileOptionsMenu(driver)
+                    "0" -> return
+                    else -> println("[x] Invalid choice.")
+                }
+            }
+        }
+    }
+
+    private fun profileOptionsMenu(driver: Driver) {
+        while (true) {
+            println("\n1. Update Profile")
+            println("2. Change Password")
+            println("3. Show Earnings")
+            println("0. Back")
+            println()
 
             when (readln().trim()) {
-                "1" -> updateProfile(driver)
-                "2" -> AuthUI.changePassword(driver)
-                "3" -> showEarnings(driver)
+                "1" -> {
+                    updateProfile(driver)
+                    return
+                }
+                "2" -> {
+                    AuthUI.changePassword(driver)
+                    return
+                }
+                "3" -> {
+                    showEarnings(driver)
+                    return
+                }
                 "0" -> return
                 else -> println("[x] Invalid choice.")
             }

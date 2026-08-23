@@ -28,7 +28,7 @@ object AuthService{
 
      fun saveUserAndCredentials(user: User, password: String) {
         UserRepo.save(user)
-        AuthRepo.save(UserCredential(user.userId,password))
+        AuthRepo.save(UserCredential.withPassword(user.userId,password))
     }
 
     fun loginUser(email: String, password: String): User {

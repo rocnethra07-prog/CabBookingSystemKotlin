@@ -9,6 +9,7 @@ import cab_booking.exception.AccountLockedException
 import cab_booking.exception.CredentialsNotFoundException
 import cab_booking.exception.DriverNotFoundException
 import cab_booking.exception.InvalidCredentialsException
+import cab_booking.exception.OperationCancelledException
 import cab_booking.exception.UserNotFoundException
 import cab_booking.model.User
 import cab_booking.model.types.UserRole
@@ -17,12 +18,11 @@ object AuthUI {
 
     fun login() {
 
-        ConsoleFormat.header("LOGIN")
-
-        val email = InputReader.promptEmail()
-        val password = InputReader.promptPassword()
-
         try {
+            ConsoleFormat.header("LOGIN")
+
+            val email = InputReader.promptEmail()
+            val password = InputReader.promptPassword()
 
             val user = AuthController.login(email, password)
 
@@ -55,38 +55,41 @@ object AuthUI {
         catch (e: DriverNotFoundException) {
             println("[x] ${e.message}. Please try again.")
         }
+        catch (_: OperationCancelledException) {
+            println("\nCancelled.")
+        }
     }
 
     fun register() {
 
-        ConsoleFormat.header("REGISTER")
+        try {
 
-        println(
-            """
+            ConsoleFormat.header("REGISTER")
+
+            println(
+                """
             
             You can register only as a Rider.
             To become a Driver, please contact: ${AdminSeeder.ADMIN_EMAIL}
 
             """.trimIndent()
-        )
+            )
 
-        val name = InputReader.promptName()
-        val phone = InputReader.promptPhone()
+            val name = InputReader.promptName()
+            val phone = InputReader.promptPhone()
 
-        var email: String
+            var email: String
 
-        while (true) {
-            email = InputReader.promptEmail()
-            if (AuthController.isEmailRegistered(email)) {
-                println("[!] This email is already registered. Please use a different email.")
-                continue
+            while (true) {
+                email = InputReader.promptEmail()
+                if (AuthController.isEmailRegistered(email)) {
+                    println("[!] This email is already registered. Please use a different email.")
+                    continue
+                }
+                break
             }
-            break
-        }
 
-        val password = InputReader.promptPassword()
-
-        try {
+            val password = InputReader.promptPassword()
 
             val user = AuthController.register(
                 name = name,
@@ -113,22 +116,24 @@ object AuthUI {
         catch (e: DriverNotFoundException) {
             println("[x] ${e.message}. Please try again.")
         }
+        catch (_: OperationCancelledException) {
+            println("\nCancelled.")
+        }
     }
 
     fun changePassword(user: User) {
 
-        ConsoleFormat.header("CHANGE PASSWORD")
-
-        val currentPassword = InputReader.promptPassword(prompt = "Current Password : ")
-        val newPassword = InputReader.promptPassword(prompt = "New Password     : ")
-        val confirmPassword = InputReader.promptPassword(prompt = "Confirm Password : ")
-
-        if (newPassword != confirmPassword) {
-            println("\nPasswords do not match.")
-            return
-        }
-
         try {
+            ConsoleFormat.header("CHANGE PASSWORD")
+
+            val currentPassword = InputReader.promptPassword(prompt = "Current Password : ")
+            val newPassword = InputReader.promptPassword(prompt = "New Password     : ")
+            val confirmPassword = InputReader.promptPassword(prompt = "Confirm Password : ")
+
+            if (newPassword != confirmPassword) {
+                println("\nPasswords do not match.")
+                return
+            }
             AuthController.changePassword(
                 user,
                 currentPassword,
@@ -150,6 +155,9 @@ object AuthUI {
         catch (e: IllegalArgumentException) {
             println("[x] ${e.message}")
         }
+        catch (_: OperationCancelledException) {
+            println("\nCancelled. Your password was not changed.")
+        }
     }
 }
 
@@ -160,6 +168,6 @@ private fun route(user: User) {
             val driver = DriverController.findDriverById(user.userId)
             DriverUI.driverDashboard(driver)
         }
-        UserRole.CUSTOMER -> RiderUI.riderDashboard(user)
+        UserRole.CUSTOMER -> CustomerUI.customerDashboard(user)
     }
 }

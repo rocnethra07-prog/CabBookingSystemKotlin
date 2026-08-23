@@ -80,7 +80,7 @@ object DriverSeeder {
             VehicleRepo.save(vehicle)
             DriverRepo.save(driver)
             UserRepo.save(driver)
-            AuthRepo.save(UserCredential(driver.userId, SEED_PASSWORD))
+            AuthRepo.save(UserCredential.withPassword(driver.userId, SEED_PASSWORD))
         }
         catch (_: IllegalArgumentException) {
             VehicleRepo.deleteByKey(vehicle.vehicleId)

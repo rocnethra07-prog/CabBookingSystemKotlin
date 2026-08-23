@@ -8,6 +8,7 @@ import cab_booking.model.types.ParcelStatus
 import cab_booking.model.types.VehicleCategory
 import cab_booking.util.IdGenerator
 import cab_booking.util.Validator
+import cab_booking.util.toDisplayString
 import java.math.BigDecimal
 import java.time.LocalDateTime
 
@@ -22,15 +23,16 @@ class Parcel(
     val contactName: String,
     val contactPhone: String,
     val weightKg: BigDecimal,
-    val category: ParcelCategory
-) : Booking(customerId, driverId, pickupLocation, dropLocation, vehicleCategory, fare) {
+    val category: ParcelCategory,
+    // Both are left out when a parcel is booked; passed by the file storage at startup.
+    val parcelId: String = IdGenerator.generateParcelId(),
+    bookedAt: LocalDateTime = LocalDateTime.now()
+) : Booking(customerId, driverId, pickupLocation, dropLocation, vehicleCategory, fare, bookedAt) {
 
     companion object {
         val MIN_WEIGHT_KG: BigDecimal = BigDecimal("0.1")
         val MAX_WEIGHT_KG: BigDecimal = BigDecimal("100.0")
     }
-
-    val parcelId: String = IdGenerator.generateParcelId()
 
     var parcelStatus: ParcelStatus = ParcelStatus.BOOKED
         private set
@@ -78,9 +80,9 @@ class Parcel(
             Category         : $category
             Fare             : ₹$fare
             Status           : $parcelStatus
-            Booked At        : $bookedAt
-            Delivered At     : ${deliveredAt ?: "-"}
-            Cancelled At     : ${cancelledAt ?: "-"}
+            Booked At        : ${bookedAt.toDisplayString()}
+            Delivered At     : ${deliveredAt?.toDisplayString() ?: "-"}
+            Cancelled At     : ${cancelledAt?.toDisplayString() ?: "-"}
         """.trimIndent()
     }
 

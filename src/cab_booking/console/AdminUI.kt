@@ -10,6 +10,7 @@ import cab_booking.exception.DriverNotFoundException
 import cab_booking.exception.UserNotFoundException
 import cab_booking.model.Driver
 import cab_booking.console.input.ConsoleFormat
+import cab_booking.exception.OperationCancelledException
 import cab_booking.exception.VehicleNotFoundException
 import cab_booking.model.Vehicle
 
@@ -70,38 +71,37 @@ object AdminUI {
     }
 
     private fun addDriver() {
-        ConsoleFormat.header("ADD DRIVER")
-
-        println("Driver Details")
-        ConsoleFormat.divider()
-
-        val name = InputReader.promptName()
-        val phone = InputReader.promptPhone()
-
-        var email: String
-        while (true) {
-            email = InputReader.promptEmail()
-            if (AuthController.isEmailRegistered(email)) {
-                println("[x] This email is already registered. Please use a different email.\n")
-                continue
-            }
-            break
-        }
-
-        val password = InputReader.promptPassword()
-        val currentLocation = InputReader.chooseLocation()
-
-        var licenseNumber: String
-        while (true) {
-            licenseNumber = InputReader.promptLicenseNumber()
-            if (AdminController.isLicenseNumberTaken(licenseNumber)) {
-                println("[x] This license number is already registered. Please enter a different one.\n")
-                continue
-            }
-            break
-        }
-
         try {
+            ConsoleFormat.header("ADD DRIVER")
+
+            println("Driver Details")
+            ConsoleFormat.divider()
+
+            val name = InputReader.promptName()
+            val phone = InputReader.promptPhone()
+
+            var email: String
+            while (true) {
+                email = InputReader.promptEmail()
+                if (AuthController.isEmailRegistered(email)) {
+                    println("[x] This email is already registered. Please use a different email.\n")
+                    continue
+                }
+                break
+            }
+
+            val password = InputReader.promptPassword()
+            val currentLocation = InputReader.chooseLocation()
+
+            var licenseNumber: String
+            while (true) {
+                licenseNumber = InputReader.promptLicenseNumber()
+                if (AdminController.isLicenseNumberTaken(licenseNumber)) {
+                    println("[x] This license number is already registered. Please enter a different one.\n")
+                    continue
+                }
+                break
+            }
             val vehicle = collectVehicleDetails()
             val driver =
                 AdminController.addDriver(name, phone, email, password, currentLocation, licenseNumber, vehicle)
@@ -110,8 +110,12 @@ object AdminUI {
             println(driver)
             println()
             println(vehicle)
-        } catch (e: IllegalArgumentException) {
+        }
+        catch (e: IllegalArgumentException) {
             println("[x] Could not add driver: ${e.message}")
+        }
+        catch (_: OperationCancelledException) {
+            println("\nCancelled. No driver was added.")
         }
     }
 
@@ -120,13 +124,13 @@ object AdminUI {
         ConsoleFormat.divider()
 
         val vehicleModel =
-            InputReader.promptNonEmptyInput("Vehicle Model (e.g. Honda City): ", "Vehicle model cannot be blank.")
+            InputReader.promptNonEmptyInput("Vehicle Model (e.g. Honda City) or 'cancel' to go back: : ", "Vehicle model cannot be blank.")
 
         var registrationNumber: String
         while (true) {
             registrationNumber = InputReader.promptRegistrationNumber()
             if (AdminController.isRegistrationNumberTaken(registrationNumber)) {
-                println("[x] This registration number is already registered.")
+                println("[x] This registration number is already registered. Please enter a different one. ")
                 continue
             }
             break
@@ -140,14 +144,14 @@ object AdminUI {
 
     private fun deleteDriver() {
 
-        ConsoleFormat.header("REMOVE DRIVER")
-
-        val userId = InputReader.promptNonEmptyInput(
-            "Enter Driver's User ID: ",
-            "User ID cannot be blank."
-        )
-
         try {
+            ConsoleFormat.header("REMOVE DRIVER")
+
+            val userId = InputReader.promptNonEmptyInput(
+                "Enter Driver's User ID: ",
+                "User ID cannot be blank."
+            )
+
             val driver = DriverController.findDriverById(userId)
             println("\nDriver Details")
             println(driver)
@@ -166,6 +170,8 @@ object AdminUI {
             println("[x] ${e.message}")
         } catch (e: IllegalArgumentException) {
             println("[x] Invalid Input, ${e.message}")
+        } catch (_: OperationCancelledException) {
+            println("\nCancelled. No driver was removed.")
         }
     }
 
@@ -208,8 +214,11 @@ object AdminUI {
             when (readln().trim()) {
                 "1" -> listVehicles(AdminController.getAllVehicles(), "ALL VEHICLES")
                 "2" -> {
-                    val category = InputReader.chooseVehicleCategory()
-                    listVehicles(AdminController.getVehiclesByCategory(category), "$category VEHICLES")
+                    try {
+                        val category = InputReader.chooseVehicleCategory()
+                        listVehicles(AdminController.getVehiclesByCategory(category), "$category VEHICLES")
+                    }
+                    catch (_: OperationCancelledException) {}
                 }
                 "0" -> return
                 else -> println("[x] Invalid choice.")
@@ -248,17 +257,17 @@ object AdminUI {
                 "2" -> lockAccount()
                 "3" -> unlockAccount()
                 "0" -> return
-                else -> println("Invalid choice.")
+                else -> println("[x] Invalid choice.")
             }
         }
     }
 
     private fun lockAccount() {
-        ConsoleFormat.header("LOCK AN ACCOUNT")
-
-        val userId = InputReader.promptNonEmptyInput("Enter User ID: ", "User ID cannot be blank.")
-
         try {
+            ConsoleFormat.header("LOCK AN ACCOUNT")
+
+            val userId = InputReader.promptNonEmptyInput("Enter User ID: ", "User ID cannot be blank.")
+
             val user = AdminController.findUserById(userId)
 
             if (AdminController.isAccountLocked(userId)) {
@@ -277,6 +286,8 @@ object AdminUI {
             println("[x] ${e.message}")
         } catch (e: CredentialsNotFoundException) {
             println("[x] ${e.message}")
+        } catch (_: OperationCancelledException) {
+            println("\nCancelled.")
         }
     }
 
@@ -293,17 +304,16 @@ object AdminUI {
         ConsoleFormat.subHeader("\nLocked Accounts:")
         printLockedAccounts(lockedAccounts)
 
-        val userId = InputReader.promptNonEmptyInput(
-            "\nEnter User ID : ",
-            "User ID cannot be empty."
-        )
-
-        if (lockedAccounts.none { it.userId == userId }) {
-            println("[x] Please enter a valid locked User ID.")
-            return
-        }
-
         try {
+            val userId = InputReader.promptNonEmptyInput(
+                "\nEnter User ID : ",
+                "User ID cannot be empty."
+            )
+
+            if (lockedAccounts.none { it.userId == userId }) {
+                println("[x] Please enter a valid locked User ID.")
+                return
+            }
             val user = AdminController.findUserById(userId)
 
             if (!AdminController.isAccountLocked(userId)) {
@@ -312,21 +322,21 @@ object AdminUI {
             }
 
             AdminController.unlockUserAccount(userId)
-            println("User account has been unlocked successfully.")
+            println("\n${user.name}'s account has been unlocked.")
         } catch (e: UserNotFoundException) {
             println("[x] ${e.message}")
         } catch (e: CredentialsNotFoundException) {
-            println("[x] Unable to unlock account. ${e.message}")
+            println("[x] We couldn't unlock this account. ${e.message}")
+        } catch (_: OperationCancelledException) {
+            println("\nCancelled.")
         }
     }
 
     private fun printLockedAccounts(accounts: List<UserCredential>) {
-        accounts.forEach { account ->
-            println(
-                "User Id : ${account.userId} , Locked ~${
-                    account.remainingLockTime()
-                } min ${account.remainingLockTime().seconds % 60} sec remaining"
-            )
+        accounts.forEach {
+            val minutesLeft = it.remainingLockTime().toMinutes()
+            val secondsLeft = it.remainingLockTime().seconds % 60
+            println("User ID : ${it.userId}  |  Locked, ~$minutesLeft min $secondsLeft sec remaining")
         }
     }
 
@@ -343,11 +353,9 @@ object AdminUI {
         lockedAccounts.forEach {
             try {
                 val user = AdminController.findUserById(it.userId)
-                println(
-                    "User ID: ${it.userId} | User Name : ${user.name} | Locked, ~${
-                        it.remainingLockTime().toMinutes() 
-                    } min ${it.remainingLockTime().seconds % 60} sec remaining"
-                )
+                val minutesLeft = it.remainingLockTime().toMinutes()
+                val secondsLeft = it.remainingLockTime().seconds % 60
+                println("User ID: ${it.userId} | Name: ${user.name} | Locked, ~$minutesLeft min $secondsLeft sec remaining")
                 println("-".repeat(50))
             } catch (_: UserNotFoundException) {
                 println("Unknown user  ID: ${it.userId}")

@@ -24,7 +24,7 @@ object RiderController{
         RiderService.rateDriver(ride,rider,rating)
 
     fun hasActiveRide(riderId: String) =
-        RideService.hasActiveRide(riderId)
+        RideService.hasActiveRideForRider(riderId)
 
     fun bookRide(
         rider: User,

@@ -2,6 +2,7 @@ package cab_booking.model
 
 import cab_booking.model.types.Location
 import cab_booking.model.types.UserRole
+import cab_booking.util.IdGenerator
 import cab_booking.util.Validator
 import java.math.BigDecimal
 
@@ -11,12 +12,14 @@ class Driver(
     email: String,
     val vehicleId: String,
     val licenseNumber: String,
-    currentLocation: Location
+    currentLocation: Location,
+    userId: String = IdGenerator.generateUserId()
 ) : User(
     name = name,
     phone = phone,
     email = email,
-    userRole = UserRole.DRIVER
+    userRole = UserRole.DRIVER,
+    userId = userId
 ) {
 
     var currentLocation: Location = currentLocation
