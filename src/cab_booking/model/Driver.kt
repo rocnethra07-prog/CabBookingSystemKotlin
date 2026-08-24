@@ -58,7 +58,7 @@ class Driver(
         this.totalRatings = ratings
     }
 
-    fun updateTotalRatingCounts(ratingsCount: Int) {
+    fun updateTotalRatingsCount(ratingsCount: Int) {
         require(ratingsCount >= 0){ "Ratings Count of driver cannot be negative" }
         this.totalRatingCounts = ratingsCount
     }
