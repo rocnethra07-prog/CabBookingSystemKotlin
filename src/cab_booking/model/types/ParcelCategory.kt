@@ -2,7 +2,7 @@ package cab_booking.model.types
 
 import java.math.BigDecimal
 
-
+//Category of a particular parcel
 enum class ParcelCategory(val handlingSurcharge: BigDecimal) {
     DOCUMENTS(BigDecimal("0")),       // No extra charge
     CLOTHES(BigDecimal("0")),         // No extra charge
