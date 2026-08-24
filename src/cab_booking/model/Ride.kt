@@ -5,7 +5,7 @@ import cab_booking.model.types.Location
 import cab_booking.model.types.RideStatus
 import cab_booking.model.types.VehicleCategory
 import cab_booking.util.IdGenerator
-import cab_booking.util.toDisplayString
+import cab_booking.console.input.toDisplayString
 import java.math.BigDecimal
 import java.time.LocalDateTime
 

@@ -8,7 +8,7 @@ import cab_booking.model.types.ParcelStatus
 import cab_booking.model.types.VehicleCategory
 import cab_booking.util.IdGenerator
 import cab_booking.util.Validator
-import cab_booking.util.toDisplayString
+import cab_booking.console.input.toDisplayString
 import java.math.BigDecimal
 import java.time.LocalDateTime
 
