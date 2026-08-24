@@ -10,7 +10,6 @@ abstract class Booking(
     val driverId: String,
     val pickupLocation: Location,
     val dropLocation: Location,
-    val vehicleCategory: VehicleCategory,
     val fare: BigDecimal
 ) {
 
