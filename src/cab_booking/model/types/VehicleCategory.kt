@@ -58,7 +58,7 @@ enum class VehicleCategory(
     companion object {
         // Only the categories big enough for this parcel, in the order declared above
         // (lightest and cheapest first).
-        fun categoriesFor(weightKg: BigDecimal): List<VehicleCategory> =
+        fun categoriesThatCanCarry(weightKg: BigDecimal): List<VehicleCategory> =
             entries.filter { it.canCarry(weightKg) }
     }
 
