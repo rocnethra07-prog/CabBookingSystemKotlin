@@ -7,8 +7,7 @@ import cab_booking.repository.VehicleRepo
 import cab_booking.util.IdGenerator
 
 object DataStore {
-
-
+    
     fun loadAll() {
         VehicleFileStorage.load().forEach { VehicleRepo.save(it) }
         DriverFileStorage.load().forEach { driver -> DriverRepo.save(driver) }
