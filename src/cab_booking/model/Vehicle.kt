@@ -13,7 +13,6 @@ class Vehicle(
     val model: String,
     val registrationNumber: String,
     val vehicleCategory: VehicleCategory,
-    // Left out when a vehicle is registered; passed by the file storage at startup.
     val vehicleId: String = IdGenerator.generateVehicleId()
 ) {
     init {
