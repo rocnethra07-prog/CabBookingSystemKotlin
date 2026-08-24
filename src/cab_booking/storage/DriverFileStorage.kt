@@ -42,7 +42,7 @@ class DriverFileStorage(private val filePath: String) : FileStorage<Driver> {
                 )
 
                 // Put the driver back the way he was, using the same methods the app uses
-                driver.setAvailability(parts[7].toBoolean())
+                driver.setAvailability(true) //true as of now because the driver is set to false without a ride or parcel being stored in the persisted
                 driver.updateEarnings(BigDecimal(parts[8]))
                 driver.updateTotalRating(parts[9].toInt())
                 driver.updateRatingCount(parts[10].toInt())
