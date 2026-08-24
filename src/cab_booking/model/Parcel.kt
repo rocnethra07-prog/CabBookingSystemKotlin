@@ -24,7 +24,7 @@ class Parcel(
     val contactPhone: String,
     val weightKg: BigDecimal,
     val category: ParcelCategory
-) : Booking(customerId, driverId, pickupLocation, dropLocation, vehicleCategory, fare) {
+) : Booking(customerId, driverId, pickupLocation, dropLocation, fare) {
 
     companion object {
         val MIN_WEIGHT_KG: BigDecimal = BigDecimal("0.1")
