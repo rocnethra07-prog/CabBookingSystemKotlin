@@ -9,7 +9,7 @@ import cab_booking.util.Validator
 // own type-specific enum) is now one class carrying a VehicleCategory. The
 // category already knows its VehicleType and its fare rule, so there is
 // nothing left for a subclass to add.
-class Vehicle(
+data class Vehicle(
     val model: String,
     val registrationNumber: String,
     val vehicleCategory: VehicleCategory,
