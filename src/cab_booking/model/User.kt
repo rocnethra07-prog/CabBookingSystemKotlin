@@ -6,9 +6,9 @@ import cab_booking.util.Validator
 
 open class User(
     name: String,
-    phone: String,
+    phoneNumber: String,
     val email: String,
-    val userRole: UserRole,
+    val role: UserRole,
     // Left out everywhere in the app, so a new user gets a freshly generated ID.
     // The file storage passes the saved ID so a user keeps the same one across runs.
     val userId: String = IdGenerator.generateUserId()
@@ -18,7 +18,7 @@ open class User(
     var name: String = name.trim()
         private set
 
-    var phone: String = phone.trim()
+    var phone: String = phoneNumber.trim()
         private set
 
     fun updateName(name: String){
@@ -33,7 +33,7 @@ open class User(
 
     init {
         require(Validator.isValidName(name)){ "Name must contain minimum 3 characters. Name cannot be blank" }
-        require(Validator.isValidPhone(phone)){ "Invalid phone number format. Phone cannot be blank" }
+        require(Validator.isValidPhone(phoneNumber)){ "Invalid phone number format. Phone cannot be blank" }
         require(Validator.isValidEmail(email)){ "Invalid email format. Email cannot be blank" }
     }
 
@@ -43,7 +43,7 @@ open class User(
             Name             : $name
             Phone            : $phone
             Email            : $email
-            Role             : $userRole
+            Role             : $role
         """.trimIndent()
     }
 }
