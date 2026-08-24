@@ -3,8 +3,6 @@ package cab_booking.storage
 import cab_booking.model.types.UserRole
 import cab_booking.repository.AuthRepo
 import cab_booking.repository.DriverRepo
-import cab_booking.repository.ParcelRepo
-import cab_booking.repository.RideRepo
 import cab_booking.repository.UserRepo
 import cab_booking.repository.VehicleRepo
 import cab_booking.util.IdGenerator
