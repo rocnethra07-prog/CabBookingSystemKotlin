@@ -19,7 +19,7 @@ import cab_booking.model.Ride
 import cab_booking.model.User
 import cab_booking.model.types.Location
 import cab_booking.model.types.ParcelMode
-import cab_booking.console.input.ConsoleFormat
+import cab_booking.console.input.ConsoleFormater
 import cab_booking.exception.OperationCancelledException
 
 object CustomerUI {
@@ -30,7 +30,7 @@ object CustomerUI {
         autoShowActiveParcel(customer)
 
         while (true) {
-            ConsoleFormat.header("RIDER MENU")
+            ConsoleFormater.header("RIDER MENU")
             println(
                 """
                 1. Book a Ride
@@ -191,7 +191,7 @@ object CustomerUI {
 
                     val driver = CustomerController.getDriverForRide(ride)
 
-                    ConsoleFormat.subHeader("RIDE CONFIRMED")
+                    ConsoleFormater.subHeader("RIDE CONFIRMED")
                     println(ride)
                     println(
                         """
@@ -236,7 +236,7 @@ object CustomerUI {
         try {
             val ride = CustomerController.getCurrentBookedRide(rider.userId)
             val driver = CustomerController.getDriverForRide(ride)
-            ConsoleFormat.header("YOUR RIDE")
+            ConsoleFormater.header("YOUR RIDE")
             println(ride)
             println()
             println("Driver : ${driver.name}")
@@ -262,7 +262,7 @@ object CustomerUI {
 
             when (readln().trim()) {
                 "1" -> {
-                    ConsoleFormat.header("YOUR RIDE")
+                    ConsoleFormater.header("YOUR RIDE")
                     println(ride)
                     println()
                     println("Driver : ${driver.name}")
@@ -319,12 +319,12 @@ object CustomerUI {
     private fun bookParcel(customer: User) {
 
         if (CustomerController.hasActiveParcel(customer.userId)) {
-            println("\nYou already have an active parcel. Finish or cancel it before booking another.")
+            println("\nYou already have an active parcel. Finish or cancel it before booking another.\n")
             return
         }
 
         try {
-            ConsoleFormat.header("SEND / RECEIVE A PARCEL")
+            ConsoleFormater.header("SEND / RECEIVE A PARCEL")
 
             val parcelMode = InputReader.chooseParcelMode()
 
@@ -358,7 +358,8 @@ object CustomerUI {
 
             val fareEstimates = try {
                 CustomerController.estimateParcelFares(pickup, drop, category)
-            } catch (e: DistanceNotFoundException) {
+            }
+            catch (e: DistanceNotFoundException) {
                 println("[x] ${e.message}")
                 return
             }
@@ -374,7 +375,7 @@ object CustomerUI {
 
                     val driver = CustomerController.getDriverForParcel(parcel)
 
-                    ConsoleFormat.subHeader("PARCEL BOOKED")
+                    ConsoleFormater.subHeader("PARCEL BOOKED")
                     println(parcel)
                     println()
                     println("Driver  : ${driver.name}")
@@ -409,7 +410,7 @@ object CustomerUI {
             val parcel = CustomerController.getCurrentParcel(customer.userId)
             val driver = CustomerController.getDriverForParcel(parcel)
 
-            ConsoleFormat.header("YOUR PARCEL")
+            ConsoleFormater.header("YOUR PARCEL")
             println(parcel)
             println()
             println("Driver  : ${driver.name}")
@@ -520,7 +521,7 @@ object CustomerUI {
     private fun accountMenu(customer: User){
         while (true) {
 
-            ConsoleFormat.header("MY PROFILE")
+            ConsoleFormater.header("MY PROFILE")
             println(customer)
             println()
             println("1. Show Options")

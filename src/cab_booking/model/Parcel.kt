@@ -23,16 +23,15 @@ class Parcel(
     val contactName: String,
     val contactPhone: String,
     val weightKg: BigDecimal,
-    val category: ParcelCategory,
-    // Both are left out when a parcel is booked; passed by the file storage at startup.
-    val parcelId: String = IdGenerator.generateParcelId(),
-    bookedAt: LocalDateTime = LocalDateTime.now()
-) : Booking(customerId, driverId, pickupLocation, dropLocation, vehicleCategory, fare, bookedAt) {
+    val category: ParcelCategory
+) : Booking(customerId, driverId, pickupLocation, dropLocation, vehicleCategory, fare) {
 
     companion object {
         val MIN_WEIGHT_KG: BigDecimal = BigDecimal("0.1")
         val MAX_WEIGHT_KG: BigDecimal = BigDecimal("100.0")
     }
+
+    val parcelId: String = IdGenerator.generateParcelId()
 
     var parcelStatus: ParcelStatus = ParcelStatus.BOOKED
         private set

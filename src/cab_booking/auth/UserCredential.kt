@@ -33,13 +33,10 @@ class UserCredential private constructor(val userId: String, password: String) {
     }
 
     private var passwordHash: String
-
-    fun getHashedPassword() = passwordHash
-
     private var failedAttempts: Int = 0
-
     private var lockedAt : LocalDateTime? = null
 
+    fun getHashedPassword() = passwordHash
     fun getLockedAtTime() = lockedAt
 
     init {

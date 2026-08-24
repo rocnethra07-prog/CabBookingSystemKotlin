@@ -24,14 +24,6 @@ object IdGenerator{
         userCounter = counterAfter(userCounter, savedIds)
     }
 
-    fun syncRideCounter(savedIds: List<String>) {
-        rideCounter = counterAfter(rideCounter, savedIds)
-    }
-
-    fun syncParcelCounter(savedIds: List<String>) {
-        parcelCounter = counterAfter(parcelCounter, savedIds)
-    }
-
     fun syncVehicleCounter(savedIds: List<String>) {
         vehicleCounter = counterAfter(vehicleCounter, savedIds)
     }

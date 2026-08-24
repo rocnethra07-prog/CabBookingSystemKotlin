@@ -1,6 +1,6 @@
 package cab_booking.console.input
 
-object ConsoleFormat {
+object ConsoleFormater {
     fun header(title: String) {
         println()
         println("=".repeat(50))

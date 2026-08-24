@@ -12,10 +12,10 @@ abstract class Booking(
     val dropLocation: Location,
     val vehicleCategory: VehicleCategory,
     val fare: BigDecimal,
-    // Defaults to "right now" for a new booking. The file storage passes the saved
-    // time so a reloaded booking keeps the moment it was actually booked.
-    val bookedAt: LocalDateTime = LocalDateTime.now()
 ) {
+
+    val bookedAt: LocalDateTime = LocalDateTime.now()
+
     var cancelledAt: LocalDateTime? = null
         private set
 

@@ -9,7 +9,7 @@ import cab_booking.exception.CredentialsNotFoundException
 import cab_booking.exception.DriverNotFoundException
 import cab_booking.exception.UserNotFoundException
 import cab_booking.model.Driver
-import cab_booking.console.input.ConsoleFormat
+import cab_booking.console.input.ConsoleFormater
 import cab_booking.exception.OperationCancelledException
 import cab_booking.exception.VehicleNotFoundException
 import cab_booking.model.Vehicle
@@ -17,7 +17,7 @@ import cab_booking.model.Vehicle
 object AdminUI {
     fun adminDashboard() {
         while (true) {
-            ConsoleFormat.header("ADMIN MENU")
+            ConsoleFormater.header("ADMIN MENU")
             println(
                 """
                 1. Drivers Management
@@ -72,10 +72,10 @@ object AdminUI {
 
     private fun addDriver() {
         try {
-            ConsoleFormat.header("ADD DRIVER")
+            ConsoleFormater.header("ADD DRIVER")
 
             println("Driver Details")
-            ConsoleFormat.divider()
+            ConsoleFormater.divider()
 
             val name = InputReader.promptName()
             val phone = InputReader.promptPhone()
@@ -106,7 +106,7 @@ object AdminUI {
             val driver =
                 AdminController.addDriver(name, phone, email, password, currentLocation, licenseNumber, vehicle)
 
-            ConsoleFormat.subHeader("DRIVER ADDED")
+            ConsoleFormater.subHeader("DRIVER ADDED")
             println(driver)
             println()
             println(vehicle)
@@ -121,7 +121,7 @@ object AdminUI {
 
     private fun collectVehicleDetails(): Vehicle {
         println("\nVehicle Details")
-        ConsoleFormat.divider()
+        ConsoleFormater.divider()
 
         val vehicleModel =
             InputReader.promptNonEmptyInput("Vehicle Model (e.g. Honda City) or 'cancel' to go back: : ", "Vehicle model cannot be blank.")
@@ -145,7 +145,7 @@ object AdminUI {
     private fun deleteDriver() {
 
         try {
-            ConsoleFormat.header("REMOVE DRIVER")
+            ConsoleFormater.header("REMOVE DRIVER")
 
             val userId = InputReader.promptNonEmptyInput(
                 "Enter Driver's User ID: ",
@@ -181,29 +181,29 @@ object AdminUI {
             return
         }
 
-        ConsoleFormat.header(title)
+        ConsoleFormater.header(title)
         drivers.forEach {
             displayDriverWithVehicle(it)
         }
     }
 
     private fun displayDriverWithVehicle(driver: Driver) {
-        ConsoleFormat.header("Driver Details")
+        ConsoleFormater.header("Driver Details")
         println(driver)
-        ConsoleFormat.divider()
+        ConsoleFormater.divider()
 
         try {
-            ConsoleFormat.header("Assigned Vehicle")
+            ConsoleFormater.header("Assigned Vehicle")
             println(DriverController.getVehicleById(driver.vehicleId))
         } catch (e: VehicleNotFoundException) {
             println("[x] ${e.message}")
         }
-        ConsoleFormat.divider()
+        ConsoleFormater.divider()
     }
 
     private fun vehiclesMenu() {
         while (true) {
-            ConsoleFormat.header("VEHICLES")
+            ConsoleFormater.header("VEHICLES")
             println("""
                1. All Vehicles
                2. By Category
@@ -232,10 +232,10 @@ object AdminUI {
             return
         }
 
-        ConsoleFormat.header(title)
+        ConsoleFormater.header(title)
         vehicles.forEach {
             println(it)
-            ConsoleFormat.divider()
+            ConsoleFormater.divider()
         }
     }
 
@@ -243,7 +243,7 @@ object AdminUI {
 
     private fun accountSecurityMenu() {
         while (true) {
-            ConsoleFormat.header("ACCOUNT SECURITY")
+            ConsoleFormater.header("ACCOUNT SECURITY")
             println(
                 """
                 1. Locked Accounts
@@ -264,7 +264,7 @@ object AdminUI {
 
     private fun lockAccount() {
         try {
-            ConsoleFormat.header("LOCK AN ACCOUNT")
+            ConsoleFormater.header("LOCK AN ACCOUNT")
 
             val userId = InputReader.promptNonEmptyInput("Enter User ID: ", "User ID cannot be blank.")
 
@@ -294,14 +294,14 @@ object AdminUI {
     private fun unlockAccount() {
         val lockedAccounts = AdminController.getLockedAccounts()
 
-        ConsoleFormat.header("UNLOCK AN ACCOUNT")
+        ConsoleFormater.header("UNLOCK AN ACCOUNT")
 
         if (lockedAccounts.isEmpty()) {
             println("No locked accounts found.")
             return
         }
 
-        ConsoleFormat.subHeader("\nLocked Accounts:")
+        ConsoleFormater.subHeader("\nLocked Accounts:")
         printLockedAccounts(lockedAccounts)
 
         try {
@@ -348,7 +348,7 @@ object AdminUI {
             return
         }
 
-        ConsoleFormat.header("LOCKED ACCOUNTS")
+        ConsoleFormater.header("LOCKED ACCOUNTS")
 
         lockedAccounts.forEach {
             try {

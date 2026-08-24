@@ -12,7 +12,7 @@ import cab_booking.exception.VehicleNotFoundException
 import cab_booking.model.Driver
 import cab_booking.model.Parcel
 import cab_booking.model.Ride
-import cab_booking.console.input.ConsoleFormat
+import cab_booking.console.input.ConsoleFormater
 import cab_booking.exception.OperationCancelledException
 import cab_booking.service.DriverService
 
@@ -24,7 +24,7 @@ object DriverUI {
 
         while (true) {
 
-            ConsoleFormat.header("DRIVER MENU")
+            ConsoleFormater.header("DRIVER MENU")
 
             println(
                 """
@@ -56,9 +56,9 @@ object DriverUI {
         try {
             val ride = DriverController.getCurrentRideOfDriver(driver.userId)
 
-            ConsoleFormat.header("CURRENT RIDE")
+            ConsoleFormater.header("CURRENT RIDE")
             println(ride)
-            ConsoleFormat.divider()
+            ConsoleFormater.divider()
 
             rideDetailsFlow(ride, driver)
 
@@ -161,9 +161,9 @@ object DriverUI {
         try {
             val parcel = DriverController.getCurrentParcelOfDriver(driver.userId)
 
-            ConsoleFormat.header("CURRENT PARCEL")
+            ConsoleFormater.header("CURRENT PARCEL")
             println(parcel)
-            ConsoleFormat.divider()
+            ConsoleFormater.divider()
 
             parcelDetailsFlow(parcel, driver)
         }
@@ -255,7 +255,7 @@ object DriverUI {
 
     fun showEarnings(driver: Driver){
 
-        ConsoleFormat.header("DRIVER EARNINGS")
+        ConsoleFormater.header("DRIVER EARNINGS")
 
         println("Total Earnings : ₹${driver.earnings}")
 
@@ -273,7 +273,7 @@ object DriverUI {
     fun updateProfile(driver: Driver) {
         try {
 
-            ConsoleFormat.header("UPDATE PROFILE")
+            ConsoleFormater.header("UPDATE PROFILE")
 
             println("(Press Enter to keep the current value)\n")
 
@@ -327,7 +327,7 @@ object DriverUI {
 
     private fun viewVehicleDetails(driver: Driver){
         try {
-            ConsoleFormat.header("ASSIGNED VEHICLE")
+            ConsoleFormater.header("ASSIGNED VEHICLE")
             println(DriverController.getVehicleById(driver.vehicleId))
         }
         catch (e: VehicleNotFoundException) {
@@ -340,7 +340,7 @@ object DriverUI {
 
             while (true) {
 
-                ConsoleFormat.header("MY PROFILE")
+                ConsoleFormater.header("MY PROFILE")
                 println(driver)
                 println()
                 println("1. Show Options")

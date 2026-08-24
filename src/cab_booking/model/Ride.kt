@@ -15,12 +15,11 @@ class Ride(
     pickupLocation: Location,
     dropLocation: Location,
     vehicleCategory: VehicleCategory,
-    fare: BigDecimal,
-    // Both are left out when a ride is booked; passed by the file storage at startup.
+    fare: BigDecimal
+) : Booking(riderId, driverId, pickupLocation, dropLocation, vehicleCategory, fare) {
+
     // Public properties are used for simple property access
-    val rideId: String = IdGenerator.generateRideId(),
-    bookedAt: LocalDateTime = LocalDateTime.now()
-) : Booking(riderId, driverId, pickupLocation, dropLocation, vehicleCategory, fare, bookedAt) {
+    val rideId: String = IdGenerator.generateRideId()
 
     var rideStatus: RideStatus = RideStatus.BOOKED
         private set

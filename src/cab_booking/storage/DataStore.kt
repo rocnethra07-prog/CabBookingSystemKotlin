@@ -17,8 +17,6 @@ object DataStore {
     private val driverStorage = DriverFileStorage("data/drivers.csv")
     private val userStorage = UserFileStorage("data/users.csv")
     private val credentialStorage = CredentialFileStorage("data/credentials.csv")
-    private val rideStorage = RideFileStorage("data/rides.csv")
-    private val parcelStorage = ParcelFileStorage("data/parcels.csv")
 
     fun loadAll() {
         vehicleStorage.load().forEach { VehicleRepo.save(it) }
@@ -32,8 +30,6 @@ object DataStore {
 
         userStorage.load().forEach { UserRepo.save(it) }
         credentialStorage.load().forEach { AuthRepo.save(it) }
-        rideStorage.load().forEach { RideRepo.save(it) }
-        parcelStorage.load().forEach { ParcelRepo.save(it) }
 
         syncIdCounters()
 
@@ -53,18 +49,14 @@ object DataStore {
         userStorage.save(UserRepo.findAll().filter { it.userRole != UserRole.DRIVER })
 
         credentialStorage.save(AuthRepo.findAll())
-        rideStorage.save(RideRepo.findAll())
-        parcelStorage.save(ParcelRepo.findAll())
 
         println("Data saved.")
     }
 
-    // Run after loading so newly created users, rides, parcels and vehicles never
+    // Run after loading so newly created users and vehicles never
     // get an ID that is already sitting in one of the files.
     private fun syncIdCounters() {
         IdGenerator.syncUserCounter(UserRepo.findAll().map { it.userId })
         IdGenerator.syncVehicleCounter(VehicleRepo.findAll().map { it.vehicleId })
-        IdGenerator.syncRideCounter(RideRepo.findAll().map { it.rideId })
-        IdGenerator.syncParcelCounter(ParcelRepo.findAll().map { it.parcelId })
     }
 }
