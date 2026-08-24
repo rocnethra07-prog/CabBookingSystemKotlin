@@ -155,7 +155,7 @@ object InputReader {
             }
             println("-".repeat(50))
 
-            val choice = readLine("Choose (or 'cancel' to go back): ").toIntOrNull()
+            val choice = readLine("$prompt (or 'cancel' to go back): ").toIntOrNull()
 
             if (choice == null || choice !in 1..VehicleCategory.entries.size) {
                 println("[x] Invalid choice. Please try again.")
@@ -180,7 +180,7 @@ object InputReader {
             }
             println("-".repeat(50))
 
-            val choice = readLine("Choose (or 'cancel' to go back): ").toIntOrNull()
+            val choice = readLine("$prompt (or 'cancel' to go back): ").toIntOrNull()
 
             if (choice == null || choice !in 1..categories.size) {
                 println("[x] Invalid choice. Please try again.")

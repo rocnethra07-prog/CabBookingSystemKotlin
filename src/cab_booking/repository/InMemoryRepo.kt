@@ -2,7 +2,7 @@ package cab_booking.repository
 
 // implementation of repository
 // Generic in-memory repository implementation using a MutableMap.
-abstract class InMemoryRepo<T> : RepositoryContract<T>{
+abstract class InMemoryRepo<T> : RepositoryStorage<T>{
     protected val storage = mutableMapOf<String, T>()
 
     protected abstract fun getKey(entity: T): String
