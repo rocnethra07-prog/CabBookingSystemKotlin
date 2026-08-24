@@ -58,10 +58,10 @@ object CustomerController{
         weightKg: BigDecimal,
         parcelCategory: ParcelCategory
     ) =
-        ParcelService.bookParcel(customer, pickup, drop, vehicleCategory, parcelMode, contactName, contactPhone, weightKg, parcelCategory)
+        CustomerService.bookParcel(customer, pickup, drop, vehicleCategory, parcelMode, contactName, contactPhone, weightKg, parcelCategory)
 
-    fun estimateParcelFares(pickup: Location, drop: Location, parcelCategory: ParcelCategory) =
-        ParcelService.estimateParcelFares(pickup, drop, parcelCategory)
+    fun estimateParcelFares(pickup: Location, drop: Location, parcelCategory: ParcelCategory, weightKg: BigDecimal) =
+        ParcelService.estimateParcelFares(pickup, drop, parcelCategory, weightKg)
 
     fun hasActiveParcel(customerId: String) =
         ParcelService.hasActiveParcel(customerId)

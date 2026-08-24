@@ -18,28 +18,19 @@ import java.time.LocalDateTime
 object ParcelService {
     // Sending and receiving a parcel are the same booking mechanics - only who the
     // "other party" at the far end is changes. See ParcelMode for details.
-    fun bookParcel(
-        customer: User,
-        pickupLocation: Location,
-        dropLocation: Location,
-        vehicleCategory: VehicleCategory,
-        parcelMode: ParcelMode,
-        contactName: String,
-        contactPhone: String,
-        weightKg: BigDecimal,
-        parcelCategory: ParcelCategory
-    ): Parcel {
 
-        val driver = DriverService.findAvailableDriver(vehicleCategory, pickupLocation)
-
+    fun createParcel(customerId: String, driverId: String, pickupLocation: Location, dropLocation: Location,
+                     vehicleCategory: VehicleCategory, parcelMode: ParcelMode, contactName: String, contactPhone: String, weightKg: BigDecimal, parcelCategory: ParcelCategory) : Parcel {
         val parcel = Parcel(
-            customerId = customer.userId,
-            driverId = driver.userId,
+            customerId = customerId,
+            driverId = driverId,
             pickupLocation = pickupLocation,
             dropLocation = dropLocation,
             vehicleCategory = vehicleCategory,
-            fare = ParcelFareCalculator.calculateParcelFare(vehicleCategory, pickupLocation, dropLocation,
-                LocalDateTime.now(),parcelCategory),
+            fare = ParcelFareCalculator.calculateParcelFare(
+                vehicleCategory, pickupLocation, dropLocation,
+                LocalDateTime.now(), parcelCategory, weightKg
+            ),
             modeOfParcel = parcelMode,
             contactName = contactName,
             contactPhone = contactPhone,
@@ -48,18 +39,20 @@ object ParcelService {
         )
 
         ParcelRepo.save(parcel)
-
-        driver.setAvailability(false)
-
         return parcel
     }
 
-    fun estimateParcelFares(pickupLocation: Location, dropLocation: Location, parcelCategory: ParcelCategory) : Map<VehicleCategory, BigDecimal> {
+
+    // Only the vehicles that can physically take this weight are priced, so the
+    // customer is never offered a bike for a 40 kg parcel. A 3 kg parcel sees all
+    // five categories; a 40 kg parcel sees Mini, Sedan and SUV; 80 kg sees only SUV.
+    fun estimateParcelFares(pickupLocation: Location, dropLocation: Location, parcelCategory: ParcelCategory, weightKg: BigDecimal) : Map<VehicleCategory, BigDecimal> {
         val map = mutableMapOf<VehicleCategory, BigDecimal>()
-        VehicleCategory.entries.forEach {
-            map[it] = ParcelFareCalculator.calculateParcelFare(it ,pickupLocation, dropLocation, LocalDateTime.now(),parcelCategory)
+        VehicleCategory.categoriesFor(weightKg).forEach {
+            map[it] = ParcelFareCalculator.calculateParcelFare(it ,pickupLocation, dropLocation, LocalDateTime.now(),parcelCategory, weightKg)
         }
         return map
+
     }
 
     fun getDriverForParcel(parcel: Parcel): Driver =

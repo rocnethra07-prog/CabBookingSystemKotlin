@@ -357,7 +357,7 @@ object CustomerUI {
             val weight = InputReader.promptWeight()
 
             val fareEstimates = try {
-                CustomerController.estimateParcelFares(pickup, drop, category)
+                CustomerController.estimateParcelFares(pickup, drop, category,weight)
             }
             catch (e: DistanceNotFoundException) {
                 println("[x] ${e.message}")
@@ -365,7 +365,8 @@ object CustomerUI {
             }
 
             while (true) {
-                val vehicleCategory = InputReader.chooseVehicleCategoryByFare(fareEstimates)
+                val vehicleCategory = InputReader.chooseVehicleCategoryByFare(fareEstimates,
+                    prompt = "Vehicles that can carry $weight kg")
 
                 println("\nFinding a nearby $vehicleCategory for you...")
                 try {

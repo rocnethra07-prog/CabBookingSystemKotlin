@@ -63,7 +63,13 @@ object ParcelFareCalculator : FareCalculator() {
         pickUpLocation: Location,
         dropLocation: Location,
         bookedAt: LocalDateTime = LocalDateTime.now(),
-        parcelCategory: ParcelCategory
-    ) =
-        calculateBaseFare(vehicleCategory,pickUpLocation,dropLocation, bookedAt) + parcelCategory.handlingSurcharge
+        parcelCategory: ParcelCategory,
+        weightKg : BigDecimal
+    ) : BigDecimal {
+        require(vehicleCategory.canCarry(weightKg)) {
+            "A $vehicleCategory can carry up to ${vehicleCategory.maxParcelWeightKg} kg. This parcel is $weightKg kg."
+        }
+
+        return calculateBaseFare(vehicleCategory, pickUpLocation, dropLocation, bookedAt) + parcelCategory.handlingSurcharge
+    }
 }
