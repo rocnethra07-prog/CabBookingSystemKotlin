@@ -35,8 +35,7 @@ object DataStore {
 
         println(
             "Loaded ${UserRepo.findAll().size} users, ${DriverRepo.findAll().size} drivers, " +
-                    "${VehicleRepo.findAll().size} vehicles, ${RideRepo.findAll().size} rides, " +
-                    "${ParcelRepo.findAll().size} parcels."
+                    "${VehicleRepo.findAll().size} vehicles"
         )
     }
 
