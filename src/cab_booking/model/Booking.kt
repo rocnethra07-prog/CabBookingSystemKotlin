@@ -11,7 +11,7 @@ abstract class Booking(
     val pickupLocation: Location,
     val dropLocation: Location,
     val vehicleCategory: VehicleCategory,
-    val fare: BigDecimal,
+    val fare: BigDecimal
 ) {
 
     val bookedAt: LocalDateTime = LocalDateTime.now()
