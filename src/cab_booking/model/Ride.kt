@@ -8,13 +8,13 @@ import cab_booking.console.input.toDisplayString
 import java.math.BigDecimal
 import java.time.LocalDateTime
 
-class Ride(
-    riderId: String,
-    driverId: String,
-    pickupLocation: Location,
-    dropLocation: Location,
-    fare: BigDecimal
-) : Booking(riderId, driverId, pickupLocation, dropLocation, fare) {
+open class Ride(
+    val customerId: String,
+    val driverId: String,
+    val pickupLocation: Location,
+    val dropLocation: Location,
+    val fare: BigDecimal
+){
 
     // Public properties are used for simple property access
     val rideId: String = IdGenerator.generateRideId()
@@ -22,11 +22,19 @@ class Ride(
     var rideStatus: RideStatus = RideStatus.BOOKED
         private set
 
+    val bookedAt: LocalDateTime = LocalDateTime.now()
+
     var completedAt: LocalDateTime? = null //null by default
         private set
 
-    var rating: Int = 0  // 1–5, 0 if not yet rated
+    private var rating: Int = 0  // 1–5, 0 if not yet rated
+
+    var cancelledAt: LocalDateTime? = null
         private set
+
+    fun setCancelledAt(cancelledAt: LocalDateTime) {
+        this.cancelledAt = cancelledAt
+    }
 
     fun updateRideStatus(newStatus: RideStatus) {
         //INVALID CONDITIONS CHECK
@@ -66,7 +74,7 @@ class Ride(
             Drop Location    : $dropLocation
             Fare             : ₹$fare
             Status           : $rideStatus
-            Booked At        : ${bookedAt.toDisplayString()}
+            Booked At        : $bookedAt
             Completed At     : ${completedAt?.toDisplayString() ?: "-"}
             Cancelled At     : ${cancelledAt?.toDisplayString() ?: "-"}
             Rating           : ${if(rating == 0) "-" else rating}
