@@ -3,7 +3,6 @@ package cab_booking.model
 import cab_booking.exception.InvalidRideStateException
 import cab_booking.model.types.Location
 import cab_booking.model.types.RideStatus
-import cab_booking.model.types.VehicleCategory
 import cab_booking.util.IdGenerator
 import cab_booking.console.input.toDisplayString
 import java.math.BigDecimal
