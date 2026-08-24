@@ -33,11 +33,7 @@ object DataStore {
     fun saveAll() {
         vehicleStorage.save(VehicleRepo.findAll())
         driverStorage.save(DriverRepo.findAll())
-
-        // Drivers already went into drivers.csv above, so only riders and the admin
-        // are written here. That keeps one driver as one row in one file.
-        userStorage.save(UserRepo.findAll().filter { it.userRole != UserRole.DRIVER })
-
+        userStorage.save(UserRepo.findAll())
         credentialStorage.save(AuthRepo.findAll())
 
         println("Data saved.")
