@@ -52,7 +52,7 @@ class UserCredential private constructor(val userId: String, private var passwor
 
         val isValid = matches(password)
 
-        if(isValid){
+        if(isValid) {
             resetFailedAttempts()
         }
         else{
