@@ -10,22 +10,22 @@ class Driver(
     name: String,
     phone: String,
     email: String,
-    val vehicleId: String,
+    val assignedVehicleId: String,
     val licenseNumber: String,
     currentLocation: Location,
     userId: String = IdGenerator.generateUserId()
 ) : User(
     name = name,
-    phone = phone,
+    phoneNumber = phone,
     email = email,
-    userRole = UserRole.DRIVER,
+    role = UserRole.DRIVER,
     userId = userId
 ) {
 
     var currentLocation: Location = currentLocation
         private set
 
-    var earnings: BigDecimal = BigDecimal.ZERO
+    var totalEarnings: BigDecimal = BigDecimal.ZERO
         private set
 
     // True whenever the driver is free to be matched to a new ride or parcel.
@@ -46,7 +46,7 @@ class Driver(
 
     fun updateEarnings(earnings: BigDecimal){
         require(earnings >= BigDecimal.ZERO){ "Earnings of driver cannot be negative" }
-        this.earnings = earnings
+        this.totalEarnings = earnings
     }
 
     fun updateCurrentLocation(location: Location) {
@@ -64,7 +64,7 @@ class Driver(
     }
 
     init {
-        require(vehicleId.isNotBlank()) { "Vehicle ID cannot be blank." }
+        require(assignedVehicleId.isNotBlank()) { "Vehicle ID cannot be blank." }
         require(Validator.isValidLicenseNumber(licenseNumber)) { "Invalid license number. Format: TN012023001234." }
     }
 
@@ -72,11 +72,11 @@ class Driver(
 
         return super.toString() + """
             
-            Vehicle ID       : $vehicleId
+            Vehicle ID       : $assignedVehicleId
             License Number   : $licenseNumber
             Current Location : $currentLocation
             Available        : $isAvailable
-            Earnings         : ₹$earnings
+            Earnings         : ₹$totalEarnings
         """.trimIndent()
     }
 }
