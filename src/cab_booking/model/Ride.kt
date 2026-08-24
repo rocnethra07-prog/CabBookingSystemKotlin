@@ -34,21 +34,15 @@ class Ride(
         //INVALID CONDITIONS CHECK
         if (
             // COMPLETED OR CANCELLED - NO FURTHER STATUS CHANGES
-            (rideStatus == RideStatus.COMPLETED ||
-                    rideStatus == RideStatus.CANCELLED) ||
+            (rideStatus == RideStatus.COMPLETED || rideStatus == RideStatus.CANCELLED) ||
 
             // BOOKED - CAN ONLY BECOME ONGOING OR CANCELLED
-            (rideStatus == RideStatus.BOOKED &&
-                    newStatus != RideStatus.STARTED &&
-                    newStatus != RideStatus.CANCELLED) ||
+            (rideStatus == RideStatus.BOOKED && newStatus != RideStatus.STARTED && newStatus != RideStatus.CANCELLED) ||
 
             // ONGOING - CAN ONLY BECOME COMPLETED
-            (rideStatus == RideStatus.STARTED &&
-                    newStatus != RideStatus.COMPLETED)
+            (rideStatus == RideStatus.STARTED && newStatus != RideStatus.COMPLETED)
         ) {
-            throw InvalidRideStateException(
-                "Ride status cannot be changed from $rideStatus to $newStatus."
-            )
+            throw InvalidRideStateException("Ride status cannot be changed from $rideStatus to $newStatus.")
         }
 
         rideStatus = newStatus

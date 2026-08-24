@@ -46,7 +46,7 @@ class Parcel(
             (parcelStatus != ParcelStatus.PICKED_UP && newParcelStatus == ParcelStatus.DELIVERED)
             ){
             throw InvalidParcelStateException(
-                "Cannot change parcel status from ${parcelStatus} to $newParcelStatus."
+                "Cannot change parcel status from $parcelStatus to $newParcelStatus."
             )
         }
 
