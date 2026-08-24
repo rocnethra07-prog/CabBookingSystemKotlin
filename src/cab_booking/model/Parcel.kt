@@ -5,7 +5,6 @@ import cab_booking.model.types.Location
 import cab_booking.model.types.ParcelCategory
 import cab_booking.model.types.ParcelMode
 import cab_booking.model.types.ParcelStatus
-import cab_booking.model.types.VehicleCategory
 import cab_booking.util.IdGenerator
 import cab_booking.util.Validator
 import cab_booking.console.input.toDisplayString
