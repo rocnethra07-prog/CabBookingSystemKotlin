@@ -73,5 +73,5 @@ object CustomerController{
         ParcelService.getDriverForParcel(parcel)
 
     fun cancelParcel(parcel: Parcel, customer: User) =
-        ParcelService.cancelParcel(parcel, customer)
+        CustomerService.cancelParcel(parcel, customer)
 }

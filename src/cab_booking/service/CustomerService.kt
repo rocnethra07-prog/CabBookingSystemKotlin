@@ -2,6 +2,7 @@ package cab_booking.service
 import cab_booking.repository.DriverRepo
 import cab_booking.exception.DriverNotFoundException
 import cab_booking.exception.InvalidRideStateException
+import cab_booking.exception.UnauthorizedParcelActionException
 import cab_booking.exception.UnauthorizedRideActionException
 import cab_booking.model.Driver
 import cab_booking.model.Parcel
@@ -13,6 +14,7 @@ import cab_booking.model.types.ParcelMode
 import cab_booking.model.types.RideStatus
 import cab_booking.model.types.VehicleCategory
 import cab_booking.service.ParcelService.createParcel
+import cab_booking.service.ParcelService.getDriverForParcel
 import cab_booking.service.pricing.RideFareCalculator
 import java.math.BigDecimal
 import java.time.LocalDateTime
@@ -39,29 +41,6 @@ object CustomerService {
         val ride = RideService.createRide(rider.userId, driver.userId, pickupLocation, dropLocation, vehicleCategory)
         markUnavailable(driver)
         return ride
-    }
-
-    fun bookParcel(
-        customer: User,
-        pickupLocation: Location,
-        dropLocation: Location,
-        vehicleCategory: VehicleCategory,
-        parcelMode: ParcelMode,
-        contactName: String,
-        contactPhone: String,
-        weightKg: BigDecimal,
-        parcelCategory: ParcelCategory
-    ): Parcel {
-
-        val driver = DriverService.findAvailableDriver(vehicleCategory, pickupLocation)
-        val parcel = createParcel(
-            customer.userId, driver.userId,
-            pickupLocation, dropLocation,
-            vehicleCategory, parcelMode,
-            contactName, contactPhone, weightKg, parcelCategory
-        )
-        markUnavailable(driver)
-        return parcel
     }
 
     fun estimateRideFares(pickupLocation: Location, dropLocation: Location): Map<VehicleCategory, BigDecimal> {
@@ -119,4 +98,38 @@ object CustomerService {
         driver.updateTotalRating(driver.totalRating + rating)
         driver.updateRatingCount(driver.ratingCount + 1)
     }
+
+    fun bookParcel(
+        customer: User,
+        pickupLocation: Location,
+        dropLocation: Location,
+        vehicleCategory: VehicleCategory,
+        parcelMode: ParcelMode,
+        contactName: String,
+        contactPhone: String,
+        weightKg: BigDecimal,
+        parcelCategory: ParcelCategory
+    ): Parcel {
+
+        val driver = DriverService.findAvailableDriver(vehicleCategory, pickupLocation)
+        val parcel = createParcel(
+            customer.userId, driver.userId,
+            pickupLocation, dropLocation,
+            vehicleCategory, parcelMode,
+            contactName, contactPhone, weightKg, parcelCategory
+        )
+        markUnavailable(driver)
+        return parcel
+    }
+
+    fun cancelParcel(
+        parcel: Parcel,
+        customer: User
+    ) {
+        if (parcel.customerId != customer.userId) {
+            throw UnauthorizedParcelActionException("Only the customer who booked this parcel can cancel it.")
+        }
+        DriverService.cancelParcel(parcel, getDriverForParcel(parcel))
+    }
+
 }

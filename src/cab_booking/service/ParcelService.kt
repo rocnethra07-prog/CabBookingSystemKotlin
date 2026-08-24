@@ -1,10 +1,8 @@
 package cab_booking.service
 
 import cab_booking.exception.DriverNotFoundException
-import cab_booking.exception.UnauthorizedParcelActionException
 import cab_booking.model.Driver
 import cab_booking.model.Parcel
-import cab_booking.model.User
 import cab_booking.model.types.Location
 import cab_booking.model.types.ParcelCategory
 import cab_booking.model.types.ParcelMode
@@ -70,13 +68,4 @@ object ParcelService {
     fun getCurrentParcelOfDriver(driverId: String): Parcel =
         ParcelRepo.findCurrentParcelOfDriver(driverId)
 
-    fun cancelParcel(
-        parcel: Parcel,
-        customer: User
-    ) {
-        if (parcel.customerId != customer.userId) {
-            throw UnauthorizedParcelActionException("Only the customer who booked this parcel can cancel it.")
-        }
-        DriverService.cancelParcel(parcel, getDriverForParcel(parcel))
-    }
 }
