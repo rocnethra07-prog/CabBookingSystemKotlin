@@ -17,7 +17,6 @@ class Parcel(
     driverId: String,
     pickupLocation: Location,
     dropLocation: Location,
-    vehicleCategory: VehicleCategory,
     fare: BigDecimal,
     val modeOfParcel: ParcelMode,
     val contactName: String,
