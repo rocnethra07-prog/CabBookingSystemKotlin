@@ -19,7 +19,7 @@ open class Ride(
     // Public properties are used for simple property access
     val rideId: String = IdGenerator.generateRideId()
 
-    var rideStatus: RideStatus = RideStatus.BOOKED
+    var status: RideStatus = RideStatus.BOOKED
         private set
 
     val bookedAt: LocalDateTime = LocalDateTime.now()
@@ -27,7 +27,7 @@ open class Ride(
     var completedAt: LocalDateTime? = null //null by default
         private set
 
-    private var rating: Int = 0  // 1–5, 0 if not yet rated
+    private var ratings: Int = 0  // 1–5, 0 if not yet rated
 
     var cancelledAt: LocalDateTime? = null
         private set
@@ -36,22 +36,22 @@ open class Ride(
         this.cancelledAt = cancelledAt
     }
 
-    fun updateRideStatus(newStatus: RideStatus) {
+    fun updateStatus(newStatus: RideStatus) {
         //INVALID CONDITIONS CHECK
         if (
             // COMPLETED OR CANCELLED - NO FURTHER STATUS CHANGES
-            (rideStatus == RideStatus.COMPLETED || rideStatus == RideStatus.CANCELLED) ||
+            (status == RideStatus.COMPLETED || status == RideStatus.CANCELLED) ||
 
             // BOOKED - CAN ONLY BECOME ONGOING OR CANCELLED
-            (rideStatus == RideStatus.BOOKED && newStatus != RideStatus.STARTED && newStatus != RideStatus.CANCELLED) ||
+            (status == RideStatus.BOOKED && newStatus != RideStatus.STARTED && newStatus != RideStatus.CANCELLED) ||
 
             // ONGOING - CAN ONLY BECOME COMPLETED
-            (rideStatus == RideStatus.STARTED && newStatus != RideStatus.COMPLETED)
+            (status == RideStatus.STARTED && newStatus != RideStatus.COMPLETED)
         ) {
-            throw InvalidRideStateException("Ride status cannot be changed from $rideStatus to $newStatus.")
+            throw InvalidRideStateException("Ride status cannot be changed from $status to $newStatus.")
         }
 
-        rideStatus = newStatus
+        status = newStatus
     }
 
     fun setCompletedAt(completedAt: LocalDateTime) {
@@ -59,13 +59,13 @@ open class Ride(
     }
 
     fun setRatings(rating: Int){
-        if(rideStatus != RideStatus.COMPLETED) {
+        if(status != RideStatus.COMPLETED) {
             throw InvalidRideStateException("Only completed rides can be rated.")
         }
 
         require(rating in 1..5) { "Rating must be between 1 and 5." }
 
-        this.rating = rating
+        this.ratings = rating
     }
 
     override fun toString(): String {
@@ -73,11 +73,11 @@ open class Ride(
             Pickup Location  : $pickupLocation
             Drop Location    : $dropLocation
             Fare             : ₹$fare
-            Status           : $rideStatus
+            Status           : $status
             Booked At        : $bookedAt
             Completed At     : ${completedAt?.toDisplayString() ?: "-"}
             Cancelled At     : ${cancelledAt?.toDisplayString() ?: "-"}
-            Rating           : ${if(rating == 0) "-" else rating}
+            Rating           : ${if(ratings == 0) "-" else ratings}
         """.trimIndent()
     }
 }
