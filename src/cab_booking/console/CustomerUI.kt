@@ -49,7 +49,7 @@ object CustomerUI {
                 "4" -> viewCurrentParcel(customer)
                 "5" -> accountMenu(customer)
                 "0" -> return
-                else -> println("[x] Invalid choice.")
+                else -> println("\n[x] Invalid choice.")
             }
         }
     }
@@ -126,16 +126,16 @@ object CustomerUI {
 
         }
         catch (e: UnauthorizedRideActionException) {
-            println("[x] We couldn't submit your rating.  ${e.message}")
+            println("\n[x] We couldn't submit your rating.  ${e.message}")
         }
         catch (e : InvalidRideStateException){
-            println("[x] We couldn't submit your rating.  ${e.message}")
+            println("\n[x] We couldn't submit your rating.  ${e.message}")
         }
         catch (e: DriverNotFoundException) {
-            println("[x] We couldn't submit your rating.  ${e.message}")
+            println("\n[x] We couldn't submit your rating.  ${e.message}")
         }
         catch (e : IllegalArgumentException){
-            println("[x] Invalid Input, Unable to submit rating at the moment${e.message}")
+            println("\n[x] Invalid Input, We couldn't submit your rating${e.message}")
         }
         catch (_: OperationCancelledException) {
             println("\nSkipped rating.")
@@ -152,13 +152,13 @@ object CustomerUI {
         try {
             println("\n========== BOOK RIDE ==========")
 
-            val pickup = InputReader.chooseLocation("Pickup Location")
+            val pickup = InputReader.chooseLocation("Pickup Location: ")
 
             var drop: Location
 
             while (true) {
 
-                drop = InputReader.chooseLocation("Drop Location")
+                drop = InputReader.chooseLocation("Drop Location: ")
 
                 if (pickup == drop) {
                     println("\n[x] Pickup and Drop locations cannot be the same.\n")
@@ -170,7 +170,7 @@ object CustomerUI {
             val fareEstimates = try {
                 CustomerController.estimateRideFares(pickup, drop)
             } catch (e: DistanceNotFoundException) {
-                println("[x] ${e.message}")
+                println("\n[x] ${e.message}")
                 return
             }
 
@@ -205,22 +205,22 @@ object CustomerUI {
                     return
 
                 } catch (e: AvailableDriversNotFoundException) {
-                    println("[x] ${e.message}")
+                    println("\n[x] ${e.message}")
                     if (InputReader.promptConfirmation("Try another vehicle type? (Y/N): ")) {
                         continue
                     }
                     return
                 } catch (e: DistanceNotFoundException) {
-                    println("[x] ${e.message}")
+                    println("\n[x] ${e.message}")
                     return
                 } catch (e: DriverNotFoundException) {
-                    println("[x] ${e.message}")
+                    println("\n[x] ${e.message}")
                     return
                 } catch (e: VehicleNotFoundException) {
-                    println("[x] ${e.message}")
+                    println("\n[x] ${e.message}")
                     return
                 } catch (e: IllegalArgumentException) {
-                    println("[x] ${e.message}")
+                    println("\n[x] ${e.message}")
                     return
                 }
             }
@@ -272,7 +272,7 @@ object CustomerUI {
                     return
                 }
                 "0" -> return
-                else -> println("[x] Invalid choice.")
+                else -> println("\n[x] Invalid choice.")
             }
         }
     }
@@ -291,7 +291,7 @@ object CustomerUI {
                 }
 
                 "0" -> return
-                else -> println("Invalid choice.")
+                else -> println("\n[x] Invalid choice.")
             }
         }
     }
@@ -304,13 +304,13 @@ object CustomerUI {
             println("\nRide cancelled successfully.")
         }
         catch (e: UnauthorizedRideActionException) {
-            println("[x] ${e.message}")
+            println("\n[x] ${e.message}")
         }
         catch (e : InvalidRideStateException){
-            println("[x] ${e.message}")
+            println("\n[x] ${e.message}")
         }
         catch (e : DriverNotFoundException){
-            println("[x] ${e.message}")
+            println("\n[x] ${e.message}")
         }
     }
 
@@ -329,9 +329,9 @@ object CustomerUI {
             val parcelMode = InputReader.chooseParcelMode()
 
             val pickupLabel =
-                if (parcelMode == ParcelMode.SEND) "Pickup Location (where you are)" else "Pickup Location (where the parcel currently is)"
+                if (parcelMode == ParcelMode.SEND) "Pickup Location (where you are): " else "Pickup Location (where the parcel currently is): "
             val dropLabel =
-                if (parcelMode == ParcelMode.SEND) "Drop Location (where it's going)" else "Drop Location (where you are)"
+                if (parcelMode == ParcelMode.SEND) "Drop Location (where it's going): " else "Drop Location (where you are): "
 
             val pickup = InputReader.chooseLocation(pickupLabel)
 
@@ -339,7 +339,7 @@ object CustomerUI {
             while (true) {
                 drop = InputReader.chooseLocation(dropLabel)
                 if (pickup == drop) {
-                    println("[x] Pickup and Drop locations cannot be the same.")
+                    println("\n[x] Pickup and Drop locations cannot be the same.")
                     continue
                 }
                 break
@@ -419,7 +419,7 @@ object CustomerUI {
             parcelDetailsFlow(parcel, customer)
         }
         catch (e: ActiveParcelNotFoundException) {
-            println("[x] ${e.message}")
+            println("\n[x] ${e.message}")
         }
     }
 
@@ -441,7 +441,7 @@ object CustomerUI {
                     return
                 }
                 "0" -> return
-                else -> println("[x] Invalid choice.")
+                else -> println("\n[x] Invalid choice.")
             }
         }
     }
@@ -469,13 +469,13 @@ object CustomerUI {
             println("\nParcel cancelled successfully.")
         }
         catch (e: UnauthorizedParcelActionException) {
-            println("[x] ${e.message}")
+            println("\n[x] ${e.message}")
         }
         catch (e: InvalidParcelStateException) {
-            println("[x] ${e.message}")
+            println("\n[x] ${e.message}")
         }
         catch (e: DriverNotFoundException) {
-            println("[x] ${e.message}")
+            println("\n[x] ${e.message}")
         }
     }
 
@@ -512,7 +512,7 @@ object CustomerUI {
 
         }
         catch (e: IllegalArgumentException) {
-            println("[x] Invalid Input, ${e.message}")
+            println("\n[x] Invalid Input, ${e.message}")
         }
         catch (_: OperationCancelledException) {
             println("\nCancelled. No changes made.")
@@ -532,7 +532,7 @@ object CustomerUI {
             when (readln().trim()) {
                 "1" -> profileOptionsMenu(customer)
                 "0" -> return
-                else -> println("[x] Invalid choice.")
+                else -> println("\n[x] Invalid choice.")
             }
         }
     }
@@ -554,7 +554,7 @@ object CustomerUI {
                     return
                 }
                 "0" -> return
-                else -> println("[x] Invalid choice.")
+                else -> println("\n[x] Invalid choice.")
             }
         }
     }

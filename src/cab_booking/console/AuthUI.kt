@@ -32,7 +32,7 @@ object AuthUI {
 
         }
         catch (e: UserNotFoundException) {
-            println("[x] Login failed: ${e.message}")
+            println("\n[x] Login failed: ${e.message}")
         }
         catch (e: AccountLockedException) {
             println(
@@ -47,13 +47,13 @@ object AuthUI {
             )
         }
         catch (e: InvalidCredentialsException) {
-            println("[x] Login failed: ${e.message}")
+            println("\n[x] Login failed: ${e.message}")
         }
         catch (e: CredentialsNotFoundException) {
-            println("[x] Authentication failed: ${e.message}")
+            println("\n[x] Authentication failed: ${e.message}")
         }
         catch (e: DriverNotFoundException) {
-            println("[x] ${e.message}. Please try again.")
+            println("\n[x] ${e.message}. Please try again.")
         }
         catch (_: OperationCancelledException) {
             println("\nCancelled.")
@@ -83,13 +83,23 @@ object AuthUI {
             while (true) {
                 email = InputReader.promptEmail()
                 if (AuthController.isEmailRegistered(email)) {
-                    println("[!] This email is already registered. Please use a different email.")
+                    println("\n[x] This email is already registered. Please use a different email.")
                     continue
                 }
                 break
             }
 
-            val password = InputReader.promptPassword()
+            var password: String
+            while(true) {
+                password = InputReader.promptPassword()
+                val confirmPassword = InputReader.promptPassword(prompt = "Confirm Password : ")
+
+                if (password != confirmPassword) {
+                    println("\nPasswords do not match.")
+                    continue
+                }
+                break
+            }
 
             val user = AuthController.register(
                 name = name,
@@ -111,10 +121,10 @@ object AuthUI {
 
         }
         catch (e: IllegalArgumentException) {
-            println("[x] Registration failed (invalid input): ${e.message}")
+            println("\n[x] Registration failed (invalid input): ${e.message}")
         }
         catch (e: DriverNotFoundException) {
-            println("[x] ${e.message}. Please try again.")
+            println("\n[x] ${e.message}. Please try again.")
         }
         catch (_: OperationCancelledException) {
             println("\nCancelled.")
@@ -126,13 +136,18 @@ object AuthUI {
         try {
             ConsoleFormater.header("CHANGE PASSWORD")
 
-            val currentPassword = InputReader.promptPassword(prompt = "Current Password : ")
-            val newPassword = InputReader.promptPassword(prompt = "New Password     : ")
-            val confirmPassword = InputReader.promptPassword(prompt = "Confirm Password : ")
+            val currentPassword = InputReader.promptPassword(prompt = "Current Password (or 'cancel' to go back): ")
 
-            if (newPassword != confirmPassword) {
-                println("\nPasswords do not match.")
-                return
+            var newPassword: String
+            while(true) {
+                newPassword = InputReader.promptPassword()
+                val confirmPassword = InputReader.promptPassword(prompt = "Confirm Password (or 'cancel' to go back): ")
+
+                if (newPassword != confirmPassword) {
+                    println("\nPasswords do not match.")
+                    continue
+                }
+                break
             }
             AuthController.changePassword(
                 user,
@@ -144,16 +159,16 @@ object AuthUI {
 
         }
         catch (e : CredentialsNotFoundException){
-            println("[x] Authentication failed: ${e.message}")
+            println("\n[x] Authentication failed: ${e.message}")
         }
         catch (e: AccountLockedException){
-            println("[x] ${e.message}")
+            println("\n[x] ${e.message}")
         }
         catch (e: InvalidCredentialsException) {
-            println("[x] ${e.message}")
+            println("\n[x] ${e.message}")
         }
         catch (e: IllegalArgumentException) {
-            println("[x] ${e.message}")
+            println("\n[x] ${e.message}")
         }
         catch (_: OperationCancelledException) {
             println("\nCancelled. Your password was not changed.")
