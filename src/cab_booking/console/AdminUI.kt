@@ -36,7 +36,7 @@ object AdminUI {
                     return
                 }
 
-                else -> println("Invalid choice.")
+                else -> println("\n[x] Invalid choice.")
             }
         }
     }
@@ -65,7 +65,7 @@ object AdminUI {
                 "4" -> displayDrivers(AdminController.getAvailableDrivers(), "AVAILABLE DRIVERS")
                 "5" -> displayDrivers(AdminController.getUnavailableDrivers(), "UNAVAILABLE DRIVERS")
                 "0" -> return
-                else -> println("Invalid choice.")
+                else -> println("\n[x] Invalid choice.")
             }
         }
     }
@@ -84,7 +84,7 @@ object AdminUI {
             while (true) {
                 email = InputReader.promptEmail()
                 if (AuthController.isEmailRegistered(email)) {
-                    println("[x] This email is already registered. Please use a different email.\n")
+                    println("\n[x] This email is already registered. Please use a different email.\n")
                     continue
                 }
                 break
@@ -97,7 +97,7 @@ object AdminUI {
             while (true) {
                 licenseNumber = InputReader.promptLicenseNumber()
                 if (AdminController.isLicenseNumberTaken(licenseNumber)) {
-                    println("[x] This license number is already registered. Please enter a different one.\n")
+                    println("\n[x] This license number is already registered. Please enter a different one.\n")
                     continue
                 }
                 break
@@ -112,7 +112,7 @@ object AdminUI {
             println(vehicle)
         }
         catch (e: IllegalArgumentException) {
-            println("[x] Could not add driver: ${e.message}")
+            println("\n[x] Could not add driver: ${e.message}")
         }
         catch (_: OperationCancelledException) {
             println("\nCancelled. No driver was added.")
@@ -130,7 +130,7 @@ object AdminUI {
         while (true) {
             registrationNumber = InputReader.promptRegistrationNumber()
             if (AdminController.isRegistrationNumberTaken(registrationNumber)) {
-                println("[x] This registration number is already registered. Please enter a different one. ")
+                println("\n[x] This registration number is already registered. Please enter a different one. ")
                 continue
             }
             break
@@ -162,14 +162,14 @@ object AdminUI {
             }
 
             if (AdminController.deleteDriver(driver)) {
-                println("Driver removed successfully.")
+                println("\nDriver removed successfully.")
             } else {
-                println("[x] This driver has an ongoing ride or parcel and cannot be removed right now.")
+                println("\n[x] This driver has an ongoing ride or parcel and cannot be removed right now.")
             }
         } catch (e: DriverNotFoundException) {
-            println("[x] ${e.message}")
+            println("\n[x] ${e.message}")
         } catch (e: IllegalArgumentException) {
-            println("[x] Invalid Input, ${e.message}")
+            println("\n[x] Invalid Input, ${e.message}")
         } catch (_: OperationCancelledException) {
             println("\nCancelled. No driver was removed.")
         }
@@ -196,7 +196,7 @@ object AdminUI {
             ConsoleFormater.header("Assigned Vehicle")
             println(DriverController.getVehicleById(driver.vehicleId))
         } catch (e: VehicleNotFoundException) {
-            println("[x] ${e.message}")
+            println("\n[x] ${e.message}")
         }
         ConsoleFormater.divider()
     }
@@ -221,7 +221,7 @@ object AdminUI {
                     catch (_: OperationCancelledException) {}
                 }
                 "0" -> return
-                else -> println("[x] Invalid choice.")
+                else -> println("\n[x] Invalid choice.")
             }
         }
     }
@@ -257,7 +257,7 @@ object AdminUI {
                 "2" -> lockAccount()
                 "3" -> unlockAccount()
                 "0" -> return
-                else -> println("[x] Invalid choice.")
+                else -> println("\n[x] Invalid choice.")
             }
         }
     }
@@ -283,9 +283,9 @@ object AdminUI {
             AdminController.lockUserAccount(userId)
             println("\n${user.name}'s account has been locked.")
         } catch (e: UserNotFoundException) {
-            println("[x] ${e.message}")
+            println("\n[x] ${e.message}")
         } catch (e: CredentialsNotFoundException) {
-            println("[x] ${e.message}")
+            println("\n[x] ${e.message}")
         } catch (_: OperationCancelledException) {
             println("\nCancelled.")
         }
@@ -311,7 +311,7 @@ object AdminUI {
             )
 
             if (lockedAccounts.none { it.userId == userId }) {
-                println("[x] Please enter a valid locked User ID.")
+                println("\n[x] Please enter a valid locked User ID.")
                 return
             }
             val user = AdminController.findUserById(userId)
@@ -324,9 +324,9 @@ object AdminUI {
             AdminController.unlockUserAccount(userId)
             println("\n${user.name}'s account has been unlocked.")
         } catch (e: UserNotFoundException) {
-            println("[x] ${e.message}")
+            println("\n[x] ${e.message}")
         } catch (e: CredentialsNotFoundException) {
-            println("[x] We couldn't unlock this account. ${e.message}")
+            println("\n[x] We couldn't unlock this account. ${e.message}")
         } catch (_: OperationCancelledException) {
             println("\nCancelled.")
         }
@@ -358,7 +358,7 @@ object AdminUI {
                 println("User ID: ${it.userId} | Name: ${user.name} | Locked, ~$minutesLeft min $secondsLeft sec remaining")
                 println("-".repeat(50))
             } catch (_: UserNotFoundException) {
-                println("Unknown user  ID: ${it.userId}")
+                println("\n[x] Unknown user  ID: ${it.userId}")
             }
         }
     }

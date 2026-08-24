@@ -64,7 +64,7 @@ object DriverUI {
 
         }
         catch (e : ActiveRideNotFoundException){
-            println("[x] ${e.message}")
+            println("\n[x] ${e.message}")
         }
     }
 
@@ -86,7 +86,7 @@ object DriverUI {
                     return
                 }
                 "0" -> return
-                else -> println("[x] Invalid choice.")
+                else -> println("\n[x] Invalid choice.")
             }
         }
     }
@@ -126,17 +126,17 @@ object DriverUI {
 
                     "0" -> return
 
-                    else -> println("[x] Invalid choice.")
+                    else -> println("\n[x] Invalid choice.")
                 }
             }
             catch (e: UnauthorizedRideActionException) {
-                println("[x] ${e.message}")
+                println("\n[x] ${e.message}")
             }
             catch (e: InvalidRideStateException){
-                println("[x] ${e.message}")
+                println("\n[x] ${e.message}")
             }
             catch (e : IllegalArgumentException){
-                println("[x] ${e.message}")
+                println("\n[x] ${e.message}")
             }
         }
     }
@@ -168,7 +168,7 @@ object DriverUI {
             parcelDetailsFlow(parcel, driver)
         }
         catch (e: ActiveParcelNotFoundException) {
-            println("[!] ${e.message}")
+            println("\n[x] ${e.message}")
         }
     }
 
@@ -190,7 +190,7 @@ object DriverUI {
                     return
                 }
                 "0" -> return
-                else -> println("[x] Invalid choice.")
+                else -> println("\n[x] Invalid choice.")
             }
         }
     }
@@ -226,13 +226,13 @@ object DriverUI {
                 }
             }
             catch (e: UnauthorizedParcelActionException) {
-                println("[x] ${e.message}")
+                println("\n[x] ${e.message}")
             }
             catch (e: InvalidParcelStateException) {
-                println("[x] ${e.message}")
+                println("\n[x] ${e.message}")
             }
             catch (e: IllegalArgumentException) {
-                println("[x] ${e.message}")
+                println("\n[x] ${e.message}")
             }
         }
     }
@@ -284,8 +284,8 @@ object DriverUI {
 
             var location = driver.currentLocation
 
-            if (InputReader.promptConfirmation("Update location?")) {
-                location = InputReader.chooseLocation("Select New Location")
+            if (InputReader.promptConfirmation("Update location?: ")) {
+                location = InputReader.chooseLocation("Select New Location: ")
             }
 
             if (
@@ -318,7 +318,7 @@ object DriverUI {
             )
 
         } catch (e: IllegalArgumentException) {
-            println("[x] Invalid Input, " + e.message)
+            println("\n[x] Invalid Input, " + e.message)
         }
         catch (_: OperationCancelledException) {
             println("\nCancelled. No changes made.")
@@ -331,7 +331,7 @@ object DriverUI {
             println(DriverController.getVehicleById(driver.vehicleId))
         }
         catch (e: VehicleNotFoundException) {
-            println("[x] ${e.message}")
+            println("\n[x] ${e.message}")
         }
     }
 
@@ -378,7 +378,7 @@ object DriverUI {
                     return
                 }
                 "0" -> return
-                else -> println("[x] Invalid choice.")
+                else -> println("\n[x] Invalid choice.")
             }
         }
     }
