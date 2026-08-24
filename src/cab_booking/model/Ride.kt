@@ -15,7 +15,7 @@ class Ride(
     pickupLocation: Location,
     dropLocation: Location,
     fare: BigDecimal
-) : Booking(riderId, driverId, pickupLocation, dropLocation, vehicleCategory, fare) {
+) : Booking(riderId, driverId, pickupLocation, dropLocation, fare) {
 
     // Public properties are used for simple property access
     val rideId: String = IdGenerator.generateRideId()
