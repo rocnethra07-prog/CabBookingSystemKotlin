@@ -6,8 +6,6 @@ import cab_booking.repository.UserRepo
 import cab_booking.repository.VehicleRepo
 import cab_booking.util.IdGenerator
 
-// The only thing MainApp talks to. It owns one file storage per entity and moves
-// data between those files and the repositories.
 object DataStore {
 
     private val vehicleStorage = VehicleFileStorage("data/vehicles.csv")
