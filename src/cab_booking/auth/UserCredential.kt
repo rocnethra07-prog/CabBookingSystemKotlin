@@ -99,7 +99,6 @@ class UserCredential private constructor(val userId: String, private var passwor
         lockAccount()
     }
 
-    // Puts back a lock that was still running when the app was closed, so the
     // 15 minutes continue from when the account was really locked.
     fun restoreLock(lockedAt: LocalDateTime) {
         this.lockedAt = lockedAt
