@@ -32,7 +32,7 @@ object InputReader {
             if(validator(input)){
                 return input
             }
-            println("[x] $errorMessage")
+            println("[x] $errorMessage\n")
         }
     }
 
@@ -196,7 +196,7 @@ object InputReader {
             println("  1. Send a parcel     - you have it now, it goes to someone else")
             println("  2. Receive a parcel  - someone else has it, it comes to you")
 
-            when (readLine(readLine("Choose (or 'cancel' to go back): "))) {
+            when (readLine("Choose (or 'cancel' to go back): ")) {
                 "1" -> return ParcelMode.SEND
                 "2" -> return ParcelMode.RECEIVE
                 else -> println("[x] Invalid choice. Please try again.")
