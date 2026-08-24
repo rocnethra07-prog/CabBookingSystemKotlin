@@ -7,7 +7,6 @@ import java.time.Duration
 import java.time.LocalDateTime
 
 // Credentials related class
-// The constructor is private because it takes an already-hashed password.
 // Use one of the two factory methods instead:
 //   withPassword(...)   - a new account, the password is validated and hashed here
 //   fromStoredHash(...) - an account read back from credentials.csv
