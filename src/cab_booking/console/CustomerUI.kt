@@ -145,20 +145,24 @@ object CustomerUI {
     private fun bookRide(rider: User) {
 
         if (CustomerController.hasActiveRide(rider.userId)) {
-            println("\nYou already have an active ride.")
+            println("\nYou already have an active ride. Finish or cancel it before booking another.")
             return
         }
 
+        if (CustomerController.hasActiveParcel(rider.userId)) {
+            println("\nYou already have an active parcel. Finish or cancel it before booking another.\n")
+            return
+        }
         try {
             println("\n========== BOOK RIDE ==========")
 
-            val pickup = InputReader.chooseLocation("Pickup Location: ")
+            val pickup = InputReader.chooseLocation("\nPickup Location: ")
 
             var drop: Location
 
             while (true) {
 
-                drop = InputReader.chooseLocation("Drop Location: ")
+                drop = InputReader.chooseLocation("\nDrop Location: ")
 
                 if (pickup == drop) {
                     println("\n[x] Pickup and Drop locations cannot be the same.\n")
@@ -178,7 +182,7 @@ object CustomerUI {
 
                 val vehicleCategory = InputReader.chooseVehicleCategoryByFare(fareEstimates)
 
-                println("\nFinding a nearby $vehicleCategory for you...")
+                println("\nFinding a nearby $vehicleCategory for you...\n")
 
                 try {
 
@@ -206,7 +210,7 @@ object CustomerUI {
 
                 } catch (e: AvailableDriversNotFoundException) {
                     println("\n[x] ${e.message}")
-                    if (InputReader.promptConfirmation("Try another vehicle type? (Y/N): ")) {
+                    if (InputReader.promptConfirmation("\nTry another vehicle type? (Y/N): ")) {
                         continue
                     }
                     return
@@ -230,8 +234,7 @@ object CustomerUI {
         }
     }
 
-    // Called both from the "My Ride" menu item and automatically on login -
-    // either way it first shows just a heads-up, then details, then actions.
+    // Called both from the "My Ride" menu item and automatically on login
     fun viewCurrentRide(rider: User){
         try {
             val ride = CustomerController.getCurrentBookedRide(rider.userId)
@@ -323,15 +326,20 @@ object CustomerUI {
             return
         }
 
+        if (CustomerController.hasActiveRide(customer.userId)) {
+            println("\nYou already have an active ride. Finish or cancel it before booking another.")
+            return
+        }
+
         try {
             ConsoleFormater.header("SEND / RECEIVE A PARCEL")
 
             val parcelMode = InputReader.chooseParcelMode()
 
             val pickupLabel =
-                if (parcelMode == ParcelMode.SEND) "Pickup Location (where you are): " else "Pickup Location (where the parcel currently is): "
+                if (parcelMode == ParcelMode.SEND) "\nPickup Location (where you are): " else "\nPickup Location (where the parcel currently is): "
             val dropLabel =
-                if (parcelMode == ParcelMode.SEND) "Drop Location (where it's going): " else "Drop Location (where you are): "
+                if (parcelMode == ParcelMode.SEND) "\nDrop Location (where it's going): " else "\nDrop Location (where you are): "
 
             val pickup = InputReader.chooseLocation(pickupLabel)
 
@@ -360,7 +368,7 @@ object CustomerUI {
                 CustomerController.estimateParcelFares(pickup, drop, category,weight)
             }
             catch (e: DistanceNotFoundException) {
-                println("[x] ${e.message}")
+                println("\n[x] ${e.message}")
                 return
             }
 
@@ -368,7 +376,7 @@ object CustomerUI {
                 val vehicleCategory = InputReader.chooseVehicleCategoryByFare(fareEstimates,
                     prompt = "Vehicles that can carry $weight kg")
 
-                println("\nFinding a nearby $vehicleCategory for you...")
+                println("\nFinding a nearby $vehicleCategory for you...\n")
                 try {
                     val parcel = CustomerController.bookParcel(
                         customer, pickup, drop, vehicleCategory, parcelMode, contactName, contactPhone, weight, category
@@ -383,20 +391,20 @@ object CustomerUI {
                     println("Phone   : ${driver.phone}")
                     return
                 } catch (e: AvailableDriversNotFoundException) {
-                    println("[x] ${e.message}")
-                    if (InputReader.promptConfirmation("Try another vehicle type?")) continue
+                    println("\n[x] ${e.message}")
+                    if (InputReader.promptConfirmation("\nTry another vehicle type?: ")) continue
                     return
                 } catch (e: DistanceNotFoundException) {
-                    println("[x] ${e.message}")
+                    println("\n[x] ${e.message}")
                     return
                 } catch (e: DriverNotFoundException) {
-                    println("[x] ${e.message}")
+                    println("\n[x] ${e.message}")
                     return
                 } catch (e: VehicleNotFoundException) {
-                    println("[x] ${e.message}")
+                    println("\n[x] ${e.message}")
                     return
                 } catch (e: IllegalArgumentException) {
-                    println("[x] ${e.message}")
+                    println("\n[x] ${e.message}")
                     return
                 }
             }
