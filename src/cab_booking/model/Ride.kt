@@ -14,7 +14,6 @@ class Ride(
     driverId: String,
     pickupLocation: Location,
     dropLocation: Location,
-    vehicleCategory: VehicleCategory,
     fare: BigDecimal
 ) : Booking(riderId, driverId, pickupLocation, dropLocation, vehicleCategory, fare) {
 
