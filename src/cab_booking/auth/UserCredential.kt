@@ -12,7 +12,7 @@ import java.time.LocalDateTime
 //   withPassword(...)   - a new account, the password is validated and hashed here
 //   fromStoredHash(...) - an account read back from credentials.csv
 
-class UserCredential private constructor(val userId: String, password: String) {
+class UserCredential private constructor(val userId: String, private var passwordHash: String) {
 
     companion object{
         private const val MAX_FAILED_ATTEMPTS = 3
@@ -32,17 +32,11 @@ class UserCredential private constructor(val userId: String, password: String) {
 
     }
 
-    private var passwordHash: String
     private var failedAttempts: Int = 0
     private var lockedAt : LocalDateTime? = null
 
     fun getHashedPassword() = passwordHash
     fun getLockedAtTime() = lockedAt
-
-    init {
-        require(Validator.isValidPassword(password)) { "Invalid password format." }
-        passwordHash = hash(password)
-    }
 
     fun isAccountLocked() : Boolean {
         refreshLockStatus()
