@@ -5,10 +5,12 @@ import cab_booking.model.types.Location
 import java.io.File
 import java.math.BigDecimal
 
-class DriverFileStorage(private val filePath: String) : FileStorage<Driver> {
+object DriverFileStorage : FileStorage<Driver> {
+
+    private const val DRIVERS_FILE_PATH = "data/drivers.csv"
 
     override fun save(items: List<Driver>) {
-        val file = File(filePath)
+        val file = File(DRIVERS_FILE_PATH)
         file.parentFile?.mkdirs()
         file.bufferedWriter().use { writer ->
             items.forEach { driver ->
@@ -24,7 +26,7 @@ class DriverFileStorage(private val filePath: String) : FileStorage<Driver> {
     }
 
     override fun load(): List<Driver> {
-        val file = File(filePath)
+        val file = File(DRIVERS_FILE_PATH)
         if (!file.exists()) return emptyList()
 
         return file.readLines()

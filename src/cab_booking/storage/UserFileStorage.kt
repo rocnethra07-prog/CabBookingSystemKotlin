@@ -6,10 +6,12 @@ import java.io.File
 
 // Riders and the admin. Drivers are users too, but they are written to drivers.csv
 // with their extra details, so DataStore keeps them out of this file.
-class UserFileStorage(private val filePath: String) : FileStorage<User> {
+object UserFileStorage : FileStorage<User> {
+
+    private const val USERS_FILE_PATH= "data/users.csv"
 
     override fun save(items: List<User>) {
-        val file = File(filePath)
+        val file = File(USERS_FILE_PATH)
         file.parentFile?.mkdirs()
         file.bufferedWriter().use { writer ->
             items.forEach { user ->
@@ -22,7 +24,7 @@ class UserFileStorage(private val filePath: String) : FileStorage<User> {
     }
 
     override fun load(): List<User> {
-        val file = File(filePath)
+        val file = File(USERS_FILE_PATH)
         if (!file.exists()) return emptyList()
 
         return file.readLines()

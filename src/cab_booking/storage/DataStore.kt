@@ -8,16 +8,12 @@ import cab_booking.util.IdGenerator
 
 object DataStore {
 
-    private val vehicleStorage = VehicleFileStorage("data/vehicles.csv")
-    private val driverStorage = DriverFileStorage("data/drivers.csv")
-    private val userStorage = UserFileStorage("data/users.csv")
-    private val credentialStorage = CredentialFileStorage("data/credentials.csv")
 
     fun loadAll() {
-        vehicleStorage.load().forEach { VehicleRepo.save(it) }
-        driverStorage.load().forEach { driver -> DriverRepo.save(driver) }
-        userStorage.load().forEach { UserRepo.save(it) }
-        credentialStorage.load().forEach { AuthRepo.save(it) }
+        VehicleFileStorage.load().forEach { VehicleRepo.save(it) }
+        DriverFileStorage.load().forEach { driver -> DriverRepo.save(driver) }
+        UserFileStorage.load().forEach { UserRepo.save(it) }
+        CredentialFileStorage.load().forEach { AuthRepo.save(it) }
 
         syncIdCounters()
 
@@ -28,10 +24,10 @@ object DataStore {
     }
 
     fun saveAll() {
-        vehicleStorage.save(VehicleRepo.findAll())
-        driverStorage.save(DriverRepo.findAll())
-        userStorage.save(UserRepo.findAll())
-        credentialStorage.save(AuthRepo.findAll())
+        VehicleFileStorage.save(VehicleRepo.findAll())
+        DriverFileStorage.save(DriverRepo.findAll())
+        UserFileStorage.save(UserRepo.findAll())
+        CredentialFileStorage.save(AuthRepo.findAll())
 
         println("Data saved.")
     }

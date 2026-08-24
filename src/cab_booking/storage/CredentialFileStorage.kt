@@ -4,11 +4,12 @@ import cab_booking.auth.UserCredential
 import java.io.File
 import java.time.LocalDateTime
 
-// Only the BCrypt hash is written - never the password itself.
-class CredentialFileStorage(private val filePath: String) : FileStorage<UserCredential> {
+object CredentialFileStorage : FileStorage<UserCredential> {
+
+    private const val CREDENTIALS_FILE_PATH = "data/credentials.csv"
 
     override fun save(items: List<UserCredential>) {
-        val file = File(filePath)
+        val file = File(CREDENTIALS_FILE_PATH)
         file.parentFile?.mkdirs()
         file.bufferedWriter().use { writer ->
             items.forEach { credential ->
@@ -20,7 +21,7 @@ class CredentialFileStorage(private val filePath: String) : FileStorage<UserCred
     }
 
     override fun load(): List<UserCredential> {
-        val file = File(filePath)
+        val file = File(CREDENTIALS_FILE_PATH)
         if (!file.exists()) return emptyList()
 
         return file.readLines()

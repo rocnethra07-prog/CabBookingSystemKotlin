@@ -4,10 +4,12 @@ import cab_booking.model.Vehicle
 import cab_booking.model.types.VehicleCategory
 import java.io.File
 
-class VehicleFileStorage(private val filePath: String) : FileStorage<Vehicle> {
+object VehicleFileStorage : FileStorage<Vehicle> {
+
+    private const val VEHICLES_FILE_PATH = "data/vehicles.csv"
 
     override fun save(items: List<Vehicle>) {
-        val file = File(filePath)
+        val file = File(VEHICLES_FILE_PATH)
         file.parentFile?.mkdirs()
         file.bufferedWriter().use { writer ->
             items.forEach { vehicle ->
@@ -21,7 +23,7 @@ class VehicleFileStorage(private val filePath: String) : FileStorage<Vehicle> {
     }
 
     override fun load(): List<Vehicle> {
-        val file = File(filePath)
+        val file = File(VEHICLES_FILE_PATH)
         if (!file.exists()) return emptyList()
 
         return file.readLines()
