@@ -65,7 +65,6 @@ class Ride(
         return """
             Pickup Location  : $pickupLocation
             Drop Location    : $dropLocation
-            Vehicle          : $vehicleCategory
             Fare             : ₹$fare
             Status           : $rideStatus
             Booked At        : ${bookedAt.toDisplayString()}
