@@ -18,14 +18,7 @@ object DataStore {
 
     fun loadAll() {
         vehicleStorage.load().forEach { VehicleRepo.save(it) }
-
-        // A driver is also a user, so the same object goes into both repositories,
-        // exactly like DriverService.createDriver does when a driver is added.
-        driverStorage.load().forEach { driver ->
-            DriverRepo.save(driver)
-            UserRepo.save(driver)
-        }
-
+        driverStorage.load().forEach { driver -> DriverRepo.save(driver) }
         userStorage.load().forEach { UserRepo.save(it) }
         credentialStorage.load().forEach { AuthRepo.save(it) }
 
