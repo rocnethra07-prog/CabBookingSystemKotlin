@@ -41,7 +41,7 @@ class Driver(
     var totalRatings: Int = 0
         private set
 
-    var totalRatingCounts: Int = 0
+    var totalRatingsCount: Int = 0
         private set
 
     fun updateTotalEarnings(earnings: BigDecimal){
