@@ -3,19 +3,18 @@ package cab_booking.model
 import cab_booking.exception.InvalidRideStateException
 import cab_booking.model.types.Location
 import cab_booking.model.types.RideStatus
+import cab_booking.model.types.VehicleCategory
 import cab_booking.util.IdGenerator
-import cab_booking.console.input.toDisplayString
 import java.math.BigDecimal
 import java.time.LocalDateTime
 
-open class Ride(
+abstract class Booking(
     val customerId: String,
     val driverId: String,
     val pickupLocation: Location,
     val dropLocation: Location,
     val fare: BigDecimal
 ) {
-    val rideId: String = IdGenerator.generateRideId()
 
     val bookedAt: LocalDateTime = LocalDateTime.now()
 
@@ -74,18 +73,5 @@ open class Ride(
         require(pickupLocation != dropLocation) { "Pickup and drop locations cannot be the same." }
 
         require(fare > BigDecimal.ZERO) { "Fare must be greater than zero." }
-    }
-
-    override fun toString(): String {
-        return """
-            Pickup Location  : $pickupLocation
-            Drop Location    : $dropLocation
-            Fare             : ₹$fare
-            Status           : $status
-            Booked At        : $bookedAt
-            Completed At     : ${completedAt?.toDisplayString() ?: "-"}
-            Cancelled At     : ${cancelledAt?.toDisplayString() ?: "-"}
-            Rating           : ${if(ratings == 0) "-" else ratings}
-        """.trimIndent()
     }
 }
