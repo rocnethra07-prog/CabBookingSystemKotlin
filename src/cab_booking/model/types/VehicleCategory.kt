@@ -2,11 +2,10 @@ package cab_booking.model.types
 
 import java.math.BigDecimal
 
-// Broad class of vehicle. Kept separate from VehicleCategory because it's
-// useful for grouping/filtering (e.g. "show me all two-wheeler drivers")
-// without caring about the specific fare rule.
+// Broad class of vehicle. Kept separate from VehicleCategory
 enum class VehicleType{BIKE, AUTO, CAR}
 
+// The product a customer picks. Each category carries its own fare rule.
 enum class VehicleCategory(
     val vehicleType: VehicleType,
     val basePrice: BigDecimal,
