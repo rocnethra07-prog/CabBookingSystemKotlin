@@ -43,8 +43,8 @@ object CustomerController{
     fun cancelRide(ride: Ride, rider: User) =
         CustomerService.cancelRide(ride, rider)
 
-    fun updateProfile(rider: User, name: String, phone: String) =
-        CustomerService.updateProfile(rider,name,phone)
+    fun updateProfile(rider: User, name: String, phoneNumber: String) =
+        CustomerService.updateProfile(rider,name,phoneNumber)
 
 
     fun bookParcelDelivery(

@@ -1,7 +1,7 @@
 package cab_booking.storage
 
 import cab_booking.model.Ride
-import cab_booking.model.types.DispatchStatus
+import cab_booking.model.types.BookingStatus
 import cab_booking.model.types.Location
 import java.math.BigDecimal
 import java.time.LocalDateTime
@@ -37,15 +37,15 @@ object RideFileStorage : FileStorage<Ride>("data/rides.csv") {
 
     // A new Ride starts as BOOKED, so walk it back through the steps it took.
     private fun replayStatus(ride: Ride, parts: List<String>) {
-        when (DispatchStatus.valueOf(parts[6])) {
+        when (BookingStatus.valueOf(parts[6])) {
 
-            DispatchStatus.BOOKED -> {}
+            BookingStatus.BOOKED -> {}
 
-            DispatchStatus.STARTED -> ride.updateStatus(DispatchStatus.STARTED)
+            BookingStatus.STARTED -> ride.updateStatus(BookingStatus.STARTED)
 
-            DispatchStatus.COMPLETED -> {
-                ride.updateStatus(DispatchStatus.STARTED)
-                ride.updateStatus(DispatchStatus.COMPLETED)
+            BookingStatus.COMPLETED -> {
+                ride.updateStatus(BookingStatus.STARTED)
+                ride.updateStatus(BookingStatus.COMPLETED)
                 ride.setCompletedAt(LocalDateTime.parse(parts[8]))
 
                 val rating = parts[10].toInt()
@@ -54,8 +54,8 @@ object RideFileStorage : FileStorage<Ride>("data/rides.csv") {
                 }
             }
 
-            DispatchStatus.CANCELLED -> {
-                ride.updateStatus(DispatchStatus.CANCELLED)
+            BookingStatus.CANCELLED -> {
+                ride.updateStatus(BookingStatus.CANCELLED)
                 ride.setCancelledAt(LocalDateTime.parse(parts[9]))
             }
         }

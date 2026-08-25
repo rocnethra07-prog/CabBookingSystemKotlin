@@ -1,13 +1,13 @@
 package cab_booking.repository
 import cab_booking.exception.ActiveParcelNotFoundException
 import cab_booking.model.ParcelDelivery
-import cab_booking.model.types.DispatchStatus
+import cab_booking.model.types.BookingStatus
 
 object ParcelDeliveryRepo : InMemoryRepo<ParcelDelivery>() {
 
     override fun getKey(entity: ParcelDelivery) = entity.bookingId
 
-    private val activeStatuses = setOf(DispatchStatus.BOOKED, DispatchStatus.STARTED)
+    private val activeStatuses = setOf(BookingStatus.BOOKED, BookingStatus.STARTED)
 
     fun findCurrentParcelDeliveryOfDriver(driverId: String): ParcelDelivery =
         findParcelDelivery { it.driverId == driverId && it.status in activeStatuses } ?: throw ActiveParcelNotFoundException()

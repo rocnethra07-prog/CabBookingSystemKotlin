@@ -3,7 +3,7 @@ package cab_booking.repository
 import cab_booking.exception.ActiveRideNotFoundException
 import cab_booking.exception.CompletedRideNotFoundException
 import cab_booking.model.Ride
-import cab_booking.model.types.DispatchStatus
+import cab_booking.model.types.BookingStatus
 
 object RideRepo : InMemoryRepo<Ride>() {
 
@@ -13,7 +13,7 @@ object RideRepo : InMemoryRepo<Ride>() {
     private fun findRides(predicate: (Ride) -> Boolean ) : List<Ride> =
         storage.values.filter(predicate)
 
-    private val activeStatuses = setOf(DispatchStatus.BOOKED, DispatchStatus.STARTED)
+    private val activeStatuses = setOf(BookingStatus.BOOKED, BookingStatus.STARTED)
 
     fun findCurrentRideOfDriver(driverId: String): Ride =
         findRide{ it.driverId == driverId && it.status in activeStatuses }  ?: throw ActiveRideNotFoundException()
@@ -36,7 +36,7 @@ object RideRepo : InMemoryRepo<Ride>() {
 
     fun findLastCompletedRide(riderId: String): Ride =
         findRides{
-                it.customerId == riderId && it.status == DispatchStatus.COMPLETED
+                it.customerId == riderId && it.status == BookingStatus.COMPLETED
             }
             .maxByOrNull {
                 it.completedAt!!

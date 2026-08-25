@@ -1,9 +1,9 @@
 package cab_booking.model
 
 import cab_booking.util.toDisplayString
-import cab_booking.exception.InvalidDispatchStateException
+import cab_booking.exception.InvalidBookingStateException
 import cab_booking.model.types.Location
-import cab_booking.model.types.DispatchStatus
+import cab_booking.model.types.BookingStatus
 import cab_booking.util.IdGenerator
 import java.math.BigDecimal
 import java.time.LocalDateTime
@@ -32,7 +32,7 @@ abstract class Booking(
     var completedAt: LocalDateTime? = null
         private set
 
-    var status: DispatchStatus = DispatchStatus.BOOKED
+    var status: BookingStatus = BookingStatus.BOOKED
         private set
 
     fun setCancelledAt(cancelledAt: LocalDateTime) {
@@ -43,19 +43,19 @@ abstract class Booking(
         this.completedAt = completedAt
     }
 
-    fun updateStatus(newStatus: DispatchStatus) {
+    fun updateStatus(newStatus: BookingStatus) {
         //INVALID CONDITIONS CHECK
         if (
         // COMPLETED OR CANCELLED - NO FURTHER STATUS CHANGES
-            (status == DispatchStatus.COMPLETED || status == DispatchStatus.CANCELLED) ||
+            (status == BookingStatus.COMPLETED || status == BookingStatus.CANCELLED) ||
 
             // BOOKED - CAN ONLY BECOME ONGOING OR CANCELLED
-            (status == DispatchStatus.BOOKED && newStatus != DispatchStatus.STARTED && newStatus != DispatchStatus.CANCELLED) ||
+            (status == BookingStatus.BOOKED && newStatus != BookingStatus.STARTED && newStatus != BookingStatus.CANCELLED) ||
 
             // ONGOING - CAN ONLY BECOME COMPLETED
-            (status == DispatchStatus.STARTED && newStatus != DispatchStatus.COMPLETED)
+            (status == BookingStatus.STARTED && newStatus != BookingStatus.COMPLETED)
         ) {
-            throw InvalidDispatchStateException("Ride status cannot be changed from $status to $newStatus.")
+            throw InvalidBookingStateException("Ride status cannot be changed from $status to $newStatus.")
         }
 
         status = newStatus
@@ -65,8 +65,8 @@ abstract class Booking(
         private set
 
     fun setRating(rating: Int){
-        if(status != DispatchStatus.COMPLETED) {
-            throw InvalidDispatchStateException("Only completed rides can be rated.")
+        if(status != BookingStatus.COMPLETED) {
+            throw InvalidBookingStateException("Only completed rides can be rated.")
         }
 
         require(rating in 1..5) { "Rating must be between 1 and 5." }
@@ -90,7 +90,8 @@ abstract class Booking(
             Drop Location    : $dropLocation
             Fare             : ₹$fare
             Status           : $status
-            Booked At        : $bookedAt
+            Booked At        : ${bookedAt.toDisplayString()}
+            Rating           : ${if (rating == 0) "Not rated yet" else "$rating/5"}
             Completed At     : ${completedAt?.toDisplayString() ?: "-"}
             Cancelled At     : ${cancelledAt?.toDisplayString() ?: "-"}
         """.trimIndent()

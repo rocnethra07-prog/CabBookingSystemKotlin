@@ -77,12 +77,12 @@ object AdminUI {
             println("Driver Details")
             ConsoleFormatter.divider()
 
-            val name = InputReader.promptName()
-            val phone = InputReader.promptPhoneNumber()
+            val name = InputReader.promptName("Enter the Driver's Name")
+            val phone = InputReader.promptPhoneNumber("Enter the Driver's Phone Number")
 
             var email: String
             while (true) {
-                email = InputReader.promptEmail()
+                email = InputReader.promptEmail("Enter the Driver's Email")
                 if (AuthController.isEmailRegistered(email)) {
                     println("\n[x] This email is already registered. Please use a different email.\n")
                     continue
@@ -90,12 +90,12 @@ object AdminUI {
                 break
             }
 
-            val password = InputReader.promptPassword()
-            val currentLocation = InputReader.chooseLocation()
+            val password = InputReader.promptPassword("Enter the Driver's Password")
+            val currentLocation = InputReader.chooseLocation("Choose the Driver's Current Location")
 
             var licenseNumber: String
             while (true) {
-                licenseNumber = InputReader.promptLicenseNumber()
+                licenseNumber = InputReader.promptLicenseNumber("Enter the Driver's License Number")
                 if (AdminController.isLicenseNumberTaken(licenseNumber)) {
                     println("\n[x] This license number is already registered. Please enter a different one.\n")
                     continue
@@ -124,11 +124,11 @@ object AdminUI {
         ConsoleFormatter.divider()
 
         val vehicleModel =
-            InputReader.promptNonEmptyInput("Vehicle Model (e.g. Honda City) or 'cancel' to go back: : ", "Vehicle model cannot be blank.")
+            InputReader.promptNonEmptyInput("Enter Vehicle Model (e.g. Honda City)", "Vehicle model cannot be blank.")
 
         var registrationNumber: String
         while (true) {
-            registrationNumber = InputReader.promptRegistrationNumber()
+            registrationNumber = InputReader.promptRegistrationNumber("Enter Vehicle Registration Number")
             if (AdminController.isRegistrationNumberTaken(registrationNumber)) {
                 println("\n[x] This registration number is already registered. Please enter a different one. ")
                 continue
@@ -148,7 +148,7 @@ object AdminUI {
             ConsoleFormatter.header("REMOVE DRIVER")
 
             val userId = InputReader.promptNonEmptyInput(
-                "Enter Driver's User ID: ",
+                "Enter Driver's User ID",
                 "User ID cannot be blank."
             )
 

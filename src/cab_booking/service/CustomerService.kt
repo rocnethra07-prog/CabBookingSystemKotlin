@@ -1,7 +1,7 @@
 package cab_booking.service
 import cab_booking.repository.DriverRepo
 import cab_booking.exception.DriverNotFoundException
-import cab_booking.exception.InvalidDispatchStateException
+import cab_booking.exception.InvalidBookingStateException
 import cab_booking.exception.UnauthorizedParcelActionException
 import cab_booking.exception.UnauthorizedRideActionException
 import cab_booking.model.Driver
@@ -9,7 +9,7 @@ import cab_booking.model.ParcelDelivery
 import cab_booking.model.Ride
 import cab_booking.model.User
 import cab_booking.model.types.Location
-import cab_booking.model.types.DispatchStatus
+import cab_booking.model.types.BookingStatus
 import cab_booking.model.types.VehicleCategory
 import cab_booking.service.ParcelDeliveryService.createParcelDelivery
 
@@ -18,10 +18,10 @@ object CustomerService {
     fun updateProfile(
         user: User,
         name: String,
-        phone: String
+        phoneNumber: String
     ) {
         user.updateName(name)
-        user.updatePhoneNumber(phone)
+        user.updatePhoneNumber(phoneNumber)
     }
 
     fun bookRide(
@@ -61,11 +61,11 @@ object CustomerService {
         }
 
         if(ride.rating != 0) {
-            throw InvalidDispatchStateException("Ride has already been rated.")
+            throw InvalidBookingStateException("Ride has already been rated.")
         }
 
-        if(ride.status != DispatchStatus.COMPLETED) {
-            throw InvalidDispatchStateException("Only completed rides can be rated.")
+        if(ride.status != BookingStatus.COMPLETED) {
+            throw InvalidBookingStateException("Only completed rides can be rated.")
         }
 
         RideService.rateRide(ride, rating)

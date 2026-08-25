@@ -24,7 +24,7 @@ class VehicleNotFoundException(message: String) :
     Exception(message)
 
 // The status rule is shared by rides and deliveries, so there is one exception.
-class InvalidDispatchStateException(message: String) :
+class InvalidBookingStateException(message: String) :
     Exception(message)
 
 // The ownership rule is the same, but the two screens word it differently.

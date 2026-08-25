@@ -13,9 +13,8 @@ object InputReader {
     // the person to keep answering until it's valid.
     private const val CANCEL_KEYWORD = "cancel"
 
-    // Every prompt reads through here so the cancel word works everywhere at once.
     private fun readLine(prompt: String): String {
-        print(prompt)
+        print("$prompt (or 'cancel' to go back):")
         val input = readln().trim()
         if (input.equals(CANCEL_KEYWORD, ignoreCase = true)) {
             throw OperationCancelledException()
@@ -38,41 +37,41 @@ object InputReader {
 
 
     fun promptName(
-        prompt: String = "Enter Name (or 'cancel' to go back): ",
+        prompt: String = "Enter Name",
         errorMessage: String = "Name must contain minimum 3 characters. Please try again"
     ) =
         promptUntilValidInput(prompt, errorMessage ) { Validator.isValidName(it) }
 
 
     fun promptPhoneNumber(
-        prompt: String = "Enter Phone (or 'cancel' to go back): ",
+        prompt: String = "Enter Phone Number",
         errorMessage: String = "Invalid Phone Number. Please enter a valid 10 digit number"
     ) =
         promptUntilValidInput(prompt, errorMessage) { Validator.isValidPhoneNumber(it) }
 
 
     fun promptEmail(
-        prompt: String = "Enter email (or 'cancel' to go back): ",
+        prompt: String = "Enter email",
         errorMessage: String = "Invalid email format. Please enter a valid email"
     ) =
         promptUntilValidInput(prompt, errorMessage){ Validator.isValidEmail(it) }
 
 
     fun promptPassword(
-        prompt: String = "Enter password (or 'cancel' to go back): ",
+        prompt: String = "Enter password",
         errorMessage: String = "Password must be at least 8 characters, with an uppercase letter, a lowercase letter, and a special character (@#$%^&+=!-_). Spaces are not allowed."
     ) =
         promptUntilValidInput(prompt, errorMessage){ Validator.isValidPassword(it) }
 
 
     fun promptLicenseNumber(
-        prompt: String = "License Number (or 'cancel' to go back): ",
+        prompt: String = "Enter License Number",
         errorMessage: String = "Invalid license number. Format: TN012023001234."
     ) =
         promptUntilValidInput(prompt, errorMessage){ Validator.isValidLicenseNumber(it) }.uppercase()
 
     fun promptRegistrationNumber(
-        prompt: String = "Registration Number (or 'cancel' to go back): ",
+        prompt: String = "Enter Registration Number",
         errorMessage: String =  "Invalid registration number. Format: TN01AB0001."
     ) =
         promptUntilValidInput(prompt, errorMessage) { Validator.isValidRegistrationNumber(it) }.uppercase()
@@ -88,10 +87,10 @@ object InputReader {
                 println("${index + 1}. $location")
             }
 
-            val choice = readLine("Choose (or 'cancel' to go back): ").toIntOrNull()
+            val choice = readLine("Choose").toIntOrNull()
 
             if (choice == null || choice !in 1..Location.entries.size) {
-                println("[x] Invalid choice. Please try again.")
+                println("\n[x] Invalid choice. Please try again.\n")
                 continue
             }
 
@@ -103,10 +102,10 @@ object InputReader {
     fun promptConfirmation(prompt: String): Boolean {
 
         while (true) {
-            when (readLine("$prompt (Y/N or 'cancel' to go back) : ").trim().uppercase()) {
+            when (readLine("$prompt ( Yes / No )").trim().uppercase()) {
                 "Y", "YES" -> return true
                 "N", "NO" -> return false
-                else -> println("[x] Please enter Y or N.")
+                else -> println("\n[x] Please enter Y or N.\n")
             }
         }
     }
@@ -140,7 +139,7 @@ object InputReader {
         }
     }
 
-    fun chooseVehicleCategory(prompt: String = "Select Vehicle Type"): VehicleCategory {
+    fun chooseVehicleCategory(prompt: String = "Select Vehicle Category"): VehicleCategory {
         while (true) {
             println("\n$prompt")
             ConsoleFormatter.divider()
@@ -200,7 +199,7 @@ object InputReader {
             val value = readLine(prompt).toIntOrNull()
 
             if (value == null || value !in 1..5) {
-                println("[x] Please enter a rating between 1 and 5.")
+                println("\n[x] Please enter a rating between 1 and 5.\n")
                 continue
             }
             return value

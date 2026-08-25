@@ -1,8 +1,8 @@
 package cab_booking.service
 
-import cab_booking.exception.InvalidDispatchStateException
+import cab_booking.exception.InvalidBookingStateException
 import cab_booking.model.ParcelDelivery
-import cab_booking.model.types.DispatchStatus
+import cab_booking.model.types.BookingStatus
 import cab_booking.model.types.Location
 import cab_booking.model.types.VehicleCategory
 import cab_booking.repository.ParcelDeliveryRepo
@@ -39,28 +39,28 @@ object ParcelDeliveryService {
     }
 
     fun markAsPickedUp(parcelDelivery: ParcelDelivery) {
-        if (parcelDelivery.status != DispatchStatus.BOOKED) {
-            throw InvalidDispatchStateException("Only booked parcels can be picked up.")
+        if (parcelDelivery.status != BookingStatus.BOOKED) {
+            throw InvalidBookingStateException("Only booked parcels can be picked up.")
         }
 
-        parcelDelivery.updateStatus(DispatchStatus.STARTED)
+        parcelDelivery.updateStatus(BookingStatus.STARTED)
     }
 
     fun markAsDelivered(parcelDelivery: ParcelDelivery) {
-        if (parcelDelivery.status != DispatchStatus.STARTED) {
-            throw InvalidDispatchStateException("Only picked-up parcels can be delivered.")
+        if (parcelDelivery.status != BookingStatus.STARTED) {
+            throw InvalidBookingStateException("Only picked-up parcels can be delivered.")
         }
 
-        parcelDelivery.updateStatus(DispatchStatus.COMPLETED)
+        parcelDelivery.updateStatus(BookingStatus.COMPLETED)
         parcelDelivery.setCompletedAt(LocalDateTime.now())
     }
 
     fun markAsCancelled(parcelDelivery: ParcelDelivery) {
-        if (parcelDelivery.status != DispatchStatus.BOOKED) {
-            throw InvalidDispatchStateException("Only booked parcels can be cancelled.")
+        if (parcelDelivery.status != BookingStatus.BOOKED) {
+            throw InvalidBookingStateException("Only booked parcels can be cancelled.")
         }
 
-        parcelDelivery.updateStatus(DispatchStatus.CANCELLED)
+        parcelDelivery.updateStatus(BookingStatus.CANCELLED)
         parcelDelivery.setCancelledAt(LocalDateTime.now())
     }
 

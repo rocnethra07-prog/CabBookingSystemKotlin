@@ -16,7 +16,7 @@ import cab_booking.model.Ride
 import cab_booking.model.User
 import cab_booking.model.types.Location
 import cab_booking.console.input.ConsoleFormatter
-import cab_booking.exception.InvalidDispatchStateException
+import cab_booking.exception.InvalidBookingStateException
 import cab_booking.exception.OperationCancelledException
 import cab_booking.model.ParcelDelivery
 
@@ -126,7 +126,7 @@ object CustomerUI {
         catch (e: UnauthorizedRideActionException) {
             println("\n[x] We couldn't submit your rating.  ${e.message}")
         }
-        catch (e : InvalidDispatchStateException){
+        catch (e : InvalidBookingStateException){
             println("\n[x] We couldn't submit your rating.  ${e.message}")
         }
         catch (e: DriverNotFoundException) {
@@ -307,7 +307,7 @@ object CustomerUI {
         catch (e: UnauthorizedRideActionException) {
             println("\n[x] ${e.message}")
         }
-        catch (e : InvalidDispatchStateException){
+        catch (e : InvalidBookingStateException){
             println("\n[x] ${e.message}")
         }
         catch (e : DriverNotFoundException){
@@ -468,7 +468,7 @@ object CustomerUI {
         catch (e: UnauthorizedParcelActionException) {
             println("\n[x] ${e.message}")
         }
-        catch (e: InvalidDispatchStateException) {
+        catch (e: InvalidBookingStateException) {
             println("\n[x] ${e.message}")
         }
         catch (e: DriverNotFoundException) {
@@ -484,16 +484,16 @@ object CustomerUI {
 
             val name = InputReader.promptOptionalName(rider.name)
 
-            val phone = InputReader.promptOptionalPhone(rider.phoneNumber)
+            val phoneNumber = InputReader.promptOptionalPhone(rider.phoneNumber)
 
-            if (name == rider.name && phone == rider.phoneNumber) {
+            if (name == rider.name && phoneNumber == rider.phoneNumber) {
                 println("\nNo changes made.")
                 return
             }
             CustomerController.updateProfile(
                 rider,
                 name,
-                phone
+                phoneNumber
             )
 
             println(

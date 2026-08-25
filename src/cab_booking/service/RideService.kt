@@ -1,8 +1,8 @@
 package cab_booking.service
 
-import cab_booking.exception.InvalidDispatchStateException
+import cab_booking.exception.InvalidBookingStateException
 import cab_booking.model.Ride
-import cab_booking.model.types.DispatchStatus
+import cab_booking.model.types.BookingStatus
 import cab_booking.model.types.Location
 import cab_booking.model.types.VehicleCategory
 import cab_booking.repository.RideRepo
@@ -34,34 +34,34 @@ object RideService {
 
 
     fun markAsStarted(ride: Ride) {
-        if (ride.status != DispatchStatus.BOOKED) {
-            throw InvalidDispatchStateException("Only booked rides can be started.")
+        if (ride.status != BookingStatus.BOOKED) {
+            throw InvalidBookingStateException("Only booked rides can be started.")
         }
 
-        ride.updateStatus(DispatchStatus.STARTED)
+        ride.updateStatus(BookingStatus.STARTED)
     }
 
     fun markAsCompleted(ride: Ride) {
-        if (ride.status != DispatchStatus.STARTED) {
-            throw InvalidDispatchStateException("Only started rides can be completed.")
+        if (ride.status != BookingStatus.STARTED) {
+            throw InvalidBookingStateException("Only started rides can be completed.")
         }
 
-        ride.updateStatus(DispatchStatus.COMPLETED)
+        ride.updateStatus(BookingStatus.COMPLETED)
         ride.setCompletedAt(LocalDateTime.now())
     }
 
     fun markAsCancelled(ride: Ride) {
-        if (ride.status != DispatchStatus.BOOKED) {
-            throw InvalidDispatchStateException("Only booked rides can be cancelled.")
+        if (ride.status != BookingStatus.BOOKED) {
+            throw InvalidBookingStateException("Only booked rides can be cancelled.")
         }
 
-        ride.updateStatus(DispatchStatus.CANCELLED)
+        ride.updateStatus(BookingStatus.CANCELLED)
         ride.setCancelledAt(LocalDateTime.now())
     }
 
     fun rateRide(ride: Ride, rating: Int) {
         if (ride.rating != 0) {
-            throw InvalidDispatchStateException("This ride has already been rated.")
+            throw InvalidBookingStateException("This ride has already been rated.")
         }
 
         ride.setRating(rating)

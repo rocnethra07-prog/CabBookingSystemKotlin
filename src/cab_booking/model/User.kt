@@ -24,9 +24,9 @@ abstract class User(
         this.name = name.trim()
     }
 
-    fun updatePhoneNumber(phone: String){
-        require(Validator.isValidPhoneNumber(phone)){ "Invalid phone number format. Phone cannot be blank" }
-        this.phoneNumber = phone.trim()
+    fun updatePhoneNumber(phoneNumber: String){
+        require(Validator.isValidPhoneNumber(phoneNumber)){ "Invalid phone number format. Phone cannot be blank" }
+        this.phoneNumber = phoneNumber.trim()
     }
 
     init {

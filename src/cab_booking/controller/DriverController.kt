@@ -20,8 +20,8 @@ object DriverController{
     fun getVehicleById(vehicleId: String) =
         VehicleService.getVehicleById(vehicleId)
 
-    fun updateProfile(driver: Driver, name: String, phone: String, location: Location) =
-        DriverService.updateProfile(driver,name,phone,location)
+    fun updateProfile(driver: Driver, name: String, phoneNumber: String, location: Location) =
+        DriverService.updateProfile(driver,name,phoneNumber,location)
 
     fun startRide(ride: Ride, driver: Driver) =
         DriverService.startRide(ride, driver)

@@ -1,7 +1,7 @@
 package cab_booking.storage
 
 import cab_booking.model.ParcelDelivery
-import cab_booking.model.types.DispatchStatus
+import cab_booking.model.types.BookingStatus
 import cab_booking.model.types.Location
 import java.math.BigDecimal
 import java.time.LocalDateTime
@@ -39,20 +39,20 @@ object ParcelDeliveryFileStorage : FileStorage<ParcelDelivery>("data/parcel_deli
 
     // STARTED means picked up, COMPLETED means delivered.
     private fun replayStatus(parcelDelivery: ParcelDelivery, parts: List<String>) {
-        when (DispatchStatus.valueOf(parts[8])) {
+        when (BookingStatus.valueOf(parts[8])) {
 
-            DispatchStatus.BOOKED -> {}
+            BookingStatus.BOOKED -> {}
 
-            DispatchStatus.STARTED -> parcelDelivery.updateStatus(DispatchStatus.STARTED)
+            BookingStatus.STARTED -> parcelDelivery.updateStatus(BookingStatus.STARTED)
 
-            DispatchStatus.COMPLETED -> {
-                parcelDelivery.updateStatus(DispatchStatus.STARTED)
-                parcelDelivery.updateStatus(DispatchStatus.COMPLETED)
+            BookingStatus.COMPLETED -> {
+                parcelDelivery.updateStatus(BookingStatus.STARTED)
+                parcelDelivery.updateStatus(BookingStatus.COMPLETED)
                 parcelDelivery.setCompletedAt(LocalDateTime.parse(parts[10]))
             }
 
-            DispatchStatus.CANCELLED -> {
-                parcelDelivery.updateStatus(DispatchStatus.CANCELLED)
+            BookingStatus.CANCELLED -> {
+                parcelDelivery.updateStatus(BookingStatus.CANCELLED)
                 parcelDelivery.setCancelledAt(LocalDateTime.parse(parts[11]))
             }
         }

@@ -10,7 +10,7 @@ import cab_booking.exception.VehicleNotFoundException
 import cab_booking.model.Driver
 import cab_booking.model.Ride
 import cab_booking.console.input.ConsoleFormatter
-import cab_booking.exception.InvalidDispatchStateException
+import cab_booking.exception.InvalidBookingStateException
 import cab_booking.exception.OperationCancelledException
 import cab_booking.model.ParcelDelivery
 import cab_booking.service.DriverService
@@ -131,7 +131,7 @@ object DriverUI {
             catch (e: UnauthorizedRideActionException) {
                 println("\n[x] ${e.message}")
             }
-            catch (e: InvalidDispatchStateException){
+            catch (e: InvalidBookingStateException){
                 println("\n[x] ${e.message}")
             }
             catch (e : IllegalArgumentException){
@@ -227,7 +227,7 @@ object DriverUI {
             catch (e: UnauthorizedParcelActionException) {
                 println("\n[x] ${e.message}")
             }
-            catch (e: InvalidDispatchStateException) {
+            catch (e: InvalidBookingStateException) {
                 println("\n[x] ${e.message}")
             }
             catch (e: IllegalArgumentException) {
@@ -277,7 +277,7 @@ object DriverUI {
             println("(Press Enter to keep the current value)\n")
 
             val name = InputReader.promptOptionalName(driver.name)
-            val phone = InputReader.promptOptionalPhone(driver.phoneNumber)
+            val phoneNumber = InputReader.promptOptionalPhone(driver.phoneNumber)
 
             println("Current Location : ${driver.currentLocation}")
 
@@ -289,7 +289,7 @@ object DriverUI {
 
             if (
                 name == driver.name &&
-                phone == driver.phoneNumber &&
+                phoneNumber == driver.phoneNumber &&
                 location == driver.currentLocation
             ) {
                 println("\nNo changes made.")
@@ -299,7 +299,7 @@ object DriverUI {
             DriverController.updateProfile(
                 driver,
                 name,
-                phone,
+                phoneNumber,
                 location
             )
 

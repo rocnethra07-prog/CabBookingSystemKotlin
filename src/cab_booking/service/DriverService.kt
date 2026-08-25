@@ -92,11 +92,11 @@ object DriverService {
     fun updateProfile(
         driver: Driver,
         name: String,
-        phone: String,
+        phoneNumber: String,
         location: Location
     ) {
         driver.updateName(name)
-        driver.updatePhoneNumber(phone)
+        driver.updatePhoneNumber(phoneNumber)
         driver.updateCurrentLocation(location)
     }
 
