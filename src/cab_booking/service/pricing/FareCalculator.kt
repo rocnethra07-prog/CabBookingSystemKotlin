@@ -7,6 +7,9 @@ import java.math.BigDecimal
 import java.math.RoundingMode
 import java.time.LocalDateTime
 
+// Fare calculation logic (distance -> base fare -> surge -> rounding)
+// is common to every vehicle category. Only the surge multiplier changes,
+// so subclasses override just that instead of duplicating the whole formula.
 abstract class FareCalculator {
 
     protected abstract val surgeMultiplier : BigDecimal
