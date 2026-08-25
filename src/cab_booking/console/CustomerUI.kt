@@ -77,7 +77,7 @@ object CustomerUI {
     private fun showRatingScreen(
         ride: Ride, customer: Customer
     ) {
-        val driver = CustomerController.getDriverForRide(ride)
+        val driver = CustomerController.getDriverOfRide(ride)
 
         println(
             """
@@ -191,7 +191,7 @@ object CustomerUI {
                         vehicleCategory
                     )
 
-                    val driver = CustomerController.getDriverForRide(ride)
+                    val driver = CustomerController.getDriverOfRide(ride)
 
                     ConsoleFormatter.subHeader("RIDE CONFIRMED")
                     println(ride)
@@ -236,7 +236,7 @@ object CustomerUI {
     fun viewCurrentRide(customer: Customer){
         try {
             val ride = CustomerController.getCurrentBookedRideOfCustomer(customer.userId)
-            val driver = CustomerController.getDriverForRide(ride)
+            val driver = CustomerController.getDriverOfRide(ride)
             ConsoleFormatter.header("YOUR RIDE")
             println(ride)
             println()
@@ -371,7 +371,7 @@ object CustomerUI {
                         customer, pickup, drop, vehicleCategory,contactPersonName, contactPersonPhoneNumber
                     )
 
-                    val driver = CustomerController.getDriverForParcelDelivery(parcelDelivery)
+                    val driver = CustomerController.getDriverOfParcelDelivery(parcelDelivery)
 
                     ConsoleFormatter.subHeader("PARCEL DELIVERY BOOKED")
                     println(parcelDelivery)
@@ -406,7 +406,7 @@ object CustomerUI {
     private fun viewCurrentParcelDelivery(customer: Customer) {
         try {
             val parcelDelivery = CustomerController.getCurrentParcelDeliveryOfCustomer(customer.userId)
-            val driver = CustomerController.getDriverForParcelDelivery(parcelDelivery)
+            val driver = CustomerController.getDriverOfParcelDelivery(parcelDelivery)
 
             ConsoleFormatter.header("YOUR PARCEL")
             println(parcelDelivery)

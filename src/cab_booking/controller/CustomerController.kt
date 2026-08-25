@@ -14,11 +14,11 @@ object CustomerController{
     fun getLastCompletedRideOfCustomer(customerId: String) =
         RideService.getLastCompletedRideOfCustomer(customerId)
 
-    fun getDriverForRide(ride: Ride) =
-        CustomerService.getDriverForRide(ride)
+    fun getDriverOfRide(ride: Ride) =
+        CustomerService.getDriverOfRide(ride)
 
-    fun getDriverForParcelDelivery(parcelDelivery: ParcelDelivery) =
-        CustomerService.getDriverForParcelDelivery(parcelDelivery)
+    fun getDriverOfParcelDelivery(parcelDelivery: ParcelDelivery) =
+        CustomerService.getDriverOfParcelDelivery(parcelDelivery)
 
     fun rateDriver(ride: Ride, customer: Customer, rating: Int) =
         CustomerService.rateDriver(ride,customer,rating)

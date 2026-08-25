@@ -37,7 +37,7 @@ object CustomerService {
         return ride
     }
 
-    fun getDriverForRide(ride: Ride): Driver =
+    fun getDriverOfRide(ride: Ride): Driver =
         DriverRepo.findByKey(ride.driverId) ?: throw DriverNotFoundException("Driver not found for this ride")
 
     fun cancelRide(
@@ -47,7 +47,7 @@ object CustomerService {
         if (ride.customerId != customer.userId) {
             throw UnauthorizedRideActionException("Only the rider/customer who booked this ride can cancel it.")
         }
-        DriverService.cancelRide(ride,getDriverForRide(ride))
+        DriverService.cancelRide(ride,getDriverOfRide(ride))
     }
 
     fun rateDriver(
@@ -100,10 +100,10 @@ object CustomerService {
         if (parcelDelivery.customerId != customer.userId) {
             throw UnauthorizedParcelActionException("Only the customer who booked this parcel can cancel it.")
         }
-        DriverService.cancelParcelDelivery(parcelDelivery, getDriverForParcelDelivery(parcelDelivery))
+        DriverService.cancelParcelDelivery(parcelDelivery, getDriverOfParcelDelivery(parcelDelivery))
     }
 
-    fun getDriverForParcelDelivery(parcelDelivery: ParcelDelivery): Driver =
+    fun getDriverOfParcelDelivery(parcelDelivery: ParcelDelivery): Driver =
         DriverRepo.findByKey(parcelDelivery.driverId) ?: throw DriverNotFoundException("Driver not found for this parcel.")
 
 
