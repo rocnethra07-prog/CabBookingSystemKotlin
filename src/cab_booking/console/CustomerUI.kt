@@ -484,7 +484,7 @@ object CustomerUI {
 
             val name = InputReader.promptOptionalName(customer.name)
 
-            val phoneNumber = InputReader.promptOptionalPhone(customer.phoneNumber)
+            val phoneNumber = InputReader.promptOptionalPhoneNumber(customer.phoneNumber)
 
             if (name == customer.name && phoneNumber == customer.phoneNumber) {
                 println("\nNo changes made.")
@@ -501,9 +501,9 @@ object CustomerUI {
     
                 Profile Updated Successfully
     
-                Name  : ${customer.name}
-                Phone : ${customer.phoneNumber}
-                Email : ${customer.email}
+                Name         : ${customer.name}
+                Phone Number : ${customer.phoneNumber}
+                Email        : ${customer.email}
                 """.trimIndent()
             )
 

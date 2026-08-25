@@ -277,7 +277,7 @@ object DriverUI {
             println("(Press Enter to keep the current value)\n")
 
             val name = InputReader.promptOptionalName(driver.name)
-            val phoneNumber = InputReader.promptOptionalPhone(driver.phoneNumber)
+            val phoneNumber = InputReader.promptOptionalPhoneNumber(driver.phoneNumber)
 
             println("Current Location : ${driver.currentLocation}")
 
@@ -309,7 +309,7 @@ object DriverUI {
                 Profile Updated Successfully
     
                 Name             : ${driver.name}
-                Phone            : ${driver.phoneNumber}
+                Phone Number     : ${driver.phoneNumber}
                 Email            : ${driver.email}
                 Location         : ${driver.currentLocation}
                 License Number   : ${driver.licenseNumber}
