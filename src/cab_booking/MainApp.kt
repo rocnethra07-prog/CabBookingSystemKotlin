@@ -13,7 +13,7 @@ fun main() {
     DriverSeeder.seed()
 
     println("\n---------------------------")
-    println("--- CAB BOOKING SERVICE ---")
+    println("Cab Booking & Parcel Delivery Service")
     println("---------------------------")
 
 
