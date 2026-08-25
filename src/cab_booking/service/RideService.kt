@@ -60,11 +60,11 @@ object RideService {
     }
 
     fun rateRide(ride: Ride, rating: Int) {
-        if (ride.ratings != 0) {
+        if (ride.rating != 0) {
             throw InvalidDispatchStateException("This ride has already been rated.")
         }
 
-        ride.setRatings(rating)
+        ride.setRating(rating)
     }
 
     fun hasActiveRideForDriver(driverId: String): Boolean =

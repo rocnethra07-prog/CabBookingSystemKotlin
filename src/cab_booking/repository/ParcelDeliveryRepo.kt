@@ -5,7 +5,7 @@ import cab_booking.model.types.DispatchStatus
 
 object ParcelDeliveryRepo : InMemoryRepo<ParcelDelivery>() {
 
-    override fun getKey(entity: ParcelDelivery) = entity.dispatchId
+    override fun getKey(entity: ParcelDelivery) = entity.bookingId
 
     private val activeStatuses = setOf(DispatchStatus.BOOKED, DispatchStatus.STARTED)
 

@@ -1,6 +1,5 @@
 package cab_booking.config
 
-import cab_booking.model.types.UserRole
 import cab_booking.service.AuthService
 import cab_booking.service.UserService
 
@@ -15,7 +14,7 @@ object AdminSeeder {
     fun seed() {
         if (!UserService.isEmailRegistered(ADMIN_EMAIL)) {
             try {
-                AuthService.registerUser(ADMIN_NAME, ADMIN_PHONE, ADMIN_EMAIL, ADMIN_PASSWORD, UserRole.ADMIN)
+                AuthService.registerAdmin(ADMIN_NAME, ADMIN_PHONE, ADMIN_EMAIL, ADMIN_PASSWORD)
             }
             catch (_ : IllegalArgumentException){}
         }

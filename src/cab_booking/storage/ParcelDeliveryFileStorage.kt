@@ -11,7 +11,7 @@ object ParcelDeliveryFileStorage : FileStorage<ParcelDelivery>("data/parcel_deli
     private const val NOT_SET = "NA"
 
     override fun toLine(item: ParcelDelivery) =
-        "${item.dispatchId},${item.customerId},${item.driverId}," +
+        "${item.bookingId},${item.customerId},${item.driverId}," +
                 "${item.pickupLocation.name},${item.dropLocation.name}," +
                 "${item.fare.toPlainString()}," +
                 "${item.receiverName},${item.receiverPhoneNumber}," +
@@ -26,10 +26,10 @@ object ParcelDeliveryFileStorage : FileStorage<ParcelDelivery>("data/parcel_deli
             driverId = parts[2],
             pickupLocation = Location.valueOf(parts[3]),
             dropLocation = Location.valueOf(parts[4]),
-            fare = BigDecimal(parts[6]),
-            receiverName = parts[7],
-            receiverPhoneNumber = parts[8],
-            bookedAt = LocalDateTime.parse(parts[10])
+            fare = BigDecimal(parts[5]),
+            receiverName = parts[6],
+            receiverPhoneNumber = parts[7],
+            bookedAt = LocalDateTime.parse(parts[9])
         )
 
         replayStatus(parcelDelivery, parts)
@@ -39,7 +39,7 @@ object ParcelDeliveryFileStorage : FileStorage<ParcelDelivery>("data/parcel_deli
 
     // STARTED means picked up, COMPLETED means delivered.
     private fun replayStatus(parcelDelivery: ParcelDelivery, parts: List<String>) {
-        when (DispatchStatus.valueOf(parts[9])) {
+        when (DispatchStatus.valueOf(parts[8])) {
 
             DispatchStatus.BOOKED -> {}
 
@@ -48,12 +48,12 @@ object ParcelDeliveryFileStorage : FileStorage<ParcelDelivery>("data/parcel_deli
             DispatchStatus.COMPLETED -> {
                 parcelDelivery.updateStatus(DispatchStatus.STARTED)
                 parcelDelivery.updateStatus(DispatchStatus.COMPLETED)
-                parcelDelivery.setCompletedAt(LocalDateTime.parse(parts[11]))
+                parcelDelivery.setCompletedAt(LocalDateTime.parse(parts[10]))
             }
 
             DispatchStatus.CANCELLED -> {
                 parcelDelivery.updateStatus(DispatchStatus.CANCELLED)
-                parcelDelivery.setCancelledAt(LocalDateTime.parse(parts[12]))
+                parcelDelivery.setCancelledAt(LocalDateTime.parse(parts[11]))
             }
         }
     }

@@ -2,7 +2,7 @@ package cab_booking.util
 
 object IdGenerator{
     private var userCounter = 1
-    private var dispatchCounter = 1
+    private var bookingCounter = 1
     private var vehicleCounter = 1
 
 
@@ -10,7 +10,7 @@ object IdGenerator{
 
     // Rides and parcel deliveries are both Dispatches, so they share one counter
     // and one ID space. Every dispatch ID in the system is unique on its own.
-    fun generateDispatchId() = "DSP-${dispatchCounter++}"
+    fun generateBookingId() = "DSP-${bookingCounter++}"
 
     fun generateVehicleId() = "VEH-${vehicleCounter++}"
 
@@ -23,8 +23,8 @@ object IdGenerator{
         userCounter = counterAfter(userCounter, savedIds)
     }
 
-    fun syncDispatchCounter(savedIds: List<String>) {
-        dispatchCounter = counterAfter(dispatchCounter, savedIds)
+    fun syncBookingCounter(savedIds: List<String>) {
+        bookingCounter = counterAfter(bookingCounter, savedIds)
     }
 
     fun syncVehicleCounter(savedIds: List<String>) {

@@ -58,7 +58,7 @@ object CustomerUI {
         try {
             val ride = CustomerController.getLastCompletedRideOfRider(rider.userId)
 
-            if (ride.ratings != 0) {
+            if (ride.rating != 0) {
                 return
             }
 

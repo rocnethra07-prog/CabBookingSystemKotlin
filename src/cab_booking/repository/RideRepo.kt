@@ -7,7 +7,7 @@ import cab_booking.model.types.DispatchStatus
 
 object RideRepo : InMemoryRepo<Ride>() {
 
-    override fun getKey(entity: Ride): String = entity.dispatchId
+    override fun getKey(entity: Ride): String = entity.bookingId
 
     //returns list of rides based on the predicate passed
     private fun findRides(predicate: (Ride) -> Boolean ) : List<Ride> =

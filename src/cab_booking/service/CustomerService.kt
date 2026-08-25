@@ -60,7 +60,7 @@ object CustomerService {
             throw UnauthorizedRideActionException("Only the rider who booked this ride can rate it.")
         }
 
-        if(ride.ratings != 0) {
+        if(ride.rating != 0) {
             throw InvalidDispatchStateException("Ride has already been rated.")
         }
 
@@ -70,7 +70,7 @@ object CustomerService {
 
         RideService.rateRide(ride, rating)
 
-        DriverService.addRatings(DriverService.findDriverById(ride.driverId), rating)
+        DriverService.addRating(DriverService.findDriverById(ride.driverId), rating)
 
     }
 

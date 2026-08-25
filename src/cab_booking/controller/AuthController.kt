@@ -1,7 +1,6 @@
 package cab_booking.controller
 
 import cab_booking.model.User
-import cab_booking.model.types.UserRole
 import cab_booking.service.AuthService
 import cab_booking.service.UserService
 
@@ -17,12 +16,11 @@ object AuthController {
         email: String,
         password: String
     ) =
-        AuthService.registerUser(
+        AuthService.registerCustomer(
             name = name,
             phone = phone,
             email = email,
-            password = password,
-            role = UserRole.CUSTOMER
+            password = password
         )
 
     fun isEmailRegistered(email: String) =

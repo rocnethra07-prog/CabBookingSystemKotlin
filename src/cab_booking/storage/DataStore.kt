@@ -1,5 +1,7 @@
 package cab_booking.storage
 
+import cab_booking.model.Admin
+import cab_booking.model.Customer
 import cab_booking.repository.AuthRepo
 import cab_booking.repository.DriverRepo
 import cab_booking.repository.ParcelDeliveryRepo
@@ -13,8 +15,14 @@ object DataStore {
 
     fun loadAll() {
         VehicleFileStorage.load().forEach { VehicleRepo.save(it) }
-        DriverFileStorage.load().forEach { driver -> DriverRepo.save(driver) }
-        UserFileStorage.load().forEach { UserRepo.save(it) }
+        // A driver is also a user, and login looks users up by email,
+        // so the same object goes into both repos.
+        DriverFileStorage.load().forEach { driver ->
+            DriverRepo.save(driver)
+            UserRepo.save(driver)
+        }
+        CustomerFileStorage.load().forEach { UserRepo.save(it) }
+        AdminFileStorage.load().forEach { UserRepo.save(it) }
         CredentialFileStorage.load().forEach { AuthRepo.save(it) }
         RideFileStorage.load().forEach { RideRepo.save(it) }
         ParcelDeliveryFileStorage.load().forEach { ParcelDeliveryRepo.save(it) }
@@ -31,7 +39,9 @@ object DataStore {
     fun saveAll() {
         VehicleFileStorage.save(VehicleRepo.findAll())
         DriverFileStorage.save(DriverRepo.findAll())
-        UserFileStorage.save(UserRepo.findAll())
+        // Each kind of user has its own file. Drivers went to drivers.csv above.
+        CustomerFileStorage.save(UserRepo.findAll().filterIsInstance<Customer>())
+        AdminFileStorage.save(UserRepo.findAll().filterIsInstance<Admin>())
         CredentialFileStorage.save(AuthRepo.findAll())
         RideFileStorage.save(RideRepo.findAll())
         ParcelDeliveryFileStorage.save(ParcelDeliveryRepo.findAll())
@@ -45,8 +55,8 @@ object DataStore {
         IdGenerator.syncVehicleCounter(VehicleRepo.findAll().map { it.vehicleId })
 
         // Rides and deliveries share one counter.
-        IdGenerator.syncDispatchCounter(
-            RideRepo.findAll().map { it.dispatchId } + ParcelDeliveryRepo.findAll().map { it.dispatchId }
+        IdGenerator.syncBookingCounter(
+            RideRepo.findAll().map { it.bookingId } + ParcelDeliveryRepo.findAll().map { it.bookingId }
         )
     }
 }

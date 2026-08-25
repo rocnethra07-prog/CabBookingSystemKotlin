@@ -14,7 +14,7 @@ import java.time.LocalDateTime
 // Not an enum on one concrete class, because ParcelDelivery needs extra
 // mandatory fields (receiver name/phone) that a plain type flag can't
 // enforce — subclassing lets the compiler guarantee they're always present.
-abstract class Dispatch(
+abstract class Booking(
     val customerId: String,
     val driverId: String,
     val pickupLocation: Location,
@@ -23,7 +23,7 @@ abstract class Dispatch(
     // Defaults to "right now" for a new booking. The file storage passes the saved
     // time so a reloaded booking keeps the moment it was actually booked.
     val bookedAt: LocalDateTime = LocalDateTime.now(),
-    val dispatchId: String = IdGenerator.generateDispatchId()
+    val bookingId: String = IdGenerator.generateBookingId()
 ) {
 
     var cancelledAt: LocalDateTime? = null
@@ -61,17 +61,17 @@ abstract class Dispatch(
         status = newStatus
     }
 
-    var ratings: Int = 0 // 1–5, 0 if not yet rated
+    var rating: Int = 0 // 1–5, 0 if not yet rated
         private set
 
-    fun setRatings(rating: Int){
+    fun setRating(rating: Int){
         if(status != DispatchStatus.COMPLETED) {
             throw InvalidDispatchStateException("Only completed rides can be rated.")
         }
 
         require(rating in 1..5) { "Rating must be between 1 and 5." }
 
-        this.ratings = rating
+        this.rating = rating
     }
 
     init {

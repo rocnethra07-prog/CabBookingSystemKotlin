@@ -15,8 +15,8 @@ class ParcelDelivery(
     val receiverName: String,
     val receiverPhoneNumber: String,
     bookedAt: LocalDateTime = LocalDateTime.now(),
-    dispatchId: String = IdGenerator.generateDispatchId()
-) : Dispatch(customerId, driverId, pickupLocation, dropLocation, fare, bookedAt, dispatchId) {
+    dispatchId: String = IdGenerator.generateBookingId()
+) : Booking(customerId, driverId, pickupLocation, dropLocation, fare, bookedAt, dispatchId) {
 
     init {
         require(Validator.isValidName(receiverName)) { "Contact name must contain minimum 3 characters. Contact name cannot be blank." }

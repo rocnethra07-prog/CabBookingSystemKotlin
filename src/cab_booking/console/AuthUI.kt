@@ -4,15 +4,16 @@ import cab_booking.config.AdminSeeder
 import cab_booking.console.input.ConsoleFormatter
 import cab_booking.console.input.InputReader
 import cab_booking.controller.AuthController
-import cab_booking.controller.DriverController
 import cab_booking.exception.AccountLockedException
 import cab_booking.exception.CredentialsNotFoundException
 import cab_booking.exception.DriverNotFoundException
 import cab_booking.exception.InvalidCredentialsException
 import cab_booking.exception.OperationCancelledException
 import cab_booking.exception.UserNotFoundException
+import cab_booking.model.Admin
+import cab_booking.model.Customer
+import cab_booking.model.Driver
 import cab_booking.model.User
-import cab_booking.model.types.UserRole
 
 object AuthUI {
 
@@ -177,12 +178,10 @@ object AuthUI {
 }
 
 private fun route(user: User) {
-    when (user.role) {
-        UserRole.ADMIN -> AdminUI.adminDashboard()
-        UserRole.DRIVER -> {
-            val driver = DriverController.findDriverById(user.userId)
-            DriverUI.driverDashboard(driver)
-        }
-        UserRole.CUSTOMER -> CustomerUI.customerDashboard(user)
+    when (user) {
+        is Admin -> AdminUI.adminDashboard()
+        is Driver -> DriverUI.driverDashboard(user)
+        is Customer -> CustomerUI.customerDashboard(user)
     }
+
 }

@@ -1,7 +1,6 @@
 package cab_booking.model
 
 import cab_booking.model.types.Location
-import cab_booking.model.types.UserRole
 import cab_booking.util.IdGenerator
 import cab_booking.util.Validator
 import java.math.BigDecimal
@@ -22,7 +21,6 @@ class Driver(
     name = name,
     phoneNumber = phoneNumber,
     email = email,
-    role = UserRole.DRIVER,
     userId = userId
 ) {
 
@@ -42,10 +40,10 @@ class Driver(
         this.isAvailable = availability
     }
 
-    var totalRatings: Int = 0
+    var totalRating: Int = 0
         private set
 
-    var totalRatingsCount: Int = 0
+    var totalRatingCount: Int = 0
         private set
 
     fun updateTotalEarnings(earnings: BigDecimal){
@@ -57,14 +55,14 @@ class Driver(
         this.currentLocation = location
     }
 
-    fun updateTotalRatings(ratings: Int) {
+    fun updateTotalRating(ratings: Int) {
         require(ratings >= 0){ "Total Ratings of driver cannot be negative" }
-        this.totalRatings = ratings
+        this.totalRating = ratings
     }
 
-    fun updateTotalRatingsCount(ratingsCount: Int) {
+    fun updateTotalRatingCount(ratingsCount: Int) {
         require(ratingsCount >= 0){ "Ratings Count of driver cannot be negative" }
-        this.totalRatingsCount = ratingsCount
+        this.totalRatingCount = ratingsCount
     }
 
     init {

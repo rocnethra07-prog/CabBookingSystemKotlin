@@ -22,5 +22,5 @@ class Ride(
     fare: BigDecimal,
     // Both are left out when a ride is booked; passed by the file storage at startup.
     bookedAt: LocalDateTime = LocalDateTime.now(),
-    dispatchId: String = IdGenerator.generateDispatchId()
-) : Dispatch(customerId, driverId, pickupLocation, dropLocation, fare, bookedAt, dispatchId)
+    dispatchId: String = IdGenerator.generateBookingId()
+) : Booking(customerId, driverId, pickupLocation, dropLocation, fare, bookedAt, dispatchId)

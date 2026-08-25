@@ -10,7 +10,7 @@ object DriverFileStorage : FileStorage<Driver>("data/drivers.csv") {
         "${item.userId},${item.name},${item.phoneNumber},${item.email}," +
                 "${item.assignedVehicleId},${item.licenseNumber},${item.currentLocation.name}," +
                 "${item.isAvailable},${item.totalEarnings.toPlainString()}," +
-                "${item.totalRatings},${item.totalRatingsCount}"
+                "${item.totalRating},${item.totalRatingCount}"
 
     override fun fromLine(parts: List<String>): Driver {
         val driver = Driver(
@@ -25,8 +25,8 @@ object DriverFileStorage : FileStorage<Driver>("data/drivers.csv") {
 
         driver.setAvailability(parts[7].toBoolean())
         driver.updateTotalEarnings(BigDecimal(parts[8]))
-        driver.updateTotalRatings(parts[9].toInt())
-        driver.updateTotalRatingsCount(parts[10].toInt())
+        driver.updateTotalRating(parts[9].toInt())
+        driver.updateTotalRatingCount(parts[10].toInt())
 
         return driver
     }

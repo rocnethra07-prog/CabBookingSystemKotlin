@@ -139,10 +139,10 @@ object DriverService {
     }
 
     fun getAverageRatingOfDriver(driver: Driver) : Double{
-        return if (driver.totalRatingsCount == 0){
+        return if (driver.totalRatingCount == 0){
             0.0
         } else {
-            driver.totalRatings.toDouble() / driver.totalRatingsCount
+            driver.totalRating.toDouble() / driver.totalRatingCount
         }
     }
 
@@ -151,10 +151,10 @@ object DriverService {
         driver.updateTotalEarnings(driver.totalEarnings + amount)
     }
 
-    fun addRatings(driver: Driver, rating: Int) {
+    fun addRating(driver: Driver, rating: Int) {
         require(rating in 1..5) { "Rating must be between 1 and 5." }
-        driver.updateTotalRatings(driver.totalRatings + rating)
-        driver.updateTotalRatingsCount(driver.totalRatingsCount + 1)
+        driver.updateTotalRating(driver.totalRating + rating)
+        driver.updateTotalRatingCount(driver.totalRatingCount + 1)
     }
     fun getAllDrivers(): List<Driver> =
         DriverRepo.findAll()

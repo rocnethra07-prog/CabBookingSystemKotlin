@@ -26,8 +26,8 @@ object RideFileStorage : FileStorage<Ride>("data/rides.csv") {
             driverId = parts[2],
             pickupLocation = Location.valueOf(parts[3]),
             dropLocation = Location.valueOf(parts[4]),
-            fare = BigDecimal(parts[6]),
-            bookedAt = LocalDateTime.parse(parts[8])
+            fare = BigDecimal(parts[5]),
+            bookedAt = LocalDateTime.parse(parts[7])
         )
 
         replayStatus(ride, parts)
@@ -37,7 +37,7 @@ object RideFileStorage : FileStorage<Ride>("data/rides.csv") {
 
     // A new Ride starts as BOOKED, so walk it back through the steps it took.
     private fun replayStatus(ride: Ride, parts: List<String>) {
-        when (DispatchStatus.valueOf(parts[7])) {
+        when (DispatchStatus.valueOf(parts[6])) {
 
             DispatchStatus.BOOKED -> {}
 
@@ -46,9 +46,9 @@ object RideFileStorage : FileStorage<Ride>("data/rides.csv") {
             DispatchStatus.COMPLETED -> {
                 ride.updateStatus(DispatchStatus.STARTED)
                 ride.updateStatus(DispatchStatus.COMPLETED)
-                ride.setCompletedAt(LocalDateTime.parse(parts[9]))
+                ride.setCompletedAt(LocalDateTime.parse(parts[8]))
 
-                val rating = parts[11].toInt()
+                val rating = parts[10].toInt()
                 if (rating in 1..5) {
                     ride.setRating(rating)
                 }
@@ -56,7 +56,7 @@ object RideFileStorage : FileStorage<Ride>("data/rides.csv") {
 
             DispatchStatus.CANCELLED -> {
                 ride.updateStatus(DispatchStatus.CANCELLED)
-                ride.setCancelledAt(LocalDateTime.parse(parts[10]))
+                ride.setCancelledAt(LocalDateTime.parse(parts[9]))
             }
         }
     }

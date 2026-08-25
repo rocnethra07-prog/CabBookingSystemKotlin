@@ -1,18 +1,12 @@
 package cab_booking.model
 
-import cab_booking.model.types.UserRole
 import cab_booking.util.IdGenerator
 import cab_booking.util.Validator
 
-// User is open, not abstract, because a plain User + role is already a
-// complete object — Admin and Customer differ only by that label for now
-// Driver subclasses this because it needs extra fields
-// (vehicle, license, location, earnings) that the enum can't express.
-open class User(
+abstract class User(
     name: String,
     phoneNumber: String,
     val email: String,
-    val role: UserRole,
     // Left out everywhere in the app, so a new user gets a freshly generated ID.
     // The file storage passes the saved ID so a user keeps the same one across runs.
     val userId: String = IdGenerator.generateUserId()
@@ -47,7 +41,7 @@ open class User(
             Name             : $name
             Phone            : $phoneNumber
             Email            : $email
-            Role             : $role
+            Role             : ${this::class.simpleName}
         """.trimIndent()
     }
 }

@@ -2,31 +2,37 @@ package cab_booking.service
 
 import cab_booking.model.User
 import cab_booking.auth.UserCredential
-import cab_booking.model.types.UserRole
 import cab_booking.repository.AuthRepo
 import cab_booking.repository.UserRepo
 import cab_booking.exception.InvalidCredentialsException
 import cab_booking.exception.AccountLockedException
+import cab_booking.model.Admin
+import cab_booking.model.Customer
 
 object AuthService{
 
-    fun registerUser(
-        name: String,
-        phone: String,
-        email: String,
-        password: String,
-        role: UserRole
-    ): User {
-        val user = User(
-            name = name,
-            phoneNumber = phone,
-            email = email,
-            role = role)
+    fun registerUser(user: User, password: String): User {
         saveUserAndCredentials(user, password)
         return user
     }
 
-     fun saveUserAndCredentials(user: User, password: String) {
+    fun registerCustomer(
+        name: String,
+        phone: String,
+        email: String,
+        password: String
+    ) =
+        registerUser(Customer(name = name, phoneNumber = phone, email = email), password)
+
+    fun registerAdmin(
+        name: String,
+        phone: String,
+        email: String,
+        password: String
+    ) =
+        registerUser(Admin(name = name, phoneNumber = phone, email = email), password)
+
+    fun saveUserAndCredentials(user: User, password: String) {
         UserRepo.save(user)
         AuthRepo.save(UserCredential.withPassword(user.userId,password))
     }
