@@ -1,7 +1,7 @@
 package cab_booking.controller
 
+import cab_booking.model.Customer
 import cab_booking.model.ParcelDelivery
-import cab_booking.model.User
 import cab_booking.model.types.Location
 import cab_booking.service.CustomerService
 import cab_booking.model.Ride
@@ -20,14 +20,14 @@ object CustomerController{
     fun getDriverForParcelDelivery(parcelDelivery: ParcelDelivery) =
         CustomerService.getDriverForParcelDelivery(parcelDelivery)
 
-    fun rateDriver(ride: Ride, rider: User, rating: Int) =
+    fun rateDriver(ride: Ride, rider: Customer, rating: Int) =
         CustomerService.rateDriver(ride,rider,rating)
 
     fun hasActiveRideOfRider(riderId: String) =
         RideService.hasActiveRideOfRider(riderId)
 
     fun bookRide(
-        rider: User,
+        rider: Customer,
         pickup: Location,
         drop: Location,
         vehicleCategory: VehicleCategory
@@ -40,15 +40,15 @@ object CustomerController{
     fun getCurrentBookedRide(riderId: String) =
         RideService.getCurrentRideOfRider(riderId)
 
-    fun cancelRide(ride: Ride, rider: User) =
+    fun cancelRide(ride: Ride, rider: Customer) =
         CustomerService.cancelRide(ride, rider)
 
-    fun updateProfile(rider: User, name: String, phoneNumber: String) =
+    fun updateProfile(rider: Customer, name: String, phoneNumber: String) =
         CustomerService.updateProfile(rider,name,phoneNumber)
 
 
     fun bookParcelDelivery(
-        customer: User,
+        customer: Customer,
         pickup: Location,
         drop: Location,
         vehicleCategory: VehicleCategory,
@@ -66,6 +66,6 @@ object CustomerController{
     fun getCurrentParcelDeliveryForCustomer(customerId: String) =
         ParcelDeliveryService.getCurrentParcelDeliveryOfCustomer(customerId)
 
-    fun cancelParcelDelivery(parcelDelivery: ParcelDelivery, customer: User) =
+    fun cancelParcelDelivery(parcelDelivery: ParcelDelivery, customer: Customer) =
         CustomerService.cancelParcelDelivery(parcelDelivery, customer)
 }

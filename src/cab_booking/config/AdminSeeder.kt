@@ -3,7 +3,6 @@ package cab_booking.config
 import cab_booking.service.AuthService
 import cab_booking.service.UserService
 
-//object instead of class so that there is no need of creating a AdminSeeder object
 object AdminSeeder {
 
     const val ADMIN_EMAIL = "admin@cabbooking.com"

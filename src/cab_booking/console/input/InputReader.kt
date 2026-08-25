@@ -14,7 +14,7 @@ object InputReader {
     private const val CANCEL_KEYWORD = "cancel"
 
     private fun readLine(prompt: String): String {
-        print("$prompt (or 'cancel' to go back):")
+        print("$prompt (or $CANCEL_KEYWORD to go back):")
         val input = readln().trim()
         if (input.equals(CANCEL_KEYWORD, ignoreCase = true)) {
             throw OperationCancelledException()
@@ -28,7 +28,7 @@ object InputReader {
             if(validator(input)){
                 return input
             }
-            println("[x] $errorMessage\n")
+            println("\n[x] $errorMessage\n")
         }
     }
 
@@ -151,10 +151,10 @@ object InputReader {
             }
             ConsoleFormatter.divider()
 
-            val choice = readLine("$prompt (or 'cancel' to go back): ").toIntOrNull()
+            val choice = readLine(prompt).toIntOrNull()
 
             if (choice == null || choice !in 1..VehicleCategory.entries.size) {
-                println("[x] Invalid choice. Please try again.")
+                println("\n[x] Invalid choice. Please try again.\n")
                 continue
             }
             return VehicleCategory.entries[choice - 1]
@@ -184,17 +184,17 @@ object InputReader {
             }
             ConsoleFormatter.divider()
 
-            val choice = readLine("Choose (or 'cancel' to go back): ").toIntOrNull()
+            val choice = readLine("Choose").toIntOrNull()
 
             if (choice == null || choice !in 1..categories.size) {
-                println("[x] Invalid choice. Please try again.")
+                println("\n[x] Invalid choice. Please try again.\n")
                 continue
             }
             return categories[choice - 1]
         }
     }
 
-    fun promptRating(prompt: String = "Enter Rating (1-5), or 'cancel' to skip: "): Int {
+    fun promptRating(prompt: String = "Enter Rating (1-5)"): Int {
         while (true) {
             val value = readLine(prompt).toIntOrNull()
 

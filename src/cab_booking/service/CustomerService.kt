@@ -4,6 +4,7 @@ import cab_booking.exception.DriverNotFoundException
 import cab_booking.exception.InvalidBookingStateException
 import cab_booking.exception.UnauthorizedParcelActionException
 import cab_booking.exception.UnauthorizedRideActionException
+import cab_booking.model.Customer
 import cab_booking.model.Driver
 import cab_booking.model.ParcelDelivery
 import cab_booking.model.Ride
@@ -16,12 +17,12 @@ import cab_booking.service.ParcelDeliveryService.createParcelDelivery
 object CustomerService {
 
     fun updateProfile(
-        user: User,
+        customer: Customer,
         name: String,
         phoneNumber: String
     ) {
-        user.updateName(name)
-        user.updatePhoneNumber(phoneNumber)
+        customer.updateName(name)
+        customer.updatePhoneNumber(phoneNumber)
     }
 
     fun bookRide(
@@ -42,7 +43,7 @@ object CustomerService {
 
     fun cancelRide(
         ride: Ride,
-        rider: User
+        rider: Customer
     ) {
         if (ride.customerId != rider.userId) {
             throw UnauthorizedRideActionException("Only the rider who booked this ride can cancel it.")
@@ -52,7 +53,7 @@ object CustomerService {
 
     fun rateDriver(
         ride: Ride,
-        rider: User,
+        rider: Customer,
         rating: Int
     ) {
 
@@ -75,7 +76,7 @@ object CustomerService {
     }
 
     fun bookParcelDelivery(
-        customer: User,
+        customer: Customer,
         pickupLocation: Location,
         dropLocation: Location,
         vehicleCategory: VehicleCategory,
@@ -95,7 +96,7 @@ object CustomerService {
 
     fun cancelParcelDelivery(
         parcelDelivery: ParcelDelivery,
-        customer: User
+        customer: Customer
     ) {
         if (parcelDelivery.customerId != customer.userId) {
             throw UnauthorizedParcelActionException("Only the customer who booked this parcel can cancel it.")

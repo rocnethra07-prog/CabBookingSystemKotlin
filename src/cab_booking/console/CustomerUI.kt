@@ -13,7 +13,7 @@ import cab_booking.exception.UnauthorizedParcelActionException
 import cab_booking.exception.UnauthorizedRideActionException
 import cab_booking.model.Driver
 import cab_booking.model.Ride
-import cab_booking.model.User
+import cab_booking.model.Customer
 import cab_booking.model.types.Location
 import cab_booking.console.input.ConsoleFormatter
 import cab_booking.exception.InvalidBookingStateException
@@ -21,14 +21,14 @@ import cab_booking.exception.OperationCancelledException
 import cab_booking.model.ParcelDelivery
 
 object CustomerUI {
-    fun customerDashboard(customer: User){
+    fun customerDashboard(customer: Customer){
 
         promptPendingRating(customer)
         autoShowActiveRide(customer)
         autoShowActiveParcelDelivery(customer)
 
         while (true) {
-            ConsoleFormatter.header("RIDER MENU")
+            ConsoleFormatter.header("CUSTOMER MENU")
             println(
                 """
                 1. Book a Ride
@@ -53,7 +53,7 @@ object CustomerUI {
     }
 
     //PENDING RATING (shown once, on login)
-    private fun promptPendingRating(rider: User) {
+    private fun promptPendingRating(rider: Customer) {
 
         try {
             val ride = CustomerController.getLastCompletedRideOfRider(rider.userId)
@@ -75,7 +75,7 @@ object CustomerUI {
 
 
     private fun showRatingScreen(
-        ride: Ride, rider: User
+        ride: Ride, rider: Customer
     ) {
         val driver = CustomerController.getDriverForRide(ride)
 
@@ -95,7 +95,7 @@ object CustomerUI {
 
     private fun submitRating(
         ride: Ride,
-        rider: User,
+        rider: Customer,
         driver: Driver
     ) {
 
@@ -140,7 +140,7 @@ object CustomerUI {
         }
     }
 
-    private fun bookRide(rider: User) {
+    private fun bookRide(rider: Customer) {
 
         if (CustomerController.hasActiveRideOfRider(rider.userId)) {
             println("\nYou already have an active ride. Finish or cancel it before booking another.")
@@ -233,7 +233,7 @@ object CustomerUI {
     }
 
     // Called both from the "My Ride" menu item and automatically on login
-    fun viewCurrentRide(rider: User){
+    fun viewCurrentRide(rider: Customer){
         try {
             val ride = CustomerController.getCurrentBookedRide(rider.userId)
             val driver = CustomerController.getDriverForRide(ride)
@@ -249,13 +249,13 @@ object CustomerUI {
         }
     }
 
-    private fun autoShowActiveRide(rider: User) {
+    private fun autoShowActiveRide(rider: Customer) {
         if(CustomerController.hasActiveRideOfRider(rider.userId)) {
             viewCurrentRide(rider)
         }
     }
 
-    private fun rideMenu(ride: Ride, rider: User, driver: Driver) {
+    private fun rideMenu(ride: Ride, rider: Customer, driver: Driver) {
         while (true) {
             println("1. Show Options")
             println("0. Close")
@@ -277,7 +277,7 @@ object CustomerUI {
             }
         }
     }
-    private fun currentRideOptions(ride: Ride, rider: User) {
+    private fun currentRideOptions(ride: Ride, rider: Customer) {
 
         while (true) {
 
@@ -298,7 +298,7 @@ object CustomerUI {
     }
 
     private fun cancelRide(
-        ride: Ride, rider: User
+        ride: Ride, rider: Customer
     ) {
         try {
             CustomerController.cancelRide(ride, rider)
@@ -317,7 +317,7 @@ object CustomerUI {
 
     // ==================== PARCELS ====================
 
-    private fun sendParcel(customer: User) {
+    private fun sendParcel(customer: Customer) {
 
         if (CustomerController.hasActiveParcelDeliveryOfCustomer(customer.userId)) {
             println("\nYou already have an active parcel. Finish or cancel it before booking another.\n")
@@ -403,7 +403,7 @@ object CustomerUI {
         }
     }
 
-    private fun viewCurrentParcelDelivery(customer: User) {
+    private fun viewCurrentParcelDelivery(customer: Customer) {
         try {
             val parcelDelivery = CustomerController.getCurrentParcelDeliveryForCustomer(customer.userId)
             val driver = CustomerController.getDriverForParcelDelivery(parcelDelivery)
@@ -420,13 +420,13 @@ object CustomerUI {
         }
     }
 
-    private fun autoShowActiveParcelDelivery(customer: User) {
+    private fun autoShowActiveParcelDelivery(customer: Customer) {
         if(CustomerController.hasActiveParcelDeliveryOfCustomer(customer.userId)){
             viewCurrentParcelDelivery(customer)
         }
     }
 
-    private fun parcelDeliveryMenu(parcelDelivery: ParcelDelivery, customer: User) {
+    private fun parcelDeliveryMenu(parcelDelivery: ParcelDelivery, customer: Customer) {
         while (true) {
             println("1. Show Options")
             println("0. Close")
@@ -443,7 +443,7 @@ object CustomerUI {
         }
     }
 
-    private fun currentParcelDeliveryOptions(parcelDelivery: ParcelDelivery, customer: User) {
+    private fun currentParcelDeliveryOptions(parcelDelivery: ParcelDelivery, customer: Customer) {
         while (true) {
             println("\n  1. Cancel Parcel")
             println("  0. Back")
@@ -460,7 +460,7 @@ object CustomerUI {
         }
     }
 
-    private fun cancelParcelDelivery(parcelDelivery: ParcelDelivery, customer: User) {
+    private fun cancelParcelDelivery(parcelDelivery: ParcelDelivery, customer: Customer) {
         try {
             CustomerController.cancelParcelDelivery(parcelDelivery, customer)
             println("\nParcel delivery cancelled successfully.")
@@ -476,7 +476,7 @@ object CustomerUI {
         }
     }
 
-    private fun updateProfile(rider: User) {
+    private fun updateProfile(rider: Customer) {
 
         try {
             println("\n========== UPDATE PROFILE ==========")
@@ -516,7 +516,7 @@ object CustomerUI {
         }
     }
 
-    private fun accountMenu(customer: User){
+    private fun accountMenu(customer: Customer){
         while (true) {
 
             ConsoleFormatter.header("MY PROFILE")
@@ -534,7 +534,7 @@ object CustomerUI {
         }
     }
 
-    private fun profileOptionsMenu(customer: User) {
+    private fun profileOptionsMenu(customer: Customer) {
         while (true) {
             println("\n1. Update Profile")
             println("2. Change Password")

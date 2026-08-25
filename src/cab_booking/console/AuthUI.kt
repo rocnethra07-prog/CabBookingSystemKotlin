@@ -6,7 +6,6 @@ import cab_booking.console.input.InputReader
 import cab_booking.controller.AuthController
 import cab_booking.exception.AccountLockedException
 import cab_booking.exception.CredentialsNotFoundException
-import cab_booking.exception.DriverNotFoundException
 import cab_booking.exception.InvalidCredentialsException
 import cab_booking.exception.OperationCancelledException
 import cab_booking.exception.UserNotFoundException
@@ -34,7 +33,7 @@ object AuthUI {
                 route(user)
 
             } catch (e: UserNotFoundException) {
-                println("\n[x] Login failed: ${e.message}")
+                println("\n[x] ${e.message}")
             } catch (e: AccountLockedException) {
                 println(
                     """
@@ -47,15 +46,13 @@ object AuthUI {
             """.trimIndent()
                 )
             } catch (e: InvalidCredentialsException) {
-                println("\n[x] Login failed: ${e.message}. Please try again.")
+                println("\n[x] ${e.message}. Please try again.")
                 continue
             } catch (e: CredentialsNotFoundException) {
-                println("\n[x] Authentication failed: ${e.message}")
-                return
-            } catch (e: DriverNotFoundException) {
                 println("\n[x] ${e.message}")
                 return
-            } catch (_: OperationCancelledException) {
+            }
+            catch (_: OperationCancelledException) {
                 println("\nCancelled.")
                 return
             }
@@ -65,7 +62,6 @@ object AuthUI {
     fun register() {
 
         try {
-
             ConsoleFormatter.header("REGISTER")
 
             println(
@@ -125,9 +121,6 @@ object AuthUI {
         catch (e: IllegalArgumentException) {
             println("\n[x] Registration failed (invalid input): ${e.message}")
         }
-        catch (e: DriverNotFoundException) {
-            println("\n[x] ${e.message}. Please try again.")
-        }
         catch (_: OperationCancelledException) {
             println("\nCancelled.")
         }
@@ -160,7 +153,7 @@ object AuthUI {
                 println("\nPassword changed successfully.")
                 return
             } catch (e: CredentialsNotFoundException) {
-                println("\n[x] Authentication failed: ${e.message}")
+                println("\n[x] ${e.message}")
                 return
             } catch (e: AccountLockedException) {
                 println("\n[x] ${e.message}")
