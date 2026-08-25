@@ -24,8 +24,8 @@ object Validator {
     fun isValidEmail(email: String) =
         email.matches(emailRegex)
 
-    fun isValidPhoneNumber(phone: String) =
-        phone.matches(phoneNumberRegex)
+    fun isValidPhoneNumber(phoneNumber: String) =
+        phoneNumber.matches(phoneNumberRegex)
 
     fun isValidPassword(password: String) =
         password.matches(passwordRegex)

@@ -24,8 +24,8 @@ class ParcelDelivery(
 ) : Booking(customerId, driverId, pickupLocation, dropLocation, fare, bookedAt, bookingId) {
 
     init {
-        require(Validator.isValidName(receiverName)) { "Contact name must contain minimum 3 characters. Contact name cannot be blank." }
-        require(Validator.isValidPhoneNumber(receiverPhoneNumber)) { "Invalid contact phone number format." }
+        require(Validator.isValidName(receiverName)) { "Receiver name must contain minimum 3 characters. Receiver name cannot be blank." }
+        require(Validator.isValidPhoneNumber(receiverPhoneNumber)) { "Invalid receiver contact phone number format." }
     }
 
 }
