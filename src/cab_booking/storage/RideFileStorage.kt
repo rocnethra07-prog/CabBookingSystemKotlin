@@ -12,7 +12,7 @@ object RideFileStorage : FileStorage<Ride>("data/rides.csv") {
     private const val NOT_SET = "NA"
 
     override fun toLine(item: Ride) =
-        "${item.dispatchId},${item.customerId},${item.driverId}," +
+        "${item.bookingId},${item.customerId},${item.driverId}," +
                 "${item.pickupLocation.name},${item.dropLocation.name}," +
                 "${item.fare.toPlainString()}," +
                 "${item.status.name},${item.bookedAt}," +
