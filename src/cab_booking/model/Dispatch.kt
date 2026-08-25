@@ -55,6 +55,19 @@ abstract class Dispatch(
         status = newStatus
     }
 
+    var ratings: Int = 0 // 1–5, 0 if not yet rated
+        private set
+
+    fun setRatings(rating: Int){
+        if(status != DispatchStatus.COMPLETED) {
+            throw InvalidDispatchStateException("Only completed rides can be rated.")
+        }
+
+        require(rating in 1..5) { "Rating must be between 1 and 5." }
+
+        this.ratings = rating
+    }
+
     init {
         require(customerId.isNotBlank()) { "Customer ID cannot be blank." }
 
