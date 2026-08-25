@@ -7,8 +7,6 @@ sealed class User(
     name: String,
     phoneNumber: String,
     val email: String,
-    // Left out everywhere in the app, so a new user gets a freshly generated ID.
-    // The file storage passes the saved ID so a user keeps the same one across runs.
     val userId: String = IdGenerator.generateUserId()
 ) {
     // Public properties are used for simple property access (user.name, user.phone)

@@ -8,20 +8,18 @@ import cab_booking.util.IdGenerator
 import java.math.BigDecimal
 import java.time.LocalDateTime
 
-// Abstract: a "dispatch" alone isn't a real bookable thing — it's always
-// either a ride or a parcel delivery. Making this abstract stops one from
-// ever being created generically.
-// Not an enum on one concrete class, because ParcelDelivery needs extra
-// mandatory fields (receiver name/phone) that a plain type flag can't
-// enforce — subclassing lets the compiler guarantee they're always present.
+
+//  Represents any service booked by a customer (a ride or a parcel delivery).
+//  Holds the data and rules common to every kind of booking: who booked it,
+//  where it goes, how much it costs, and its current status (booked, started,
+//  completed, cancelled). Individual booking types (Ride, ParcelDelivery) add
+//  only the extra details specific to them.
 sealed class Booking(
     val customerId: String,
     val driverId: String,
     val pickupLocation: Location,
     val dropLocation: Location,
     val fare: BigDecimal,
-    // Defaults to "right now" for a new booking. The file storage passes the saved
-    // time so a reloaded booking keeps the moment it was actually booked.
     val bookedAt: LocalDateTime = LocalDateTime.now(),
     val bookingId: String = IdGenerator.generateBookingId()
 ) {

@@ -16,6 +16,7 @@ class Driver(
     val assignedVehicleId: String,
     val licenseNumber: String,
     currentLocation: Location,
+    // The file storage passes the saved ID
     userId: String = IdGenerator.generateUserId()
 ) : User(
     name = name,
