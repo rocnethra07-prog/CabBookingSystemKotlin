@@ -25,10 +25,11 @@ object InputReader {
     private fun promptUntilValidInput(prompt: String, errorMessage: String, validator: (String) -> Boolean) : String{
         while (true) {
             val input = readUserInput(prompt)
-            if(validator(input)){
-                return input
+            if(!validator(input)){
+                ConsoleFormatter.showError(errorMessage)
+                continue
             }
-            println("\n[x] $errorMessage\n")
+            return input
         }
     }
 

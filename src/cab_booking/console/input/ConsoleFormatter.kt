@@ -16,4 +16,11 @@ object ConsoleFormatter {
     fun divider() {
         println("-".repeat(50))
     }
+
+    fun showError(message: String) {
+        println("----------------------------------------")
+        println("[x] $message")
+        println("----------------------------------------")
+        println()
+    }
 }
