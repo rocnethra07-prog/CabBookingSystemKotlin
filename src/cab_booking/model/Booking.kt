@@ -14,7 +14,7 @@ import java.time.LocalDateTime
 // Not an enum on one concrete class, because ParcelDelivery needs extra
 // mandatory fields (receiver name/phone) that a plain type flag can't
 // enforce — subclassing lets the compiler guarantee they're always present.
-abstract class Booking(
+sealed class Booking(
     val customerId: String,
     val driverId: String,
     val pickupLocation: Location,

@@ -3,7 +3,7 @@ package cab_booking.model
 import cab_booking.util.IdGenerator
 import cab_booking.util.Validator
 
-abstract class User(
+sealed class User(
     name: String,
     phoneNumber: String,
     val email: String,
