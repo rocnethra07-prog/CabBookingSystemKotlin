@@ -64,10 +64,10 @@ object ParcelDeliveryService {
         parcelDelivery.setCancelledAt(LocalDateTime.now())
     }
 
-    fun hasActiveParcelDelivery(customerId: String): Boolean =
+    fun hasActiveParcelDeliveryOfCustomer(customerId: String): Boolean =
         ParcelDeliveryRepo.hasCurrentParcelDeliveryOfCustomer(customerId)
 
-    fun hasActiveParcelForDriver(driverId: String) : Boolean =
+    fun hasActiveParcelDeliveryOfDriver(driverId: String) : Boolean =
         ParcelDeliveryRepo.hasCurrentParcelDeliveryOfDriver(driverId)
 
     fun getCurrentParcelDeliveryOfCustomer(customerId: String): ParcelDelivery =

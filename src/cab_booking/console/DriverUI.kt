@@ -68,7 +68,7 @@ object DriverUI {
     }
 
     private fun autoShowActiveRide(driver: Driver) {
-        if(DriverService.hasActiveRideForDriver(driver.userId)){
+        if(DriverService.hasActiveRideOfDriver(driver.userId)){
             activeRideMenu(driver)
         }
     }
@@ -172,7 +172,7 @@ object DriverUI {
     }
 
     private fun autoShowActiveParcel(driver: Driver){
-        if(DriverService.hasActiveParcelDeliveryForDriver(driver.userId)){
+        if(DriverService.hasActiveParcelDeliveryOfDriver(driver.userId)){
             activeParcelDeliveryMenu(driver)
         }
     }

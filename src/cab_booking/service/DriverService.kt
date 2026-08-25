@@ -49,15 +49,15 @@ object DriverService {
         }
     }
 
-    fun hasActiveRideForDriver(driverId: String) =
-        RideService.hasActiveRideForDriver(driverId)
+    fun hasActiveRideOfDriver(driverId: String) =
+        RideService.hasActiveRideOfDriver(driverId)
 
-    fun hasActiveParcelDeliveryForDriver(driverId: String) =
-        ParcelDeliveryService.hasActiveParcelForDriver(driverId)
+    fun hasActiveParcelDeliveryOfDriver(driverId: String) =
+        ParcelDeliveryService.hasActiveParcelDeliveryOfDriver(driverId)
 
     fun deleteDriver(driver: Driver): Boolean {
 
-        if (hasActiveRideForDriver(driver.userId) || hasActiveParcelDeliveryForDriver(driver.userId)) {
+        if (hasActiveRideOfDriver(driver.userId) || hasActiveParcelDeliveryOfDriver(driver.userId)) {
             return false
         }
 

@@ -67,10 +67,10 @@ object RideService {
         ride.setRating(rating)
     }
 
-    fun hasActiveRideForDriver(driverId: String): Boolean =
+    fun hasActiveRideOfDriver(driverId: String): Boolean =
         RideRepo.hasActiveRideOfDriver(driverId)
 
-    fun hasActiveRideForRider(riderId: String): Boolean =
+    fun hasActiveRideOfRider(riderId: String): Boolean =
         RideRepo.hasActiveRideOfRider(riderId)
 
     fun getCurrentRideOfDriver(driverId: String): Ride =

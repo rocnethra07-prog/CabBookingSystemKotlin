@@ -23,8 +23,8 @@ object CustomerController{
     fun rateDriver(ride: Ride, rider: User, rating: Int) =
         CustomerService.rateDriver(ride,rider,rating)
 
-    fun hasActiveRide(riderId: String) =
-        RideService.hasActiveRideForRider(riderId)
+    fun hasActiveRideOfRider(riderId: String) =
+        RideService.hasActiveRideOfRider(riderId)
 
     fun bookRide(
         rider: User,
@@ -60,8 +60,8 @@ object CustomerController{
     fun estimateParcelDeliveryFares(pickup: Location, drop: Location) =
         ParcelDeliveryService.estimateParcelDeliveryFares(pickup, drop)
 
-    fun hasActiveParcelDelivery(customerId: String) =
-        ParcelDeliveryService.hasActiveParcelDelivery(customerId)
+    fun hasActiveParcelDeliveryOfCustomer(customerId: String) =
+        ParcelDeliveryService.hasActiveParcelDeliveryOfCustomer(customerId)
 
     fun getCurrentParcelDeliveryForCustomer(customerId: String) =
         ParcelDeliveryService.getCurrentParcelDeliveryOfCustomer(customerId)

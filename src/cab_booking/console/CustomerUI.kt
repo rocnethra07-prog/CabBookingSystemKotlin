@@ -142,12 +142,12 @@ object CustomerUI {
 
     private fun bookRide(rider: User) {
 
-        if (CustomerController.hasActiveRide(rider.userId)) {
+        if (CustomerController.hasActiveRideOfRider(rider.userId)) {
             println("\nYou already have an active ride. Finish or cancel it before booking another.")
             return
         }
 
-        if (CustomerController.hasActiveParcelDelivery(rider.userId)) {
+        if (CustomerController.hasActiveParcelDeliveryOfCustomer(rider.userId)) {
             println("\nYou already have an active parcel. Finish or cancel it before booking another.\n")
             return
         }
@@ -250,7 +250,7 @@ object CustomerUI {
     }
 
     private fun autoShowActiveRide(rider: User) {
-        if(CustomerController.hasActiveRide(rider.userId)) {
+        if(CustomerController.hasActiveRideOfRider(rider.userId)) {
             viewCurrentRide(rider)
         }
     }
@@ -319,12 +319,12 @@ object CustomerUI {
 
     private fun sendParcel(customer: User) {
 
-        if (CustomerController.hasActiveParcelDelivery(customer.userId)) {
+        if (CustomerController.hasActiveParcelDeliveryOfCustomer(customer.userId)) {
             println("\nYou already have an active parcel. Finish or cancel it before booking another.\n")
             return
         }
 
-        if (CustomerController.hasActiveRide(customer.userId)) {
+        if (CustomerController.hasActiveRideOfRider(customer.userId)) {
             println("\nYou already have an active ride. Finish or cancel it before booking another.")
             return
         }
@@ -421,7 +421,7 @@ object CustomerUI {
     }
 
     private fun autoShowActiveParcelDelivery(customer: User) {
-        if(CustomerController.hasActiveParcelDelivery(customer.userId)){
+        if(CustomerController.hasActiveParcelDeliveryOfCustomer(customer.userId)){
             viewCurrentParcelDelivery(customer)
         }
     }
