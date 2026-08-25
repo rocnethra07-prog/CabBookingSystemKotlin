@@ -3,9 +3,9 @@ package cab_booking.util
 object Validator {
 
     private val emailRegex =
-        Regex("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")
+        Regex("^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[A-Za-z]{2,}$")
 
-    private val phoneRegex =
+    private val phoneNumberRegex =
         Regex("^\\d{10}$")
 
     private val passwordRegex =
@@ -24,8 +24,8 @@ object Validator {
     fun isValidEmail(email: String) =
         email.matches(emailRegex)
 
-    fun isValidPhone(phone: String) =
-        phone.matches(phoneRegex)
+    fun isValidPhoneNumber(phone: String) =
+        phone.matches(phoneNumberRegex)
 
     fun isValidPassword(password: String) =
         password.matches(passwordRegex)

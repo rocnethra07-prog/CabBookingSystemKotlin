@@ -1,16 +1,13 @@
 package cab_booking.controller
 
-import cab_booking.model.Parcel
+import cab_booking.model.ParcelDelivery
 import cab_booking.model.User
 import cab_booking.model.types.Location
 import cab_booking.service.CustomerService
 import cab_booking.model.Ride
-import cab_booking.model.types.ParcelCategory
-import cab_booking.model.types.ParcelMode
 import cab_booking.model.types.VehicleCategory
-import cab_booking.service.ParcelService
+import cab_booking.service.ParcelDeliveryService
 import cab_booking.service.RideService
-import java.math.BigDecimal
 
 object CustomerController{
 
@@ -19,6 +16,9 @@ object CustomerController{
 
     fun getDriverForRide(ride: Ride) =
         CustomerService.getDriverForRide(ride)
+
+    fun getDriverForParcelDelivery(parcelDelivery: ParcelDelivery) =
+        CustomerService.getDriverForParcelDelivery(parcelDelivery)
 
     fun rateDriver(ride: Ride, rider: User, rating: Int) =
         CustomerService.rateDriver(ride,rider,rating)
@@ -35,10 +35,10 @@ object CustomerController{
         CustomerService.bookRide(rider,pickup,drop,vehicleCategory)
 
     fun estimateRideFares(pickup: Location, drop: Location) =
-        CustomerService.estimateRideFares(pickup, drop)
+        RideService.estimateRideFares(pickup, drop)
 
     fun getCurrentBookedRide(riderId: String) =
-        RideService.getCurrentBookedRide(riderId)
+        RideService.getCurrentRideOfRider(riderId)
 
     fun cancelRide(ride: Ride, rider: User) =
         CustomerService.cancelRide(ride, rider)
@@ -47,31 +47,25 @@ object CustomerController{
         CustomerService.updateProfile(rider,name,phone)
 
 
-    fun bookParcel(
+    fun bookParcelDelivery(
         customer: User,
         pickup: Location,
         drop: Location,
         vehicleCategory: VehicleCategory,
-        parcelMode: ParcelMode,
         contactName: String,
         contactPhone: String,
-        weightKg: BigDecimal,
-        parcelCategory: ParcelCategory
     ) =
-        CustomerService.bookParcel(customer, pickup, drop, vehicleCategory, parcelMode, contactName, contactPhone, weightKg, parcelCategory)
+        CustomerService.bookParcelDelivery(customer, pickup, drop, vehicleCategory,contactName, contactPhone)
 
-    fun estimateParcelFares(pickup: Location, drop: Location, parcelCategory: ParcelCategory, weightKg: BigDecimal) =
-        ParcelService.estimateParcelFares(pickup, drop, parcelCategory, weightKg)
+    fun estimateParcelDeliveryFares(pickup: Location, drop: Location) =
+        ParcelDeliveryService.estimateParcelDeliveryFares(pickup, drop)
 
-    fun hasActiveParcel(customerId: String) =
-        ParcelService.hasActiveParcel(customerId)
+    fun hasActiveParcelDelivery(customerId: String) =
+        ParcelDeliveryService.hasActiveParcelDelivery(customerId)
 
-    fun getCurrentParcel(customerId: String) =
-        ParcelService.getCurrentParcel(customerId)
+    fun getCurrentParcelDeliveryForCustomer(customerId: String) =
+        ParcelDeliveryService.getCurrentParcelDeliveryOfCustomer(customerId)
 
-    fun getDriverForParcel(parcel: Parcel) =
-        ParcelService.getDriverForParcel(parcel)
-
-    fun cancelParcel(parcel: Parcel, customer: User) =
-        CustomerService.cancelParcel(parcel, customer)
+    fun cancelParcelDelivery(parcelDelivery: ParcelDelivery, customer: User) =
+        CustomerService.cancelParcelDelivery(parcelDelivery, customer)
 }

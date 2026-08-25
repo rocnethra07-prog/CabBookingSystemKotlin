@@ -7,11 +7,10 @@ import java.time.Duration
 import java.time.LocalDateTime
 
 // Credentials related class
-// Use one of the two factory methods instead:
 //   withPassword(...)   - a new account, the password is validated and hashed here
 //   fromStoredHash(...) - an account read back from credentials.csv
 
-class UserCredential private constructor(val userId: String, private var passwordHash: String) {
+class UserCredential private constructor(val userId: String, passwordHash: String) {
 
     companion object{
         private const val MAX_FAILED_ATTEMPTS = 3
@@ -32,10 +31,12 @@ class UserCredential private constructor(val userId: String, private var passwor
     }
 
     private var failedAttempts: Int = 0
-    private var lockedAt : LocalDateTime? = null
+    // Readable so the file storage can write them, but only this class changes them.
+    var passwordHash: String = passwordHash
+        private set
 
-    fun getHashedPassword() = passwordHash
-    fun getLockedAtTime() = lockedAt
+    var lockedAt: LocalDateTime? = null
+        private set
 
     fun isAccountLocked() : Boolean {
         refreshLockStatus()

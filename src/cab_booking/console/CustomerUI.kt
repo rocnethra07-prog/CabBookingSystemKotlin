@@ -7,34 +7,32 @@ import cab_booking.exception.AvailableDriversNotFoundException
 import cab_booking.exception.CompletedRideNotFoundException
 import cab_booking.exception.DistanceNotFoundException
 import cab_booking.exception.DriverNotFoundException
-import cab_booking.exception.InvalidRideStateException
 import cab_booking.exception.VehicleNotFoundException
 import cab_booking.exception.ActiveParcelNotFoundException
-import cab_booking.exception.InvalidParcelStateException
 import cab_booking.exception.UnauthorizedParcelActionException
 import cab_booking.exception.UnauthorizedRideActionException
 import cab_booking.model.Driver
-import cab_booking.model.Parcel
 import cab_booking.model.Ride
 import cab_booking.model.User
 import cab_booking.model.types.Location
-import cab_booking.model.types.ParcelMode
-import cab_booking.console.input.ConsoleFormater
+import cab_booking.console.input.ConsoleFormatter
+import cab_booking.exception.InvalidDispatchStateException
 import cab_booking.exception.OperationCancelledException
+import cab_booking.model.ParcelDelivery
 
 object CustomerUI {
     fun customerDashboard(customer: User){
 
         promptPendingRating(customer)
         autoShowActiveRide(customer)
-        autoShowActiveParcel(customer)
+        autoShowActiveParcelDelivery(customer)
 
         while (true) {
-            ConsoleFormater.header("RIDER MENU")
+            ConsoleFormatter.header("RIDER MENU")
             println(
                 """
                 1. Book a Ride
-                2. Send / Receive Parcel
+                2. Send a Parcel
                 3. My Ride
                 4. My Parcel 
                 5. Account
@@ -44,9 +42,9 @@ object CustomerUI {
             when (readln().trim()) {
 
                 "1" -> bookRide(customer)
-                "2" -> bookParcel(customer)
+                "2" -> sendParcel(customer)
                 "3" -> viewCurrentRide(customer)
-                "4" -> viewCurrentParcel(customer)
+                "4" -> viewCurrentParcelDelivery(customer)
                 "5" -> accountMenu(customer)
                 "0" -> return
                 else -> println("\n[x] Invalid choice.")
@@ -60,7 +58,7 @@ object CustomerUI {
         try {
             val ride = CustomerController.getLastCompletedRideOfRider(rider.userId)
 
-            if (ride.rating != 0) {
+            if (ride.ratings != 0) {
                 return
             }
 
@@ -128,7 +126,7 @@ object CustomerUI {
         catch (e: UnauthorizedRideActionException) {
             println("\n[x] We couldn't submit your rating.  ${e.message}")
         }
-        catch (e : InvalidRideStateException){
+        catch (e : InvalidDispatchStateException){
             println("\n[x] We couldn't submit your rating.  ${e.message}")
         }
         catch (e: DriverNotFoundException) {
@@ -149,7 +147,7 @@ object CustomerUI {
             return
         }
 
-        if (CustomerController.hasActiveParcel(rider.userId)) {
+        if (CustomerController.hasActiveParcelDelivery(rider.userId)) {
             println("\nYou already have an active parcel. Finish or cancel it before booking another.\n")
             return
         }
@@ -195,14 +193,14 @@ object CustomerUI {
 
                     val driver = CustomerController.getDriverForRide(ride)
 
-                    ConsoleFormater.subHeader("RIDE CONFIRMED")
+                    ConsoleFormatter.subHeader("RIDE CONFIRMED")
                     println(ride)
                     println(
                         """
                         
                     Driver Details :
                     Driver : ${driver.name}
-                    Phone  : ${driver.phone}
+                    Phone  : ${driver.phoneNumber}
                     """.trimIndent()
                     )
 
@@ -239,12 +237,12 @@ object CustomerUI {
         try {
             val ride = CustomerController.getCurrentBookedRide(rider.userId)
             val driver = CustomerController.getDriverForRide(ride)
-            ConsoleFormater.header("YOUR RIDE")
+            ConsoleFormatter.header("YOUR RIDE")
             println(ride)
             println()
             println("Driver : ${driver.name}")
-            println("Phone  : ${driver.phone}")
-            rideDetailsFlow(ride, rider, driver)
+            println("Phone  : ${driver.phoneNumber}")
+            rideMenu(ride, rider, driver)
         }
         catch (e: ActiveRideNotFoundException) {
             println("\n${e.message}")
@@ -257,7 +255,7 @@ object CustomerUI {
         }
     }
 
-    private fun rideDetailsFlow(ride: Ride, rider: User, driver: Driver) {
+    private fun rideMenu(ride: Ride, rider: User, driver: Driver) {
         while (true) {
             println("1. Show Options")
             println("0. Close")
@@ -265,13 +263,13 @@ object CustomerUI {
 
             when (readln().trim()) {
                 "1" -> {
-                    ConsoleFormater.header("YOUR RIDE")
+                    ConsoleFormatter.header("YOUR RIDE")
                     println(ride)
                     println()
                     println("Driver : ${driver.name}")
-                    println("Phone  : ${driver.phone}")
+                    println("Phone  : ${driver.phoneNumber}")
 
-                    currentRideMenu(ride, rider)
+                    currentRideOptions(ride, rider)
                     return
                 }
                 "0" -> return
@@ -279,7 +277,7 @@ object CustomerUI {
             }
         }
     }
-    private fun currentRideMenu(ride: Ride, rider: User) {
+    private fun currentRideOptions(ride: Ride, rider: User) {
 
         while (true) {
 
@@ -309,7 +307,7 @@ object CustomerUI {
         catch (e: UnauthorizedRideActionException) {
             println("\n[x] ${e.message}")
         }
-        catch (e : InvalidRideStateException){
+        catch (e : InvalidDispatchStateException){
             println("\n[x] ${e.message}")
         }
         catch (e : DriverNotFoundException){
@@ -319,9 +317,9 @@ object CustomerUI {
 
     // ==================== PARCELS ====================
 
-    private fun bookParcel(customer: User) {
+    private fun sendParcel(customer: User) {
 
-        if (CustomerController.hasActiveParcel(customer.userId)) {
+        if (CustomerController.hasActiveParcelDelivery(customer.userId)) {
             println("\nYou already have an active parcel. Finish or cancel it before booking another.\n")
             return
         }
@@ -332,20 +330,13 @@ object CustomerUI {
         }
 
         try {
-            ConsoleFormater.header("SEND / RECEIVE A PARCEL")
+            ConsoleFormatter.header("SEND A PARCEL")
 
-            val parcelMode = InputReader.chooseParcelMode()
-
-            val pickupLabel =
-                if (parcelMode == ParcelMode.SEND) "\nPickup Location (where you are): " else "\nPickup Location (where the parcel currently is): "
-            val dropLabel =
-                if (parcelMode == ParcelMode.SEND) "\nDrop Location (where it's going): " else "\nDrop Location (where you are): "
-
-            val pickup = InputReader.chooseLocation(pickupLabel)
+            val pickup = InputReader.chooseLocation("\nPickup Location (where you are): ")
 
             var drop: Location
             while (true) {
-                drop = InputReader.chooseLocation(dropLabel)
+                drop = InputReader.chooseLocation("\nDrop Location (where it's going): ")
                 if (pickup == drop) {
                     println("\n[x] Pickup and Drop locations cannot be the same.")
                     continue
@@ -353,19 +344,15 @@ object CustomerUI {
                 break
             }
 
-            val contactLabel = if (parcelMode == ParcelMode.SEND) "recipient" else "pickup contact"
-            val contactName = InputReader.promptName(
-                prompt = "Name of the $contactLabel: "
+            val contactPersonName = InputReader.promptName(
+                prompt = "Name of the receiver: "
             )
-            val contactPhone = InputReader.promptPhone(
-                prompt = "Phone of the $contactLabel: "
+            val contactPersonPhoneNumber = InputReader.promptPhoneNumber(
+                prompt = "Phone of the receiver: "
             )
-
-            val category = InputReader.chooseParcelCategory()
-            val weight = InputReader.promptWeight()
 
             val fareEstimates = try {
-                CustomerController.estimateParcelFares(pickup, drop, category,weight)
+                CustomerController.estimateParcelDeliveryFares(pickup, drop)
             }
             catch (e: DistanceNotFoundException) {
                 println("\n[x] ${e.message}")
@@ -374,21 +361,23 @@ object CustomerUI {
 
             while (true) {
                 val vehicleCategory = InputReader.chooseVehicleCategoryByFare(fareEstimates,
-                    prompt = "Vehicles that can carry $weight kg")
+                    prompt = "Choose a vehicle for your parcel",
+                    showWeightLimit = true
+                )
 
                 println("\nFinding a nearby $vehicleCategory for you...\n")
                 try {
-                    val parcel = CustomerController.bookParcel(
-                        customer, pickup, drop, vehicleCategory, parcelMode, contactName, contactPhone, weight, category
+                    val parcelDelivery = CustomerController.bookParcelDelivery(
+                        customer, pickup, drop, vehicleCategory,contactPersonName, contactPersonPhoneNumber
                     )
 
-                    val driver = CustomerController.getDriverForParcel(parcel)
+                    val driver = CustomerController.getDriverForParcelDelivery(parcelDelivery)
 
-                    ConsoleFormater.subHeader("PARCEL BOOKED")
-                    println(parcel)
+                    ConsoleFormatter.subHeader("PARCEL DELIVERY BOOKED")
+                    println(parcelDelivery)
                     println()
                     println("Driver  : ${driver.name}")
-                    println("Phone   : ${driver.phone}")
+                    println("Phone   : ${driver.phoneNumber}")
                     return
                 } catch (e: AvailableDriversNotFoundException) {
                     println("\n[x] ${e.message}")
@@ -414,30 +403,30 @@ object CustomerUI {
         }
     }
 
-    private fun viewCurrentParcel(customer: User) {
+    private fun viewCurrentParcelDelivery(customer: User) {
         try {
-            val parcel = CustomerController.getCurrentParcel(customer.userId)
-            val driver = CustomerController.getDriverForParcel(parcel)
+            val parcelDelivery = CustomerController.getCurrentParcelDeliveryForCustomer(customer.userId)
+            val driver = CustomerController.getDriverForParcelDelivery(parcelDelivery)
 
-            ConsoleFormater.header("YOUR PARCEL")
-            println(parcel)
+            ConsoleFormatter.header("YOUR PARCEL")
+            println(parcelDelivery)
             println()
             println("Driver  : ${driver.name}")
-            println("Phone   : ${driver.phone}")
-            parcelDetailsFlow(parcel, customer)
+            println("Phone   : ${driver.phoneNumber}")
+            parcelDeliveryMenu(parcelDelivery, customer)
         }
         catch (e: ActiveParcelNotFoundException) {
             println("\n[x] ${e.message}")
         }
     }
 
-    private fun autoShowActiveParcel(customer: User) {
-        if(CustomerController.hasActiveParcel(customer.userId)){
-            viewCurrentParcel(customer)
+    private fun autoShowActiveParcelDelivery(customer: User) {
+        if(CustomerController.hasActiveParcelDelivery(customer.userId)){
+            viewCurrentParcelDelivery(customer)
         }
     }
 
-    private fun parcelDetailsFlow(parcel: Parcel, customer: User) {
+    private fun parcelDeliveryMenu(parcelDelivery: ParcelDelivery, customer: User) {
         while (true) {
             println("1. Show Options")
             println("0. Close")
@@ -445,7 +434,7 @@ object CustomerUI {
 
             when (readln().trim()) {
                 "1" -> {
-                    currentParcelMenu(parcel, customer)
+                    currentParcelDeliveryOptions(parcelDelivery, customer)
                     return
                 }
                 "0" -> return
@@ -454,7 +443,7 @@ object CustomerUI {
         }
     }
 
-    private fun currentParcelMenu(parcel: Parcel, customer: User) {
+    private fun currentParcelDeliveryOptions(parcelDelivery: ParcelDelivery, customer: User) {
         while (true) {
             println("\n  1. Cancel Parcel")
             println("  0. Back")
@@ -462,7 +451,7 @@ object CustomerUI {
 
             when (readln().trim()) {
                 "1" -> {
-                    cancelParcel(parcel, customer)
+                    cancelParcelDelivery(parcelDelivery, customer)
                     return
                 }
                 "0" -> return
@@ -471,15 +460,15 @@ object CustomerUI {
         }
     }
 
-    private fun cancelParcel(parcel: Parcel, customer: User) {
+    private fun cancelParcelDelivery(parcelDelivery: ParcelDelivery, customer: User) {
         try {
-            CustomerController.cancelParcel(parcel, customer)
-            println("\nParcel cancelled successfully.")
+            CustomerController.cancelParcelDelivery(parcelDelivery, customer)
+            println("\nParcel delivery cancelled successfully.")
         }
         catch (e: UnauthorizedParcelActionException) {
             println("\n[x] ${e.message}")
         }
-        catch (e: InvalidParcelStateException) {
+        catch (e: InvalidDispatchStateException) {
             println("\n[x] ${e.message}")
         }
         catch (e: DriverNotFoundException) {
@@ -495,9 +484,9 @@ object CustomerUI {
 
             val name = InputReader.promptOptionalName(rider.name)
 
-            val phone = InputReader.promptOptionalPhone(rider.phone)
+            val phone = InputReader.promptOptionalPhone(rider.phoneNumber)
 
-            if (name == rider.name && phone == rider.phone) {
+            if (name == rider.name && phone == rider.phoneNumber) {
                 println("\nNo changes made.")
                 return
             }
@@ -513,7 +502,7 @@ object CustomerUI {
                 Profile Updated Successfully
     
                 Name  : ${rider.name}
-                Phone : ${rider.phone}
+                Phone : ${rider.phoneNumber}
                 Email : ${rider.email}
                 """.trimIndent()
             )
@@ -530,7 +519,7 @@ object CustomerUI {
     private fun accountMenu(customer: User){
         while (true) {
 
-            ConsoleFormater.header("MY PROFILE")
+            ConsoleFormatter.header("MY PROFILE")
             println(customer)
             println()
             println("1. Show Options")

@@ -2,54 +2,32 @@ package cab_booking.storage
 
 import cab_booking.model.Driver
 import cab_booking.model.types.Location
-import java.io.File
 import java.math.BigDecimal
 
-object DriverFileStorage : FileStorage<Driver> {
+object DriverFileStorage : FileStorage<Driver>("data/drivers.csv") {
 
-    private const val DRIVERS_FILE_PATH = "data/drivers.csv"
+    override fun toLine(item: Driver) =
+        "${item.userId},${item.name},${item.phoneNumber},${item.email}," +
+                "${item.assignedVehicleId},${item.licenseNumber},${item.currentLocation.name}," +
+                "${item.isAvailable},${item.totalEarnings.toPlainString()}," +
+                "${item.totalRatings},${item.totalRatingsCount}"
 
-    override fun save(items: List<Driver>) {
-        val file = File(DRIVERS_FILE_PATH)
-        file.parentFile?.mkdirs()
-        file.bufferedWriter().use { writer ->
-            items.forEach { driver ->
-                writer.write(
-                    "${driver.userId},${driver.name},${driver.phone},${driver.email}," +
-                            "${driver.vehicleId},${driver.licenseNumber},${driver.currentLocation.name}," +
-                            "${driver.isAvailable},${driver.earnings.toPlainString()}," +
-                            "${driver.totalRating},${driver.ratingCount}"
-                )
-                writer.newLine()
-            }
-        }
-    }
+    override fun fromLine(parts: List<String>): Driver {
+        val driver = Driver(
+            userId = parts[0],
+            name = parts[1],
+            phoneNumber = parts[2],
+            email = parts[3],
+            assignedVehicleId = parts[4],
+            licenseNumber = parts[5],
+            currentLocation = Location.valueOf(parts[6])
+        )
 
-    override fun load(): List<Driver> {
-        val file = File(DRIVERS_FILE_PATH)
-        if (!file.exists()) return emptyList()
+        driver.setAvailability(parts[7].toBoolean())
+        driver.updateTotalEarnings(BigDecimal(parts[8]))
+        driver.updateTotalRatings(parts[9].toInt())
+        driver.updateTotalRatingsCount(parts[10].toInt())
 
-        return file.readLines()
-            .filter { it.isNotBlank() }
-            .map { line ->
-                val parts = line.split(",")
-                val driver = Driver(
-                    name = parts[1],
-                    phone = parts[2],
-                    email = parts[3],
-                    vehicleId = parts[4],
-                    licenseNumber = parts[5],
-                    currentLocation = Location.valueOf(parts[6]),
-                    userId = parts[0]
-                )
-
-                // Put the driver back the way he was, using the same methods the app uses
-                driver.setAvailability(true) //true as of now because the driver is set to false without a ride or parcel being stored in the persisted
-                driver.updateEarnings(BigDecimal(parts[8]))
-                driver.updateTotalRating(parts[9].toInt())
-                driver.updateRatingCount(parts[10].toInt())
-
-                driver
-            }
+        return driver
     }
 }

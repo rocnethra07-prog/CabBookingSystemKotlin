@@ -1,7 +1,7 @@
 package cab_booking.model.types
 
 // The same four states describe a passenger ride and a delivery ride.
-enum class RideStatus {
+enum class DispatchStatus {
     BOOKED,
     STARTED,
     COMPLETED,

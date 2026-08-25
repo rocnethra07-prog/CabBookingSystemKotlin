@@ -8,7 +8,7 @@ import java.math.BigDecimal
 
 class Driver(
     name: String,
-    phone: String,
+    phoneNumber: String,
     email: String,
     val assignedVehicleId: String,
     val licenseNumber: String,
@@ -16,7 +16,7 @@ class Driver(
     userId: String = IdGenerator.generateUserId()
 ) : User(
     name = name,
-    phoneNumber = phone,
+    phoneNumber = phoneNumber,
     email = email,
     role = UserRole.DRIVER,
     userId = userId

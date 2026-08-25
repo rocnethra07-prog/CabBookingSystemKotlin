@@ -1,9 +1,6 @@
 package cab_booking.console.input
 
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-
-object ConsoleFormater {
+object ConsoleFormatter {
     fun header(title: String) {
         println()
         println("=".repeat(50))
@@ -20,8 +17,3 @@ object ConsoleFormater {
         println("-".repeat(50))
     }
 }
-
-
-private val DISPLAY_FORMAT: DateTimeFormatter = DateTimeFormatter.ofPattern("dd MMM yyyy, hh:mm a")
-
-fun LocalDateTime.toDisplayString(): String = this.format(DISPLAY_FORMAT)

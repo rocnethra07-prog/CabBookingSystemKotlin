@@ -2,16 +2,15 @@ package cab_booking.util
 
 object IdGenerator{
     private var userCounter = 1
-    private var rideCounter = 1
-    private var parcelCounter = 1
+    private var dispatchCounter = 1
     private var vehicleCounter = 1
 
 
     fun generateUserId() = "USR-${userCounter++}"
 
-    fun generateRideId() = "RID-${rideCounter++}"
-
-    fun generateParcelId() = "PCL-${parcelCounter++}"
+    // Rides and parcel deliveries are both Dispatches, so they share one counter
+    // and one ID space. Every dispatch ID in the system is unique on its own.
+    fun generateDispatchId() = "DSP-${dispatchCounter++}"
 
     fun generateVehicleId() = "VEH-${vehicleCounter++}"
 
@@ -24,10 +23,16 @@ object IdGenerator{
         userCounter = counterAfter(userCounter, savedIds)
     }
 
+    fun syncDispatchCounter(savedIds: List<String>) {
+        dispatchCounter = counterAfter(dispatchCounter, savedIds)
+    }
+
     fun syncVehicleCounter(savedIds: List<String>) {
         vehicleCounter = counterAfter(vehicleCounter, savedIds)
     }
 
+    // "USR-7" -> 7, so the next generated ID is USR-8.
+    // A counter is only ever moved forward, never backwards.
     private fun counterAfter(currentCounter: Int, savedIds: List<String>): Int {
         val highestSaved = savedIds
             .mapNotNull { it.substringAfter("-").toIntOrNull() }

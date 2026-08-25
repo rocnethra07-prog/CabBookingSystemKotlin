@@ -18,7 +18,7 @@ open class User(
     var name: String = name.trim()
         private set
 
-    var phone: String = phoneNumber.trim()
+    var phoneNumber: String = phoneNumber.trim()
         private set
 
     fun updateName(name: String){
@@ -26,14 +26,14 @@ open class User(
         this.name = name.trim()
     }
 
-    fun updatePhone(phone: String){
-        require(Validator.isValidPhone(phone)){ "Invalid phone number format. Phone cannot be blank" }
-        this.phone = phone.trim()
+    fun updatePhoneNumber(phone: String){
+        require(Validator.isValidPhoneNumber(phone)){ "Invalid phone number format. Phone cannot be blank" }
+        this.phoneNumber = phone.trim()
     }
 
     init {
         require(Validator.isValidName(name)){ "Name must contain minimum 3 characters. Name cannot be blank" }
-        require(Validator.isValidPhone(phoneNumber)){ "Invalid phone number format. Phone cannot be blank" }
+        require(Validator.isValidPhoneNumber(phoneNumber)){ "Invalid phone number format. Phone cannot be blank" }
         require(Validator.isValidEmail(email)){ "Invalid email format. Email cannot be blank" }
     }
 
@@ -41,7 +41,7 @@ open class User(
         return """
             User ID          : $userId
             Name             : $name
-            Phone            : $phone
+            Phone            : $phoneNumber
             Email            : $email
             Role             : $role
         """.trimIndent()

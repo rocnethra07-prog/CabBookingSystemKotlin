@@ -1,10 +1,7 @@
 package cab_booking.console.input
 
 import cab_booking.exception.OperationCancelledException
-import cab_booking.model.Parcel
 import cab_booking.model.types.Location
-import cab_booking.model.types.ParcelCategory
-import cab_booking.model.types.ParcelMode
 import cab_booking.model.types.VehicleCategory
 import cab_booking.util.Validator
 import java.math.BigDecimal
@@ -47,18 +44,18 @@ object InputReader {
         promptUntilValidInput(prompt, errorMessage ) { Validator.isValidName(it) }
 
 
-    fun promptPhone(
+    fun promptPhoneNumber(
         prompt: String = "Enter Phone (or 'cancel' to go back): ",
         errorMessage: String = "Invalid Phone Number. Please enter a valid 10 digit number"
     ) =
-        promptUntilValidInput(prompt, errorMessage) { Validator.isValidPhone(it) }
+        promptUntilValidInput(prompt, errorMessage) { Validator.isValidPhoneNumber(it) }
 
 
     fun promptEmail(
         prompt: String = "Enter email (or 'cancel' to go back): ",
         errorMessage: String = "Invalid email format. Please enter a valid email"
     ) =
-        promptUntilValidInput(prompt, errorMessage){ Validator.isValidEmail(it) }.lowercase()
+        promptUntilValidInput(prompt, errorMessage){ Validator.isValidEmail(it) }
 
 
     fun promptPassword(
@@ -134,7 +131,7 @@ object InputReader {
             print("Phone [$currentValue] (Press Enter to keep the current value,  or 'cancel' to go back) : ")
             val input = readln().trim()
             if (input.isBlank()) return currentValue
-            if (!Validator.isValidPhone(input)) {
+            if (!Validator.isValidPhoneNumber(input)) {
                 println("Invalid phone number.")
                 continue
             }
@@ -146,14 +143,14 @@ object InputReader {
     fun chooseVehicleCategory(prompt: String = "Select Vehicle Type"): VehicleCategory {
         while (true) {
             println("\n$prompt")
-            println("-".repeat(50))
+            ConsoleFormatter.divider()
             VehicleCategory.entries.forEachIndexed { index, category ->
                 println(
                     "  ${index + 1}. $category  " +
                             "Base ₹${category.basePrice}  +  ₹${category.perKmRate}/km"
                 )
             }
-            println("-".repeat(50))
+            ConsoleFormatter.divider()
 
             val choice = readLine("$prompt (or 'cancel' to go back): ").toIntOrNull()
 
@@ -165,75 +162,36 @@ object InputReader {
         }
     }
 
+    // showWeightLimit is switched on for parcel deliveries, where the customer is
+    // choosing a vehicle by how much it can carry rather than by comfort.
     fun chooseVehicleCategoryByFare(
         fareEstimates: Map<VehicleCategory, BigDecimal>,
-        prompt: String = "Choose a ride"
+        prompt: String = "Choose a ride",
+        showWeightLimit: Boolean = false
     ): VehicleCategory {
         val categories = fareEstimates.keys.toList()
 
         while (true) {
             println("\n$prompt")
-            println("-".repeat(50))
+            ConsoleFormatter.divider()
             categories.forEachIndexed { index, category ->
                 val fare = fareEstimates.getValue(category)
-                println("  ${index + 1}. $category  ₹$fare")
+                if (showWeightLimit) {
+                    println("  ${index + 1}. ${category.name.padEnd(6)} up to ${category.maxParcelWeightKg} kg   ₹$fare")
+                }
+                else {
+                    println("  ${index + 1}. $category  ₹$fare")
+                }
             }
-            println("-".repeat(50))
+            ConsoleFormatter.divider()
 
-            val choice = readLine("$prompt (or 'cancel' to go back): ").toIntOrNull()
+            val choice = readLine("Choose (or 'cancel' to go back): ").toIntOrNull()
 
             if (choice == null || choice !in 1..categories.size) {
                 println("[x] Invalid choice. Please try again.")
                 continue
             }
             return categories[choice - 1]
-        }
-    }
-
-    fun chooseParcelMode(prompt: String = "What are you doing?"): ParcelMode {
-        while (true) {
-            println("\n$prompt")
-            println("  1. Send a parcel     - you have it now, it goes to someone else")
-            println("  2. Receive a parcel  - someone else has it, it comes to you")
-
-            when (readLine("Choose (or 'cancel' to go back): ")) {
-                "1" -> return ParcelMode.SEND
-                "2" -> return ParcelMode.RECEIVE
-                else -> println("[x] Invalid choice. Please try again.")
-            }
-        }
-    }
-
-    fun chooseParcelCategory(prompt: String = "Select Parcel Category"): ParcelCategory {
-        while (true) {
-            println("\n$prompt")
-            ParcelCategory.entries.forEachIndexed { index, category ->
-                val surcharge = if (category.handlingSurcharge > BigDecimal.ZERO) " (+₹${category.handlingSurcharge} handling)" else ""
-                println("  ${index + 1}. $category$surcharge")
-            }
-
-            val choice = readLine("Choose (or 'cancel' to go back): ").toIntOrNull()
-
-            if (choice == null || choice !in 1..ParcelCategory.entries.size) {
-                println("[x] Invalid choice. Please try again.")
-                continue
-            }
-            return ParcelCategory.entries[choice - 1]
-        }
-    }
-
-    fun promptWeight(
-        prompt: String = "Parcel Weight in kg (${Parcel.MIN_WEIGHT_KG} - ${Parcel.MAX_WEIGHT_KG}): "
-    ): BigDecimal {
-        while (true) {
-            print(prompt)
-            val value = readLine(prompt).toBigDecimalOrNull()
-
-            if (value == null || value < Parcel.MIN_WEIGHT_KG || value > Parcel.MAX_WEIGHT_KG) {
-                println("[x] Invalid weight. Enter a value between ${Parcel.MIN_WEIGHT_KG} kg and ${Parcel.MAX_WEIGHT_KG} kg.")
-                continue
-            }
-            return value
         }
     }
 

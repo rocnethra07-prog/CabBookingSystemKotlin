@@ -19,9 +19,9 @@ object AuthService{
     ): User {
         val user = User(
             name = name,
-            phone = phone,
+            phoneNumber = phone,
             email = email,
-            userRole = role)
+            role = role)
         saveUserAndCredentials(user, password)
         return user
     }

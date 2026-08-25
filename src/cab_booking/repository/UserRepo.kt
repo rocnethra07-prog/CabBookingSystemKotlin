@@ -10,28 +10,21 @@ object UserRepo : InMemoryRepo<User>() {
     }
 
     fun findByEmail(email: String): User {
-        val trimmedEmail = trimEmail(email)
-        return findByKey(trimmedEmail) ?: throw UserNotFoundException("Account does not exist. Please register.")
+        return findByKey(email) ?: throw UserNotFoundException("Account does not exist. Please register.")
     }
 
     fun existsByEmail(email: String): Boolean {
-        val trimmedEmail = trimEmail(email)
-
-        if (trimmedEmail.isBlank()) {
+        if (email.isBlank()) {
             return false
         }
-
-        return existsByKey(trimmedEmail)
+        return existsByKey(email)
     }
 
     fun deleteByEmail(email: String) {
-        val trimmedEmail = trimEmail(email)
-        deleteByKey(trimmedEmail)
+        deleteByKey(email)
     }
 
     fun findByUserId(userId: String): User =
         storage.values.firstOrNull { it.userId == userId } ?: throw UserNotFoundException("User not found for ID: $userId")
 
-    private fun trimEmail(email: String) =
-        email.trim().lowercase()
 }

@@ -4,16 +4,15 @@ import cab_booking.console.input.InputReader
 import cab_booking.controller.DriverController
 import cab_booking.exception.ActiveParcelNotFoundException
 import cab_booking.exception.ActiveRideNotFoundException
-import cab_booking.exception.InvalidParcelStateException
-import cab_booking.exception.InvalidRideStateException
 import cab_booking.exception.UnauthorizedParcelActionException
 import cab_booking.exception.UnauthorizedRideActionException
 import cab_booking.exception.VehicleNotFoundException
 import cab_booking.model.Driver
-import cab_booking.model.Parcel
 import cab_booking.model.Ride
-import cab_booking.console.input.ConsoleFormater
+import cab_booking.console.input.ConsoleFormatter
+import cab_booking.exception.InvalidDispatchStateException
 import cab_booking.exception.OperationCancelledException
+import cab_booking.model.ParcelDelivery
 import cab_booking.service.DriverService
 
 object DriverUI {
@@ -24,12 +23,12 @@ object DriverUI {
 
         while (true) {
 
-            ConsoleFormater.header("DRIVER MENU")
+            ConsoleFormatter.header("DRIVER MENU")
 
             println(
                 """
                 1. My Ride
-                2. My Parcel 
+                2. My Parcel Delivery 
                 3. Earnings
                 4. Vehicle Details
                 5. Account
@@ -39,7 +38,7 @@ object DriverUI {
 
             when (readln().trim()) {
                 "1" -> activeRideMenu(driver)
-                "2" -> activeParcelMenu(driver)
+                "2" -> activeParcelDeliveryMenu(driver)
                 "3" -> showEarnings(driver)
                 "4" -> viewVehicleDetails(driver)
                 "5" -> accountMenu(driver)
@@ -56,9 +55,9 @@ object DriverUI {
         try {
             val ride = DriverController.getCurrentRideOfDriver(driver.userId)
 
-            ConsoleFormater.header("CURRENT RIDE")
+            ConsoleFormatter.header("CURRENT RIDE")
             println(ride)
-            ConsoleFormater.divider()
+            ConsoleFormatter.divider()
 
             rideDetailsFlow(ride, driver)
 
@@ -132,7 +131,7 @@ object DriverUI {
             catch (e: UnauthorizedRideActionException) {
                 println("\n[x] ${e.message}")
             }
-            catch (e: InvalidRideStateException){
+            catch (e: InvalidDispatchStateException){
                 println("\n[x] ${e.message}")
             }
             catch (e : IllegalArgumentException){
@@ -157,15 +156,15 @@ object DriverUI {
         println("\nRide cancelled successfully.")
     }
 
-    private fun activeParcelMenu(driver: Driver) {
+    private fun activeParcelDeliveryMenu(driver: Driver) {
         try {
-            val parcel = DriverController.getCurrentParcelOfDriver(driver.userId)
+            val parcelDelivery = DriverController.getCurrentParcelDeliveryOfDriver(driver.userId)
 
-            ConsoleFormater.header("CURRENT PARCEL")
-            println(parcel)
-            ConsoleFormater.divider()
+            ConsoleFormatter.header("CURRENT PARCEL DELIVERY")
+            println(parcelDelivery)
+            ConsoleFormatter.divider()
 
-            parcelDetailsFlow(parcel, driver)
+            parcelDeliveryOptions(parcelDelivery, driver)
         }
         catch (e: ActiveParcelNotFoundException) {
             println("\n[x] ${e.message}")
@@ -173,12 +172,12 @@ object DriverUI {
     }
 
     private fun autoShowActiveParcel(driver: Driver){
-        if(DriverService.hasActiveParcelForDriver(driver.userId)){
-            activeParcelMenu(driver)
+        if(DriverService.hasActiveParcelDeliveryForDriver(driver.userId)){
+            activeParcelDeliveryMenu(driver)
         }
     }
 
-    private fun parcelDetailsFlow(parcel: Parcel, driver: Driver) {
+    private fun parcelDeliveryOptions(parcelDelivery: ParcelDelivery, driver: Driver) {
         while (true) {
             println("1. Show Details")
             println("0. Close")
@@ -186,7 +185,7 @@ object DriverUI {
 
             when (readln().trim()) {
                 "1" -> {
-                    parcelActionMenu(parcel, driver)
+                    parcelDeliveryActionMenu(parcelDelivery, driver)
                     return
                 }
                 "0" -> return
@@ -194,7 +193,7 @@ object DriverUI {
             }
         }
     }
-    private fun parcelActionMenu(parcel: Parcel, driver: Driver) {
+    private fun parcelDeliveryActionMenu(parcelDelivery: ParcelDelivery, driver: Driver) {
         while (true) {
             println(
                 """
@@ -210,15 +209,15 @@ object DriverUI {
             try {
                 when (readln().trim()) {
                     "1" -> {
-                        pickUpParcel(parcel, driver)
+                        pickUpParcel(parcelDelivery, driver)
                         return
                     }
                     "2" -> {
-                        deliverParcel(parcel, driver)
+                        deliverParcel(parcelDelivery, driver)
                         return
                     }
                     "3" -> {
-                        cancelParcel(parcel, driver)
+                        cancelParcel(parcelDelivery, driver)
                         return
                     }
                     "0" -> return
@@ -228,7 +227,7 @@ object DriverUI {
             catch (e: UnauthorizedParcelActionException) {
                 println("\n[x] ${e.message}")
             }
-            catch (e: InvalidParcelStateException) {
+            catch (e: InvalidDispatchStateException) {
                 println("\n[x] ${e.message}")
             }
             catch (e: IllegalArgumentException) {
@@ -237,27 +236,27 @@ object DriverUI {
         }
     }
 
-    private fun pickUpParcel(parcel: Parcel, driver: Driver) {
-        DriverController.pickUpParcel(parcel, driver)
+    private fun pickUpParcel(parcelDelivery: ParcelDelivery, driver: Driver) {
+        DriverController.pickUpParcelDelivery(parcelDelivery, driver)
         println("\nParcel picked up.")
     }
 
-    private fun deliverParcel(parcel: Parcel, driver: Driver) {
-        DriverController.deliverParcel(parcel, driver)
+    private fun deliverParcel(parcelDelivery: ParcelDelivery, driver: Driver) {
+        DriverController.deliverParcelDelivery(parcelDelivery, driver)
         println("\nParcel delivered successfully!")
         showEarnings(driver)
     }
 
-    private fun cancelParcel(parcel: Parcel, driver: Driver) {
-        DriverController.cancelParcel(parcel, driver)
-        println("\nParcel cancelled successfully.")
+    private fun cancelParcel(parcelDelivery: ParcelDelivery, driver: Driver) {
+        DriverController.cancelParcelDelivery(parcelDelivery, driver)
+        println("\nParcel Delivery cancelled.")
     }
 
     fun showEarnings(driver: Driver){
 
-        ConsoleFormater.header("DRIVER EARNINGS")
+        ConsoleFormatter.header("DRIVER EARNINGS")
 
-        println("Total Earnings : ₹${driver.earnings}")
+        println("Total Earnings : ₹${driver.totalEarnings}")
 
         val averageRating = DriverController.getAverageRatingOfDriver(driver)
 
@@ -273,12 +272,12 @@ object DriverUI {
     fun updateProfile(driver: Driver) {
         try {
 
-            ConsoleFormater.header("UPDATE PROFILE")
+            ConsoleFormatter.header("UPDATE PROFILE")
 
             println("(Press Enter to keep the current value)\n")
 
             val name = InputReader.promptOptionalName(driver.name)
-            val phone = InputReader.promptOptionalPhone(driver.phone)
+            val phone = InputReader.promptOptionalPhone(driver.phoneNumber)
 
             println("Current Location : ${driver.currentLocation}")
 
@@ -290,7 +289,7 @@ object DriverUI {
 
             if (
                 name == driver.name &&
-                phone == driver.phone &&
+                phone == driver.phoneNumber &&
                 location == driver.currentLocation
             ) {
                 println("\nNo changes made.")
@@ -310,7 +309,7 @@ object DriverUI {
                 Profile Updated Successfully
     
                 Name             : ${driver.name}
-                Phone            : ${driver.phone}
+                Phone            : ${driver.phoneNumber}
                 Email            : ${driver.email}
                 Location         : ${driver.currentLocation}
                 License Number   : ${driver.licenseNumber}
@@ -327,8 +326,8 @@ object DriverUI {
 
     private fun viewVehicleDetails(driver: Driver){
         try {
-            ConsoleFormater.header("ASSIGNED VEHICLE")
-            println(DriverController.getVehicleById(driver.vehicleId))
+            ConsoleFormatter.header("ASSIGNED VEHICLE")
+            println(DriverController.getVehicleById(driver.assignedVehicleId))
         }
         catch (e: VehicleNotFoundException) {
             println("\n[x] ${e.message}")
@@ -340,7 +339,7 @@ object DriverUI {
 
             while (true) {
 
-                ConsoleFormater.header("MY PROFILE")
+                ConsoleFormatter.header("MY PROFILE")
                 println(driver)
                 println()
                 println("1. Show Options")

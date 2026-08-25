@@ -1,7 +1,7 @@
 package cab_booking.console
 
 import cab_booking.config.AdminSeeder
-import cab_booking.console.input.ConsoleFormater
+import cab_booking.console.input.ConsoleFormatter
 import cab_booking.console.input.InputReader
 import cab_booking.controller.AuthController
 import cab_booking.controller.DriverController
@@ -19,7 +19,7 @@ object AuthUI {
     fun login() {
 
         try {
-            ConsoleFormater.header("LOGIN")
+            ConsoleFormatter.header("LOGIN")
 
             val email = InputReader.promptEmail()
             val password = InputReader.promptPassword()
@@ -64,7 +64,7 @@ object AuthUI {
 
         try {
 
-            ConsoleFormater.header("REGISTER")
+            ConsoleFormatter.header("REGISTER")
 
             println(
                 """
@@ -76,7 +76,7 @@ object AuthUI {
             )
 
             val name = InputReader.promptName()
-            val phone = InputReader.promptPhone()
+            val phone = InputReader.promptPhoneNumber()
 
             var email: String
 
@@ -134,7 +134,7 @@ object AuthUI {
     fun changePassword(user: User) {
 
         try {
-            ConsoleFormater.header("CHANGE PASSWORD")
+            ConsoleFormatter.header("CHANGE PASSWORD")
 
             val currentPassword = InputReader.promptPassword(prompt = "Current Password (or 'cancel' to go back): ")
 
@@ -177,7 +177,7 @@ object AuthUI {
 }
 
 private fun route(user: User) {
-    when (user.userRole) {
+    when (user.role) {
         UserRole.ADMIN -> AdminUI.adminDashboard()
         UserRole.DRIVER -> {
             val driver = DriverController.findDriverById(user.userId)

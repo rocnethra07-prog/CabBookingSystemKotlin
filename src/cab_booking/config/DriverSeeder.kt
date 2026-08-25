@@ -69,9 +69,9 @@ object DriverSeeder {
 
         val driver = Driver(
             name = name,
-            phone = phone,
+            phoneNumber = phone,
             email = email,
-            vehicleId = vehicle.vehicleId,
+            assignedVehicleId = vehicle.vehicleId,
             licenseNumber = licenseNumber,
             currentLocation = location
         )
