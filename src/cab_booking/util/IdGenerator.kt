@@ -10,7 +10,7 @@ object IdGenerator{
 
     // Rides and parcel deliveries are both Dispatches, so they share one counter
     // and one ID space. Every dispatch ID in the system is unique on its own.
-    fun generateBookingId() = "DSP-${bookingCounter++}"
+    fun generateBookingId() = "BKG-${bookingCounter++}"
 
     fun generateVehicleId() = "VEH-${vehicleCounter++}"
 
