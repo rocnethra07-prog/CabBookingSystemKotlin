@@ -9,7 +9,7 @@ import java.math.BigDecimal
 object InputReader {
 
     // Typing this word at any prompt cancels whatever is being filled in and
-    // hands control back to the screen that started it, instead of forcing
+    // handles control back to the screen that started it, instead of forcing
     // the person to keep answering until it's valid.
     private const val CANCEL_KEYWORD = "cancel"
 
