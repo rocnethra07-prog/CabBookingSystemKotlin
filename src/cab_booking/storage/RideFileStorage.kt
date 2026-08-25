@@ -50,7 +50,7 @@ object RideFileStorage : FileStorage<Ride>("data/rides.csv") {
 
                 val rating = parts[11].toInt()
                 if (rating in 1..5) {
-                    ride.setRatings(rating)
+                    ride.setRating(rating)
                 }
             }
 
