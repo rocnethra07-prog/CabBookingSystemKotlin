@@ -18,9 +18,8 @@ object ConsoleFormatter {
     }
 
     fun showError(message: String) {
-        println("----------------------------------------")
+        println("-".repeat(50))
         println("[x] $message")
-        println("----------------------------------------")
-        println()
+        println("-".repeat(50))
     }
 }
