@@ -142,7 +142,7 @@ object DriverUI {
 
     private fun startRide(ride: Ride, driver: Driver){
         DriverController.startRide(ride, driver)
-        println("\nRide completed successfully!")
+        println("\nRide started successfully!")
     }
 
     private fun completeRide(ride: Ride, driver: Driver) {
@@ -153,7 +153,7 @@ object DriverUI {
 
     private fun cancelRide(ride: Ride, driver: Driver) {
         DriverController.cancelRide(ride, driver)
-        println("\nRide cancelled successfully.")
+        println("\nRide cancelled .")
     }
 
     private fun activeParcelDeliveryMenu(driver: Driver) {
