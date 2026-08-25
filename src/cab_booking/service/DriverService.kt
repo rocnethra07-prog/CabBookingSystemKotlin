@@ -11,7 +11,7 @@ import cab_booking.exception.UnauthorizedRideActionException
 import cab_booking.model.ParcelDelivery
 import cab_booking.model.Vehicle
 import cab_booking.model.types.VehicleCategory
-import cab_booking.repository.AuthRepo
+import cab_booking.repository.CredentialRepo
 import cab_booking.repository.UserRepo
 import java.math.BigDecimal
 
@@ -64,7 +64,7 @@ object DriverService {
         VehicleService.deleteVehicle(driver.assignedVehicleId)
         DriverRepo.deleteByKey(driver.userId)
         UserRepo.deleteByEmail(driver.email)
-        AuthRepo.deleteByKey(driver.userId)
+        CredentialRepo.deleteByKey(driver.userId)
 
         return true
     }
@@ -80,7 +80,7 @@ object DriverService {
             }
 
         if (matchingDrivers.isEmpty()) {
-            throw AvailableDriversNotFoundException("[!]No $vehicleCategory drivers are available right now")
+            throw AvailableDriversNotFoundException(vehicleCategory)
         }
 
         return matchingDrivers.firstOrNull {

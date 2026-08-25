@@ -1,27 +1,28 @@
 package cab_booking.exception
 
 import cab_booking.model.types.Location
+import cab_booking.model.types.VehicleCategory
 
 class UserNotFoundException(message: String) :
     Exception(message)
 
 class CredentialsNotFoundException() :
-    Exception("Authentication details not found")
+    Exception("No login credentials found.")
 
 class InvalidCredentialsException() :
-    Exception("Invalid Credentials")
+    Exception("Incorrect email or password.")
 
 class AccountLockedException(minutesLeft: Long, secondsLeft: Long) :
-    Exception("Account Locked. Try again in ~$minutesLeft minute(s) $secondsLeft second(s)")
+    Exception("Account Locked. Please try again in ~${minutesLeft}m ${secondsLeft}s")
 
 class DriverNotFoundException(message: String) :
     Exception(message)
 
-class AvailableDriversNotFoundException(message: String) :
-    Exception(message)
+class AvailableDriversNotFoundException(vehicleCategory: VehicleCategory) :
+    Exception("No $vehicleCategory drivers are available right now. Please try again in a few minutes.")
 
-class VehicleNotFoundException(message: String) :
-    Exception(message)
+class VehicleNotFoundException(vehicleId: String) :
+    Exception("We couldn't find a vehicle with ID '$vehicleId'.")
 
 // The status rule is shared by rides and deliveries, so there is one exception.
 class InvalidBookingStateException(message: String) :
@@ -35,17 +36,17 @@ class UnauthorizedParcelActionException(message: String) :
     Exception(message)
 
 class ActiveRideNotFoundException() :
-    Exception("No active ride found at the moment")
+    Exception("You don't have any active ride right now.")
 
 class ActiveParcelNotFoundException() :
-    Exception("No active parcel found at the moment")
+    Exception("You don't have any active parcel delivery right now.")
 
 class CompletedRideNotFoundException() :
-    Exception("No completed ride found at the moment")
+    Exception("You don't have any completed rides yet.")
 
 class DistanceNotFoundException(pickupLocation: Location, dropLocation: Location) :
-    Exception("The selected location is outside our service area ($pickupLocation to $dropLocation)")
+    Exception("Sorry, we don't service this route yet ($pickupLocation → $dropLocation).")
 
 // Thrown when the user types 'cancel' at any prompt.
 class OperationCancelledException() :
-    Exception("Cancelled.")
+    Exception("Operation cancelled.")

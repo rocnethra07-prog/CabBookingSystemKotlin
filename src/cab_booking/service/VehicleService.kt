@@ -26,6 +26,6 @@ object VehicleService {
         VehicleRepo.findByCategory(vehicleCategory)
 
     fun getVehicleById(vehicleId: String): Vehicle =
-        VehicleRepo.findByKey(vehicleId) ?: throw VehicleNotFoundException("Cab not found for ID: ${vehicleId}")
+        VehicleRepo.findByKey(vehicleId) ?: throw VehicleNotFoundException(vehicleId)
 
 }

@@ -2,7 +2,7 @@ package cab_booking.storage
 
 import cab_booking.model.Admin
 import cab_booking.model.Customer
-import cab_booking.repository.AuthRepo
+import cab_booking.repository.CredentialRepo
 import cab_booking.repository.DriverRepo
 import cab_booking.repository.ParcelDeliveryRepo
 import cab_booking.repository.RideRepo
@@ -23,7 +23,7 @@ object DataStore {
         }
         CustomerFileStorage.load().forEach { UserRepo.save(it) }
         AdminFileStorage.load().forEach { UserRepo.save(it) }
-        CredentialFileStorage.load().forEach { AuthRepo.save(it) }
+        CredentialFileStorage.load().forEach { CredentialRepo.save(it) }
         RideFileStorage.load().forEach { RideRepo.save(it) }
         ParcelDeliveryFileStorage.load().forEach { ParcelDeliveryRepo.save(it) }
 
@@ -42,7 +42,7 @@ object DataStore {
         // Each kind of user has its own file. Drivers went to drivers.csv above.
         CustomerFileStorage.save(UserRepo.findAll().filterIsInstance<Customer>())
         AdminFileStorage.save(UserRepo.findAll().filterIsInstance<Admin>())
-        CredentialFileStorage.save(AuthRepo.findAll())
+        CredentialFileStorage.save(CredentialRepo.findAll())
         RideFileStorage.save(RideRepo.findAll())
         ParcelDeliveryFileStorage.save(ParcelDeliveryRepo.findAll())
 

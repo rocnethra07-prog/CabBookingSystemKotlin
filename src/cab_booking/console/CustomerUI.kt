@@ -208,7 +208,7 @@ object CustomerUI {
 
                 } catch (e: AvailableDriversNotFoundException) {
                     println("\n[x] ${e.message}")
-                    if (InputReader.promptConfirmation("\nTry another vehicle type? (Y/N): ")) {
+                    if (InputReader.promptConfirmation("\nOr Try another vehicle type? (Y/N): ")) {
                         continue
                     }
                     return

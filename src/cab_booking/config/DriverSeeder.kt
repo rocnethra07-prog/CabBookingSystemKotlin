@@ -5,7 +5,7 @@ import cab_booking.model.Driver
 import cab_booking.model.Vehicle
 import cab_booking.model.types.Location
 import cab_booking.model.types.VehicleCategory
-import cab_booking.repository.AuthRepo
+import cab_booking.repository.CredentialRepo
 import cab_booking.repository.DriverRepo
 import cab_booking.repository.UserRepo
 import cab_booking.repository.VehicleRepo
@@ -80,7 +80,7 @@ object DriverSeeder {
             VehicleRepo.save(vehicle)
             DriverRepo.save(driver)
             UserRepo.save(driver)
-            AuthRepo.save(UserCredential.withPassword(driver.userId, SEED_PASSWORD))
+            CredentialRepo.save(UserCredential.withPassword(driver.userId, SEED_PASSWORD))
         }
         catch (_: IllegalArgumentException) {
             VehicleRepo.deleteByKey(vehicle.vehicleId)

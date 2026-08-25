@@ -12,13 +12,13 @@ object AuthController {
 
     fun register(
         name: String,
-        phone: String,
+        phoneNumber: String,
         email: String,
         password: String
     ) =
         AuthService.registerCustomer(
             name = name,
-            phone = phone,
+            phoneNumber = phoneNumber,
             email = email,
             password = password
         )

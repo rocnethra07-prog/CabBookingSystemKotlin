@@ -38,7 +38,7 @@ object CustomerService {
     }
 
     fun getDriverForRide(ride: Ride): Driver =
-        DriverRepo.findByKey(ride.driverId) ?: throw DriverNotFoundException("Driver not found for ID: ${ride.driverId}")
+        DriverRepo.findByKey(ride.driverId) ?: throw DriverNotFoundException("Driver not found for this ride")
 
     fun cancelRide(
         ride: Ride,

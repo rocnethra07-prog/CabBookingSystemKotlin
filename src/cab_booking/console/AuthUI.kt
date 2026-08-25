@@ -19,25 +19,25 @@ object AuthUI {
 
     fun login() {
 
-        try {
-            ConsoleFormatter.header("LOGIN")
+        ConsoleFormatter.header("LOGIN")
 
-            val email = InputReader.promptEmail()
-            val password = InputReader.promptPassword()
+        while(true) {
+            try {
 
-            val user = AuthController.login(email, password)
+                val email = InputReader.promptEmail()
+                val password = InputReader.promptPassword()
 
-            println("\nWelcome back, ${user.name}!")
+                val user = AuthController.login(email, password)
 
-            route(user)
+                println("\nWelcome back, ${user.name}!")
 
-        }
-        catch (e: UserNotFoundException) {
-            println("\n[x] Login failed: ${e.message}")
-        }
-        catch (e: AccountLockedException) {
-            println(
-                """
+                route(user)
+
+            } catch (e: UserNotFoundException) {
+                println("\n[x] Login failed: ${e.message}")
+            } catch (e: AccountLockedException) {
+                println(
+                    """
                 
                 Your account has been temporarily locked due to multiple failed login attempts.
                 Need Help? Contact : ${AdminSeeder.ADMIN_EMAIL}
@@ -45,19 +45,20 @@ object AuthUI {
                 ${e.message}
                 
             """.trimIndent()
-            )
-        }
-        catch (e: InvalidCredentialsException) {
-            println("\n[x] Login failed: ${e.message}")
-        }
-        catch (e: CredentialsNotFoundException) {
-            println("\n[x] Authentication failed: ${e.message}")
-        }
-        catch (e: DriverNotFoundException) {
-            println("\n[x] ${e.message}. Please try again.")
-        }
-        catch (_: OperationCancelledException) {
-            println("\nCancelled.")
+                )
+            } catch (e: InvalidCredentialsException) {
+                println("\n[x] Login failed: ${e.message}. Please try again.")
+                continue
+            } catch (e: CredentialsNotFoundException) {
+                println("\n[x] Authentication failed: ${e.message}")
+                return
+            } catch (e: DriverNotFoundException) {
+                println("\n[x] ${e.message}")
+                return
+            } catch (_: OperationCancelledException) {
+                println("\nCancelled.")
+                return
+            }
         }
     }
 
@@ -77,7 +78,7 @@ object AuthUI {
             )
 
             val name = InputReader.promptName()
-            val phone = InputReader.promptPhoneNumber()
+            val phoneNumber = InputReader.promptPhoneNumber()
 
             var email: String
 
@@ -104,7 +105,7 @@ object AuthUI {
 
             val user = AuthController.register(
                 name = name,
-                phone = phone,
+                phoneNumber = phoneNumber,
                 email = email,
                 password = password
             )
@@ -134,45 +135,46 @@ object AuthUI {
 
     fun changePassword(user: User) {
 
-        try {
-            ConsoleFormatter.header("CHANGE PASSWORD")
+        ConsoleFormatter.header("CHANGE PASSWORD")
+        while (true) {
+            try {
+                val currentPassword = InputReader.promptPassword(prompt = "Current Password (or 'cancel' to go back): ")
+                var newPassword: String
+                while (true) {
+                    newPassword = InputReader.promptPassword()
+                    val confirmPassword =
+                        InputReader.promptPassword(prompt = "Confirm Password (or 'cancel' to go back): ")
 
-            val currentPassword = InputReader.promptPassword(prompt = "Current Password (or 'cancel' to go back): ")
-
-            var newPassword: String
-            while(true) {
-                newPassword = InputReader.promptPassword()
-                val confirmPassword = InputReader.promptPassword(prompt = "Confirm Password (or 'cancel' to go back): ")
-
-                if (newPassword != confirmPassword) {
-                    println("\nPasswords do not match.")
-                    continue
+                    if (newPassword != confirmPassword) {
+                        println("\nPasswords do not match.")
+                        continue
+                    }
+                    break
                 }
-                break
+                AuthController.changePassword(
+                    user,
+                    currentPassword,
+                    newPassword
+                )
+
+                println("\nPassword changed successfully.")
+                return
+            } catch (e: CredentialsNotFoundException) {
+                println("\n[x] Authentication failed: ${e.message}")
+                return
+            } catch (e: AccountLockedException) {
+                println("\n[x] ${e.message}")
+                return
+            } catch (e: InvalidCredentialsException) {
+                println("\n[x] ${e.message}. Please try again.\n")
+                continue
+            } catch (e: IllegalArgumentException) {
+                println("\n[x] ${e.message}")
+                return
+            } catch (_: OperationCancelledException) {
+                println("\nCancelled. Your password was not changed.")
+                return
             }
-            AuthController.changePassword(
-                user,
-                currentPassword,
-                newPassword
-            )
-
-            println("\nPassword changed successfully.")
-
-        }
-        catch (e : CredentialsNotFoundException){
-            println("\n[x] Authentication failed: ${e.message}")
-        }
-        catch (e: AccountLockedException){
-            println("\n[x] ${e.message}")
-        }
-        catch (e: InvalidCredentialsException) {
-            println("\n[x] ${e.message}")
-        }
-        catch (e: IllegalArgumentException) {
-            println("\n[x] ${e.message}")
-        }
-        catch (_: OperationCancelledException) {
-            println("\nCancelled. Your password was not changed.")
         }
     }
 }
