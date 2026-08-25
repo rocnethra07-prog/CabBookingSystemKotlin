@@ -6,6 +6,10 @@ import cab_booking.util.IdGenerator
 import cab_booking.util.Validator
 import java.math.BigDecimal
 
+// Subclasses User because a driver needs real extra structure the enum
+// can't hold: vehicle, license, location, earnings, availability, ratings —
+// plus behavior (updateCurrentLocation, etc.) a plain User has no reason
+// to carry. This is the genuine case for subclassing, unlike Admin/Customer.
 class Driver(
     name: String,
     phoneNumber: String,

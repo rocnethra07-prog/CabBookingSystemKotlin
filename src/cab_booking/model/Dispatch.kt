@@ -8,6 +8,12 @@ import cab_booking.util.IdGenerator
 import java.math.BigDecimal
 import java.time.LocalDateTime
 
+// Abstract: a "dispatch" alone isn't a real bookable thing — it's always
+// either a ride or a parcel delivery. Making this abstract stops one from
+// ever being created generically.
+// Not an enum on one concrete class, because ParcelDelivery needs extra
+// mandatory fields (receiver name/phone) that a plain type flag can't
+// enforce — subclassing lets the compiler guarantee they're always present.
 abstract class Dispatch(
     val customerId: String,
     val driverId: String,

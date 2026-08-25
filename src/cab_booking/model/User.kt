@@ -4,6 +4,10 @@ import cab_booking.model.types.UserRole
 import cab_booking.util.IdGenerator
 import cab_booking.util.Validator
 
+// User is open, not abstract, because a plain User + role is already a
+// complete object — Admin and Customer differ only by that label for now
+// Driver subclasses this because it needs extra fields
+// (vehicle, license, location, earnings) that the enum can't express.
 open class User(
     name: String,
     phoneNumber: String,
