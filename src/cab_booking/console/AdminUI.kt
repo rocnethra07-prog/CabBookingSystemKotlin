@@ -323,11 +323,14 @@ object AdminUI {
 
             AdminController.unlockUserAccount(userId)
             println("\n${user.name}'s account has been unlocked.")
-        } catch (e: UserNotFoundException) {
+        }
+        catch (e: UserNotFoundException) {
             println("\n[x] ${e.message}")
-        } catch (e: CredentialsNotFoundException) {
+        }
+        catch (e: CredentialsNotFoundException) {
             println("\n[x] We couldn't unlock this account. ${e.message}")
-        } catch (_: OperationCancelledException) {
+        }
+        catch (_: OperationCancelledException) {
             println("\nCancelled.")
         }
     }
