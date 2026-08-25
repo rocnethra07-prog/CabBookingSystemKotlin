@@ -89,7 +89,7 @@ object AuthUI {
             var password: String
             while(true) {
                 password = InputReader.promptPassword()
-                val confirmPassword = InputReader.promptPassword(prompt = "Confirm Password : ")
+                val confirmPassword = InputReader.promptPassword(prompt = "Confirm Password")
 
                 if (password != confirmPassword) {
                     println("\nPasswords do not match.")
@@ -130,12 +130,12 @@ object AuthUI {
         try {
             ConsoleFormatter.header("CHANGE PASSWORD")
 
-            val currentPassword = InputReader.promptPassword(prompt = "Current Password (or 'cancel' to go back): ")
+            val currentPassword = InputReader.promptPassword(prompt = "Current Password")
 
             var newPassword: String
             while(true) {
                 newPassword = InputReader.promptPassword()
-                val confirmPassword = InputReader.promptPassword(prompt = "Confirm Password (or 'cancel' to go back): ")
+                val confirmPassword = InputReader.promptPassword(prompt = "Confirm Password")
 
                 if (newPassword != confirmPassword) {
                     println("\nPasswords do not match.")
