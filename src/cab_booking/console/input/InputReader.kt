@@ -125,6 +125,7 @@ object InputReader {
     ): String =
         promptOptionalInput(currentValue, prompt, errorMessage){ Validator.isValidPhoneNumber(it) }
 
+    //used while driver creation to map a vehicle with the driver
     fun chooseVehicleCategory(prompt: String = "Select Vehicle Category"): VehicleCategory {
         while (true) {
             println("\n$prompt")
