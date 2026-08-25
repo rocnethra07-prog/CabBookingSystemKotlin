@@ -17,7 +17,7 @@ object RideFileStorage : FileStorage<Ride>("data/rides.csv") {
                 "${item.fare.toPlainString()}," +
                 "${item.status.name},${item.bookedAt}," +
                 "${item.completedAt?.toString() ?: NOT_SET}," +
-                "${item.cancelledAt?.toString() ?: NOT_SET},${item.ratings}"
+                "${item.cancelledAt?.toString() ?: NOT_SET},${item.rating}"
 
     override fun fromLine(parts: List<String>): Ride {
         val ride = Ride(
