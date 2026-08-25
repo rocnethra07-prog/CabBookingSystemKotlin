@@ -53,10 +53,10 @@ object CustomerUI {
     }
 
     //PENDING RATING (shown once, on login)
-    private fun promptPendingRating(rider: Customer) {
+    private fun promptPendingRating(customer: Customer) {
 
         try {
-            val ride = CustomerController.getLastCompletedRideOfRider(rider.userId)
+            val ride = CustomerController.getLastCompletedRideOfCustomer(customer.userId)
 
             if (ride.rating != 0) {
                 return
@@ -65,7 +65,7 @@ object CustomerUI {
             println("\nYou haven't rated your last ride yet.")
 
             if (InputReader.promptConfirmation("Would you like to rate it now?")) {
-                showRatingScreen(ride, rider)
+                showRatingScreen(ride, customer)
             }
 
         }
@@ -75,7 +75,7 @@ object CustomerUI {
 
 
     private fun showRatingScreen(
-        ride: Ride, rider: Customer
+        ride: Ride, customer: Customer
     ) {
         val driver = CustomerController.getDriverForRide(ride)
 
@@ -90,12 +90,12 @@ object CustomerUI {
             """.trimIndent()
         )
 
-        submitRating(ride, rider, driver)
+        submitRating(ride, customer, driver)
     }
 
     private fun submitRating(
         ride: Ride,
-        rider: Customer,
+        customer: Customer,
         driver: Driver
     ) {
 
@@ -116,7 +116,7 @@ object CustomerUI {
             val rating = InputReader.promptRating()
             CustomerController.rateDriver(
                 ride,
-                rider,
+                customer,
                 rating
             )
             println("\nThank you for rating ${driver.name}")
@@ -140,14 +140,14 @@ object CustomerUI {
         }
     }
 
-    private fun bookRide(rider: Customer) {
+    private fun bookRide(customer: Customer) {
 
-        if (CustomerController.hasActiveRideOfRider(rider.userId)) {
+        if (CustomerController.hasActiveRideOfCustomer(customer.userId)) {
             println("\nYou already have an active ride. Finish or cancel it before booking another.")
             return
         }
 
-        if (CustomerController.hasActiveParcelDeliveryOfCustomer(rider.userId)) {
+        if (CustomerController.hasActiveParcelDeliveryOfCustomer(customer.userId)) {
             println("\nYou already have an active parcel. Finish or cancel it before booking another.\n")
             return
         }
@@ -185,7 +185,7 @@ object CustomerUI {
                 try {
 
                     val ride = CustomerController.bookRide(
-                        rider,
+                        customer,
                         pickup,
                         drop,
                         vehicleCategory
@@ -233,29 +233,29 @@ object CustomerUI {
     }
 
     // Called both from the "My Ride" menu item and automatically on login
-    fun viewCurrentRide(rider: Customer){
+    fun viewCurrentRide(customer: Customer){
         try {
-            val ride = CustomerController.getCurrentBookedRide(rider.userId)
+            val ride = CustomerController.getCurrentBookedRideOfCustomer(customer.userId)
             val driver = CustomerController.getDriverForRide(ride)
             ConsoleFormatter.header("YOUR RIDE")
             println(ride)
             println()
             println("Driver : ${driver.name}")
             println("Phone  : ${driver.phoneNumber}")
-            rideMenu(ride, rider, driver)
+            rideMenu(ride, customer, driver)
         }
         catch (e: ActiveRideNotFoundException) {
             println("\n${e.message}")
         }
     }
 
-    private fun autoShowActiveRide(rider: Customer) {
-        if(CustomerController.hasActiveRideOfRider(rider.userId)) {
-            viewCurrentRide(rider)
+    private fun autoShowActiveRide(customer: Customer) {
+        if(CustomerController.hasActiveRideOfCustomer(customer.userId)) {
+            viewCurrentRide(customer)
         }
     }
 
-    private fun rideMenu(ride: Ride, rider: Customer, driver: Driver) {
+    private fun rideMenu(ride: Ride, customer: Customer, driver: Driver) {
         while (true) {
             println("1. Show Options")
             println("0. Close")
@@ -269,7 +269,7 @@ object CustomerUI {
                     println("Driver : ${driver.name}")
                     println("Phone  : ${driver.phoneNumber}")
 
-                    currentRideOptions(ride, rider)
+                    currentRideOptions(ride, customer)
                     return
                 }
                 "0" -> return
@@ -277,7 +277,7 @@ object CustomerUI {
             }
         }
     }
-    private fun currentRideOptions(ride: Ride, rider: Customer) {
+    private fun currentRideOptions(ride: Ride, customer: Customer) {
 
         while (true) {
 
@@ -287,7 +287,7 @@ object CustomerUI {
             when (readln().trim()) {
 
                 "1" -> {
-                    cancelRide(ride, rider)
+                    cancelRide(ride, customer)
                     return
                 }
 
@@ -298,10 +298,10 @@ object CustomerUI {
     }
 
     private fun cancelRide(
-        ride: Ride, rider: Customer
+        ride: Ride, customer: Customer
     ) {
         try {
-            CustomerController.cancelRide(ride, rider)
+            CustomerController.cancelRide(ride, customer)
             println("\nRide cancelled successfully.")
         }
         catch (e: UnauthorizedRideActionException) {
@@ -324,7 +324,7 @@ object CustomerUI {
             return
         }
 
-        if (CustomerController.hasActiveRideOfRider(customer.userId)) {
+        if (CustomerController.hasActiveRideOfCustomer(customer.userId)) {
             println("\nYou already have an active ride. Finish or cancel it before booking another.")
             return
         }
@@ -405,7 +405,7 @@ object CustomerUI {
 
     private fun viewCurrentParcelDelivery(customer: Customer) {
         try {
-            val parcelDelivery = CustomerController.getCurrentParcelDeliveryForCustomer(customer.userId)
+            val parcelDelivery = CustomerController.getCurrentParcelDeliveryOfCustomer(customer.userId)
             val driver = CustomerController.getDriverForParcelDelivery(parcelDelivery)
 
             ConsoleFormatter.header("YOUR PARCEL")
@@ -476,22 +476,22 @@ object CustomerUI {
         }
     }
 
-    private fun updateProfile(rider: Customer) {
+    private fun updateProfile(customer: Customer) {
 
         try {
             println("\n========== UPDATE PROFILE ==========")
             println("(Press Enter to keep the current value)\n")
 
-            val name = InputReader.promptOptionalName(rider.name)
+            val name = InputReader.promptOptionalName(customer.name)
 
-            val phoneNumber = InputReader.promptOptionalPhone(rider.phoneNumber)
+            val phoneNumber = InputReader.promptOptionalPhone(customer.phoneNumber)
 
-            if (name == rider.name && phoneNumber == rider.phoneNumber) {
+            if (name == customer.name && phoneNumber == customer.phoneNumber) {
                 println("\nNo changes made.")
                 return
             }
             CustomerController.updateProfile(
-                rider,
+                customer,
                 name,
                 phoneNumber
             )
@@ -501,9 +501,9 @@ object CustomerUI {
     
                 Profile Updated Successfully
     
-                Name  : ${rider.name}
-                Phone : ${rider.phoneNumber}
-                Email : ${rider.email}
+                Name  : ${customer.name}
+                Phone : ${customer.phoneNumber}
+                Email : ${customer.email}
                 """.trimIndent()
             )
 

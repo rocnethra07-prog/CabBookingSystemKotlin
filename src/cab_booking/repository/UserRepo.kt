@@ -6,7 +6,7 @@ import cab_booking.model.User
 object UserRepo : InMemoryRepo<User>() {
 
     override fun getKey(entity: User): String {
-        return entity.email.trim().lowercase()
+        return entity.email.lowercase()
     }
 
     fun findByEmail(email: String): User {

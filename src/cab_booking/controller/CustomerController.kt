@@ -11,8 +11,8 @@ import cab_booking.service.RideService
 
 object CustomerController{
 
-    fun getLastCompletedRideOfRider(riderId: String) =
-        RideService.getLastCompletedRide(riderId)
+    fun getLastCompletedRideOfCustomer(customerId: String) =
+        RideService.getLastCompletedRideOfCustomer(customerId)
 
     fun getDriverForRide(ride: Ride) =
         CustomerService.getDriverForRide(ride)
@@ -20,31 +20,31 @@ object CustomerController{
     fun getDriverForParcelDelivery(parcelDelivery: ParcelDelivery) =
         CustomerService.getDriverForParcelDelivery(parcelDelivery)
 
-    fun rateDriver(ride: Ride, rider: Customer, rating: Int) =
-        CustomerService.rateDriver(ride,rider,rating)
+    fun rateDriver(ride: Ride, customer: Customer, rating: Int) =
+        CustomerService.rateDriver(ride,customer,rating)
 
-    fun hasActiveRideOfRider(riderId: String) =
-        RideService.hasActiveRideOfRider(riderId)
+    fun hasActiveRideOfCustomer(customerId: String) =
+        RideService.hasActiveRideOfCustomer(customerId)
 
     fun bookRide(
-        rider: Customer,
+        customer: Customer,
         pickup: Location,
         drop: Location,
         vehicleCategory: VehicleCategory
     ) =
-        CustomerService.bookRide(rider,pickup,drop,vehicleCategory)
+        CustomerService.bookRide(customer,pickup,drop,vehicleCategory)
 
     fun estimateRideFares(pickup: Location, drop: Location) =
         RideService.estimateRideFares(pickup, drop)
 
-    fun getCurrentBookedRide(riderId: String) =
-        RideService.getCurrentRideOfRider(riderId)
+    fun getCurrentBookedRideOfCustomer(customerId: String) =
+        RideService.getCurrentRideOfCustomer(customerId)
 
-    fun cancelRide(ride: Ride, rider: Customer) =
-        CustomerService.cancelRide(ride, rider)
+    fun cancelRide(ride: Ride, customer: Customer) =
+        CustomerService.cancelRide(ride, customer)
 
-    fun updateProfile(rider: Customer, name: String, phoneNumber: String) =
-        CustomerService.updateProfile(rider,name,phoneNumber)
+    fun updateProfile(customer: Customer, name: String, phoneNumber: String) =
+        CustomerService.updateProfile(customer,name,phoneNumber)
 
 
     fun bookParcelDelivery(
@@ -63,7 +63,7 @@ object CustomerController{
     fun hasActiveParcelDeliveryOfCustomer(customerId: String) =
         ParcelDeliveryService.hasActiveParcelDeliveryOfCustomer(customerId)
 
-    fun getCurrentParcelDeliveryForCustomer(customerId: String) =
+    fun getCurrentParcelDeliveryOfCustomer(customerId: String) =
         ParcelDeliveryService.getCurrentParcelDeliveryOfCustomer(customerId)
 
     fun cancelParcelDelivery(parcelDelivery: ParcelDelivery, customer: Customer) =

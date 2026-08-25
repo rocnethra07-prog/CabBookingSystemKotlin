@@ -12,9 +12,9 @@ import java.time.LocalDateTime
 
 object RideService {
 
-    fun createRide(riderId: String, driverId: String, pickupLocation: Location, dropLocation: Location, vehicleCategory: VehicleCategory) : Ride{
+    fun createRide(customerId: String, driverId: String, pickupLocation: Location, dropLocation: Location, vehicleCategory: VehicleCategory) : Ride{
         val ride = Ride(
-            customerId = riderId,
+            customerId = customerId,
             driverId = driverId,
             pickupLocation = pickupLocation,
             dropLocation = dropLocation,
@@ -70,17 +70,17 @@ object RideService {
     fun hasActiveRideOfDriver(driverId: String): Boolean =
         RideRepo.hasActiveRideOfDriver(driverId)
 
-    fun hasActiveRideOfRider(riderId: String): Boolean =
-        RideRepo.hasActiveRideOfRider(riderId)
+    fun hasActiveRideOfCustomer(customerId: String): Boolean =
+        RideRepo.hasActiveRideOfCustomer(customerId)
 
     fun getCurrentRideOfDriver(driverId: String): Ride =
         RideRepo.findCurrentRideOfDriver(driverId)
 
-    fun getCurrentRideOfRider(riderId: String): Ride =
-        RideRepo.findCurrentRideOfRider(riderId)
+    fun getCurrentRideOfCustomer(customerId: String): Ride =
+        RideRepo.findCurrentRideOfCustomer(customerId)
 
-    fun getLastCompletedRide(
-        riderId: String
+    fun getLastCompletedRideOfCustomer(
+        customerId: String
     ): Ride =
-        RideRepo.findLastCompletedRide(riderId)
+        RideRepo.findLastCompletedRideOfCustomer(customerId)
 }

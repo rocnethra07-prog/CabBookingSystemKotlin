@@ -8,7 +8,6 @@ import cab_booking.model.Customer
 import cab_booking.model.Driver
 import cab_booking.model.ParcelDelivery
 import cab_booking.model.Ride
-import cab_booking.model.User
 import cab_booking.model.types.Location
 import cab_booking.model.types.BookingStatus
 import cab_booking.model.types.VehicleCategory
@@ -26,14 +25,14 @@ object CustomerService {
     }
 
     fun bookRide(
-        rider: User,
+        customer: Customer,
         pickupLocation: Location,
         dropLocation: Location,
         vehicleCategory: VehicleCategory
     ): Ride {
 
         val driver = DriverService.findAvailableDriver(vehicleCategory, pickupLocation)
-        val ride = RideService.createRide(rider.userId, driver.userId, pickupLocation, dropLocation, vehicleCategory)
+        val ride = RideService.createRide(customer.userId, driver.userId, pickupLocation, dropLocation, vehicleCategory)
         DriverService.markUnavailable(driver)
         return ride
     }
@@ -43,22 +42,22 @@ object CustomerService {
 
     fun cancelRide(
         ride: Ride,
-        rider: Customer
+        customer: Customer
     ) {
-        if (ride.customerId != rider.userId) {
-            throw UnauthorizedRideActionException("Only the rider who booked this ride can cancel it.")
+        if (ride.customerId != customer.userId) {
+            throw UnauthorizedRideActionException("Only the rider/customer who booked this ride can cancel it.")
         }
         DriverService.cancelRide(ride,getDriverForRide(ride))
     }
 
     fun rateDriver(
         ride: Ride,
-        rider: Customer,
+        customer: Customer,
         rating: Int
     ) {
 
-        if (ride.customerId != rider.userId) {
-            throw UnauthorizedRideActionException("Only the rider who booked this ride can rate it.")
+        if (ride.customerId != customer.userId) {
+            throw UnauthorizedRideActionException("Only the rider/customer who booked this ride can rate it.")
         }
 
         if(ride.rating != 0) {

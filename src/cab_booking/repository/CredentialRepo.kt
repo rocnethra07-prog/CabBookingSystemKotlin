@@ -5,7 +5,7 @@ import cab_booking.exception.CredentialsNotFoundException
 
 object CredentialRepo : InMemoryRepo<UserCredential>() {
 
-    override fun getKey(entity: UserCredential) = entity.userId.trim()
+    override fun getKey(entity: UserCredential) = entity.userId
 
     fun findByUserId(userId: String): UserCredential =
         findByKey(userId)  ?: throw CredentialsNotFoundException()

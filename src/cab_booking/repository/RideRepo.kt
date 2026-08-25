@@ -18,12 +18,12 @@ object RideRepo : InMemoryRepo<Ride>() {
     fun findCurrentRideOfDriver(driverId: String): Ride =
         findRide{ it.driverId == driverId && it.status in activeStatuses }  ?: throw ActiveRideNotFoundException()
 
-    fun findCurrentRideOfRider(riderId: String): Ride =
-        findRide { it.customerId == riderId && it.status in activeStatuses } ?: throw ActiveRideNotFoundException()
+    fun findCurrentRideOfCustomer(customerId: String): Ride =
+        findRide { it.customerId == customerId && it.status in activeStatuses } ?: throw ActiveRideNotFoundException()
 
-    fun hasActiveRideOfRider(riderId: String): Boolean =
+    fun hasActiveRideOfCustomer(customerId: String): Boolean =
         storage.values.any {
-            it.customerId == riderId && it.status in activeStatuses
+            it.customerId == customerId && it.status in activeStatuses
         }
 
     fun hasActiveRideOfDriver(driverId: String): Boolean =
@@ -34,9 +34,9 @@ object RideRepo : InMemoryRepo<Ride>() {
     private fun findRide(predicate : (Ride) -> Boolean) =
         storage.values.find(predicate)
 
-    fun findLastCompletedRide(riderId: String): Ride =
+    fun findLastCompletedRideOfCustomer(customerId: String): Ride =
         findRides{
-                it.customerId == riderId && it.status == BookingStatus.COMPLETED
+                it.customerId == customerId && it.status == BookingStatus.COMPLETED
             }
             .maxByOrNull {
                 it.completedAt!!
