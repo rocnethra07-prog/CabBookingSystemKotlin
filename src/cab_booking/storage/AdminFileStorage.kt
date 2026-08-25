@@ -2,7 +2,7 @@ package cab_booking.storage
 
 import cab_booking.model.Admin
 
-object AdminFileStorage : FileStorage<Admin>("data/admins.csv") {
+object AdminFileStorage : FileStorage<Admin>("data/admin.csv") {
 
     override fun toLine(item: Admin) =
         "${item.userId},${item.name},${item.phoneNumber},${item.email}"
