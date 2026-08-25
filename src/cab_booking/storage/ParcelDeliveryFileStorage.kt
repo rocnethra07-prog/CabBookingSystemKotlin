@@ -17,7 +17,7 @@ object ParcelDeliveryFileStorage : FileStorage<ParcelDelivery>("data/parcel_deli
                 "${item.receiverName},${item.receiverPhoneNumber}," +
                 "${item.status.name},${item.bookedAt}," +
                 "${item.completedAt?.toString() ?: NOT_SET}," +
-                "${item.cancelledAt?.toString() ?: NOT_SET}"
+                (item.cancelledAt?.toString() ?: NOT_SET)
 
     override fun fromLine(parts: List<String>): ParcelDelivery {
         val parcelDelivery = ParcelDelivery(
