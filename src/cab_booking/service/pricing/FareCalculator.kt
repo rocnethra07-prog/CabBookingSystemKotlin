@@ -41,5 +41,5 @@ object RideFareCalculator : FareCalculator() {
 
 
 object ParcelFareCalculator : FareCalculator() {
-    override val surgeMultiplier = BigDecimal("0.5")
+    override val surgeMultiplier = BigDecimal("1.1")
 }
