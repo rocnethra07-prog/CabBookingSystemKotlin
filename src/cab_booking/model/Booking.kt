@@ -53,7 +53,7 @@ sealed class Booking(
             // ONGOING - CAN ONLY BECOME COMPLETED
             (status == BookingStatus.STARTED && newStatus != BookingStatus.COMPLETED)
         ) {
-            throw InvalidBookingStateException("Ride status cannot be changed from $status to $newStatus.")
+            throw InvalidBookingStateException("Booking status cannot be changed from $status to $newStatus.")
         }
 
         status = newStatus
