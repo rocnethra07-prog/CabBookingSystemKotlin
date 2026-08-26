@@ -44,16 +44,7 @@ object ParcelDeliveryService {
 
     fun cancelParcelDelivery(parcelDelivery: ParcelDelivery) =
         BookingService.cancel(parcelDelivery, "parcel")
-
-
-//    fun pickUpParcel(parcelDelivery: ParcelDelivery) {
-//    }
-//
-//    fun deliverParcel(parcelDelivery: ParcelDelivery) {
-//    }
-//
-//    fun cancelParcelDelivery(parcelDelivery: ParcelDelivery) {
-//    }
+    
 
     fun hasActiveParcelDeliveryOfCustomer(customerId: String): Boolean =
         ParcelDeliveryRepo.hasCurrentParcelDeliveryOfCustomer(customerId)
