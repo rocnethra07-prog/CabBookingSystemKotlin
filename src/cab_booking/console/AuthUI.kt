@@ -66,7 +66,7 @@ object AuthUI {
             println(
                 """
             
-            You can register only as a Rider.
+            You can register only as a Customer.
             To become a Driver, please contact: ${AdminSeeder.ADMIN_EMAIL}
 
             """.trimIndent()
