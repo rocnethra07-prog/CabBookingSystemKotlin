@@ -2,7 +2,6 @@ package cab_booking.service
 
 import cab_booking.exception.InvalidBookingStateException
 import cab_booking.model.Ride
-import cab_booking.model.types.BookingStatus
 import cab_booking.model.types.Location
 import cab_booking.model.types.VehicleCategory
 import cab_booking.repository.RideRepo
@@ -33,31 +32,15 @@ object RideService {
     }
 
 
-    fun markAsStarted(ride: Ride) {
-        if (ride.status != BookingStatus.BOOKED) {
-            throw InvalidBookingStateException("Only booked rides can be started.")
-        }
+    fun startRide(ride: Ride) =
+        BookingService.start(ride, "started")
 
-        ride.updateStatus(BookingStatus.STARTED)
-    }
+    fun completeRide(ride: Ride) =
+        BookingService.complete(ride, "completed")
 
-    fun markAsCompleted(ride: Ride) {
-        if (ride.status != BookingStatus.STARTED) {
-            throw InvalidBookingStateException("Only started rides can be completed.")
-        }
+    fun cancelRide(ride: Ride) =
+        BookingService.cancel(ride, "ride")
 
-        ride.updateStatus(BookingStatus.COMPLETED)
-        ride.setCompletedAt(LocalDateTime.now())
-    }
-
-    fun markAsCancelled(ride: Ride) {
-        if (ride.status != BookingStatus.BOOKED) {
-            throw InvalidBookingStateException("Only booked rides can be cancelled.")
-        }
-
-        ride.updateStatus(BookingStatus.CANCELLED)
-        ride.setCancelledAt(LocalDateTime.now())
-    }
 
     fun rateRide(ride: Ride, rating: Int) {
         if (ride.rating != 0) {

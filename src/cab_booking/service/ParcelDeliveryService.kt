@@ -1,8 +1,6 @@
 package cab_booking.service
 
-import cab_booking.exception.InvalidBookingStateException
 import cab_booking.model.ParcelDelivery
-import cab_booking.model.types.BookingStatus
 import cab_booking.model.types.Location
 import cab_booking.model.types.VehicleCategory
 import cab_booking.repository.ParcelDeliveryRepo
@@ -38,31 +36,24 @@ object ParcelDeliveryService {
 
     }
 
-    fun markAsPickedUp(parcelDelivery: ParcelDelivery) {
-        if (parcelDelivery.status != BookingStatus.BOOKED) {
-            throw InvalidBookingStateException("Only booked parcels can be picked up.")
-        }
+    fun pickUpParcelDelivery(parcelDelivery: ParcelDelivery) =
+        BookingService.start(parcelDelivery, "picked up")
 
-        parcelDelivery.updateStatus(BookingStatus.STARTED)
-    }
+    fun deliverParcelDelivery(parcelDelivery: ParcelDelivery) =
+        BookingService.complete(parcelDelivery, "delivered")
 
-    fun markAsDelivered(parcelDelivery: ParcelDelivery) {
-        if (parcelDelivery.status != BookingStatus.STARTED) {
-            throw InvalidBookingStateException("Only picked-up parcels can be delivered.")
-        }
+    fun cancelParcelDelivery(parcelDelivery: ParcelDelivery) =
+        BookingService.cancel(parcelDelivery, "parcel")
 
-        parcelDelivery.updateStatus(BookingStatus.COMPLETED)
-        parcelDelivery.setCompletedAt(LocalDateTime.now())
-    }
 
-    fun markAsCancelled(parcelDelivery: ParcelDelivery) {
-        if (parcelDelivery.status != BookingStatus.BOOKED) {
-            throw InvalidBookingStateException("Only booked parcels can be cancelled.")
-        }
-
-        parcelDelivery.updateStatus(BookingStatus.CANCELLED)
-        parcelDelivery.setCancelledAt(LocalDateTime.now())
-    }
+//    fun pickUpParcel(parcelDelivery: ParcelDelivery) {
+//    }
+//
+//    fun deliverParcel(parcelDelivery: ParcelDelivery) {
+//    }
+//
+//    fun cancelParcelDelivery(parcelDelivery: ParcelDelivery) {
+//    }
 
     fun hasActiveParcelDeliveryOfCustomer(customerId: String): Boolean =
         ParcelDeliveryRepo.hasCurrentParcelDeliveryOfCustomer(customerId)

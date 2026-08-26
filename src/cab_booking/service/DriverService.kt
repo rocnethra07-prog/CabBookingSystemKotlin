@@ -105,7 +105,7 @@ object DriverService {
         driver: Driver
     ){
         validateRideOwnership(ride, driver)
-        RideService.markAsStarted(ride)
+        RideService.startRide(ride)
         driver.updateCurrentLocation(ride.pickupLocation)
     }
 
@@ -114,7 +114,7 @@ object DriverService {
         driver: Driver
     ) {
         validateRideOwnership(ride, driver)
-        RideService.markAsCompleted(ride)
+        RideService.completeRide(ride)
         driver.updateCurrentLocation(ride.dropLocation)
         addEarnings(driver, ride.fare)
         markAvailable(driver)
@@ -126,7 +126,7 @@ object DriverService {
     ) {
 
         validateRideOwnership(ride, driver)
-        RideService.markAsCancelled(ride)
+        RideService.cancelRide(ride)
         markAvailable(driver)
     }
 
@@ -172,13 +172,13 @@ object DriverService {
     // Parcel actions
     fun pickUpParcelDelivery(parcelDelivery: ParcelDelivery, driver: Driver) {
         validateParcelDeliveryOwnership(parcelDelivery, driver)
-        ParcelDeliveryService.markAsPickedUp(parcelDelivery)
+        ParcelDeliveryService.pickUpParcelDelivery(parcelDelivery)
         driver.updateCurrentLocation(parcelDelivery.pickupLocation)
     }
 
     fun deliverParcelDelivery(parcelDelivery: ParcelDelivery, driver: Driver) {
         validateParcelDeliveryOwnership(parcelDelivery, driver)
-        ParcelDeliveryService.markAsDelivered(parcelDelivery)
+        ParcelDeliveryService.deliverParcelDelivery(parcelDelivery)
         driver.updateCurrentLocation(parcelDelivery.dropLocation)
         addEarnings(driver, parcelDelivery.fare)
         markAvailable(driver)
@@ -186,7 +186,7 @@ object DriverService {
 
     fun cancelParcelDelivery(parcelDelivery: ParcelDelivery, driver: Driver) {
         validateParcelDeliveryOwnership(parcelDelivery, driver)
-        ParcelDeliveryService.markAsCancelled(parcelDelivery)
+        ParcelDeliveryService.cancelParcelDelivery(parcelDelivery)
         markAvailable(driver)
     }
 
