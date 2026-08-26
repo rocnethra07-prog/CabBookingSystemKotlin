@@ -64,7 +64,7 @@ sealed class Booking(
 
     fun setRating(rating: Int){
         if(status != BookingStatus.COMPLETED) {
-            throw InvalidBookingStateException("Only completed rides can be rated.")
+            throw InvalidBookingStateException("Only completed booking can be rated.")
         }
 
         require(rating in 1..5) { "Rating must be between 1 and 5." }
