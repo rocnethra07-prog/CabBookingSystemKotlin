@@ -12,7 +12,7 @@ fun main() {
     AdminSeeder.seed()
     DriverSeeder.seed()
 
-    println("\n---------------------------")
+    println("\n------------------------------------")
     println("Cab Booking & Parcel Delivery Service")
     println("---------------------------")
 
