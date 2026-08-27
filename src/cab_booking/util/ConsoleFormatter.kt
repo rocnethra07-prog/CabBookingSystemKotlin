@@ -1,4 +1,4 @@
-package cab_booking.console.input
+package cab_booking.util
 
 object ConsoleFormatter {
     fun header(title: String) {

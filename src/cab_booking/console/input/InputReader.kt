@@ -3,6 +3,7 @@ package cab_booking.console.input
 import cab_booking.exception.OperationCancelledException
 import cab_booking.model.types.Location
 import cab_booking.model.types.VehicleCategory
+import cab_booking.util.ConsoleFormatter
 import cab_booking.util.Validator
 import java.math.BigDecimal
 
@@ -14,7 +15,7 @@ object InputReader {
     private const val CANCEL_KEYWORD = "/cancel"
 
     private fun readUserInput(prompt: String): String {
-        print("$prompt (or '${CANCEL_KEYWORD}' to go back): ")
+        print("$prompt (or $CANCEL_KEYWORD to go back): ")
         val input = readln().trim()
         if (input.equals(CANCEL_KEYWORD, ignoreCase = true)) {
             throw OperationCancelledException()

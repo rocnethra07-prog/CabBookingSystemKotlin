@@ -9,7 +9,7 @@ import cab_booking.exception.UnauthorizedRideActionException
 import cab_booking.exception.VehicleNotFoundException
 import cab_booking.model.Driver
 import cab_booking.model.Ride
-import cab_booking.console.input.ConsoleFormatter
+import cab_booking.util.ConsoleFormatter
 import cab_booking.exception.InvalidBookingStateException
 import cab_booking.exception.OperationCancelledException
 import cab_booking.model.ParcelDelivery

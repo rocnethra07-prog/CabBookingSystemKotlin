@@ -9,7 +9,7 @@ import cab_booking.exception.CredentialsNotFoundException
 import cab_booking.exception.DriverNotFoundException
 import cab_booking.exception.UserNotFoundException
 import cab_booking.model.Driver
-import cab_booking.console.input.ConsoleFormatter
+import cab_booking.util.ConsoleFormatter
 import cab_booking.exception.OperationCancelledException
 import cab_booking.exception.VehicleNotFoundException
 import cab_booking.model.Vehicle

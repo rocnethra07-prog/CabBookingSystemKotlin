@@ -1,7 +1,7 @@
 package cab_booking.console
 
 import cab_booking.config.AdminSeeder
-import cab_booking.console.input.ConsoleFormatter
+import cab_booking.util.ConsoleFormatter
 import cab_booking.console.input.InputReader
 import cab_booking.controller.AuthController
 import cab_booking.exception.AccountLockedException
