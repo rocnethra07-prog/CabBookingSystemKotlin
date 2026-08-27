@@ -10,7 +10,6 @@ abstract class FileStorage<T>(private val filePath: String) {
 
     protected abstract fun fromLine(parts: List<String>): T
 
-    // Rewrites the whole file, so a deleted record really disappears.
     fun save(items: List<T>) {
         val file = File(filePath)
         file.parentFile?.mkdirs()
@@ -23,7 +22,6 @@ abstract class FileStorage<T>(private val filePath: String) {
         }
     }
 
-    // No file yet means nothing has been saved, so the seeders take over.
     fun load(): List<T> {
         val file = File(filePath)
         if (!file.exists()) return emptyList()

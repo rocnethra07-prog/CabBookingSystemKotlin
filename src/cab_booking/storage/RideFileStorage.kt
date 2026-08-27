@@ -21,7 +21,7 @@ object RideFileStorage : FileStorage<Ride>("data/rides.csv") {
 
     override fun fromLine(parts: List<String>): Ride {
         val ride = Ride(
-            dispatchId = parts[0],
+            bookingId = parts[0],
             customerId = parts[1],
             driverId = parts[2],
             pickupLocation = Location.valueOf(parts[3]),

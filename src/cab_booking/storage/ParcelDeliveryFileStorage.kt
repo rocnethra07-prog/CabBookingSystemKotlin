@@ -21,7 +21,7 @@ object ParcelDeliveryFileStorage : FileStorage<ParcelDelivery>("data/parcel_deli
 
     override fun fromLine(parts: List<String>): ParcelDelivery {
         val parcelDelivery = ParcelDelivery(
-            dispatchId = parts[0],
+            bookingId = parts[0],
             customerId = parts[1],
             driverId = parts[2],
             pickupLocation = Location.valueOf(parts[3]),
