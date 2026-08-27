@@ -46,7 +46,7 @@ object DataStore {
         RideFileStorage.save(RideRepo.findAll())
         ParcelDeliveryFileStorage.save(ParcelDeliveryRepo.findAll())
 
-        println("Data saved.")
+//        println("Data saved.")
     }
 
     // Move the counters past the highest saved ID so no ID is handed out twice.
