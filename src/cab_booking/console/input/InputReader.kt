@@ -202,7 +202,7 @@ object InputReader {
         validator: (String) -> Boolean
     ): String {
         while (true) {
-            print("$prompt [$currentValue] (Press Enter to keep the current value, or '$CANCEL_KEYWORD' to go back): ")
+            print("$prompt [$currentValue] (Press Enter to keep the current value, or $CANCEL_KEYWORD to go back): ")
             val input = readln().trim()
 
             if (input.equals(CANCEL_KEYWORD, ignoreCase = true)) {
