@@ -18,7 +18,6 @@ data class Vehicle(
 
     override fun toString(): String {
         return """
-            Vehicle ID           : $vehicleId
             Model                : $model
             Category             : $vehicleCategory (${vehicleCategory.vehicleType})
             Base Fare            : ₹${vehicleCategory.basePrice}

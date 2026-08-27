@@ -35,11 +35,9 @@ sealed class User(
 
     override fun toString(): String {
         return """
-            User ID          : $userId
             Name             : $name
             Phone            : $phoneNumber
             Email            : $email
-            Role             : ${this::class.simpleName}
         """.trimIndent()
     }
 }

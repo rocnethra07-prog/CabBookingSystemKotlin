@@ -64,7 +64,7 @@ sealed class Booking(
 
     fun setRating(rating: Int){
         if(status != BookingStatus.COMPLETED) {
-            throw InvalidBookingStateException("Only completed booking can be rated.")
+            throw InvalidBookingStateException("Only completed rides can be rated.")
         }
 
         require(rating in 1..5) { "Rating must be between 1 and 5." }
@@ -89,7 +89,6 @@ sealed class Booking(
             Fare             : ₹$fare
             Status           : $status
             Booked At        : ${bookedAt.toDisplayString()}
-            Rating           : ${if (rating == 0) "Not rated yet" else "$rating/5"}
             Completed At     : ${completedAt?.toDisplayString() ?: "-"}
             Cancelled At     : ${cancelledAt?.toDisplayString() ?: "-"}
         """.trimIndent()
